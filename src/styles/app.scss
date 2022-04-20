@@ -1,0 +1,37 @@
+@import "~vuetify/src/styles/styles.sass";
+@import "variables";
+@import "base";
+@import "personal-base";
+@import "responsive";
+
+// global
+.parent {
+  // padding-top: 3vh;
+  max-width: 1500px;
+  margin-inline: auto;
+}
+// hover effect
+a:not(.notHover) {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    background-color: $color-boton;
+    opacity: 0;
+    border-radius: 50px;
+    transform: scaleX(0.2);
+    transform-origin: left;
+    transition: transform 250ms ease;
+  }
+  &:is(:hover, :focus):before {
+    opacity: 0.2;
+    transform: scaleX(1);
+  }
+}
