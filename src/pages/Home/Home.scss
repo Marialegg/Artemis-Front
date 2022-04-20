@@ -110,6 +110,12 @@
         border-radius: 30px;
         overflow: hidden;
         padding: 1em;
+        transition: 0.2s ease-out;
+        border-radius: $border;
+        &:hover {
+          padding-inline: 1.1em;
+          box-shadow: inset 0 0 6px 2px rgba(0, 0, 0, 0.3) !important;
+        }
         img {
           width: 100%;
         }
