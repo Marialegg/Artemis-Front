@@ -5,7 +5,7 @@
     <!-- desktop -->
     <v-app-bar
     id="headerApp"
-    height="100px"
+    height="85px"
     fixed
   >
     <v-row>
@@ -19,7 +19,7 @@
           <!-- logo -->
           <router-link to="/" class="eliminarmobile">
             <img class="logo" src="@/assets/logos/logo.png"
-              alt="Logo">
+              alt="logo">
           </router-link>
         </aside>
 
@@ -33,10 +33,44 @@
           </v-col>
         </v-col>
 
+        <divider></divider>
+
         <aside class="contright">
-          <v-btn class="walletButton" color="#F29627" rounded>
+          <v-btn 
+            v-show="!sesion"
+            class="walletButton" 
+            color="#F29627" 
+            rounded
+            @click="signIn()"
+          >
             Connect Wallet
           </v-btn>
+          <div
+              v-show="sesion"
+              class="text-center"
+            >
+              <v-menu offset-y transition="slide-x-transition">
+                <template #activator="{ on, attrs }">
+                  <v-btn 
+                    class="walletButton" 
+                    color="#F29627" 
+                    rounded
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    {{ accountId }}
+                  </v-btn>
+                </template>
+                <v-list style = "background-color: #E5E5E5">
+                  <v-list-item to="/user-profile">
+                    <v-list-item-title>Mi Perfil</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="signOut()">
+                    <v-list-item-title>Cerrar Sesión</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
         </aside>
       </v-col>
     </v-row>
@@ -48,6 +82,18 @@
 
 <script>
 import MenuHeader from "./MenuHeader.vue"
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
 
 let scrollValue =
 document.body.scrollTop || document.documentElement.scrollTop;
@@ -85,6 +131,8 @@ export default {
   data() {
     return {
       // themeButton: true,
+      accountId: null,
+      sesion: null,
       dataHeader: [
         {
           title: "Inicio",
@@ -99,21 +147,64 @@ export default {
         //   link: "#"
         // },
         {
-          title: "Instructor",
-          link: "#"
-        },
-        {
-          title: "Mi Aprendizaje",
-          link: "#"
-        },
-        {
-          title: "Contact",
+          title: "Contacto",
           link: "#"
         }
       ]
     };
   },
   methods: {
+    async signIn () {
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+      wallet.requestSignIn(
+        'contract.defixtest.testnet'
+      )
+    },
+    async isSigned () {    
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+      if (wallet.isSignedIn()) {
+        this.sesion = true
+        // returns account Id as string
+        const walletAccountId = wallet.getAccountId()
+        this.accountId = walletAccountId
+        this.dataHeader = [
+          {
+            title: "Inicio",
+            link: "#"
+          },
+          {
+            title: "Cursos",
+            link: "#"
+          },
+          // {
+          //   title: "Mi Perfil",
+          //   link: "#"
+          // },
+          
+          {
+            title: "Instructor",
+            link: "#"
+          },
+          {
+            title: "Mi Aprendizaje",
+            link: "#"
+          },
+          {
+            title: "Contacto",
+            link: "#"
+          }
+      ]
+      }
+    },
+    async signOut () {
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+      wallet.signOut()
+      this.sesion = false
+      this.$router.go()
+    },
     ShowDrawer() {
       this.$refs.menu.ShowDrawer();
     },
@@ -140,6 +231,8 @@ export default {
   mounted() {
     document.getElementById("headerApp").style.background = "transparent";
     document.addEventListener('scroll', this.scrollListener);
+    this.isSigned()
+    
   },
   beforeDestroy() {
     document.removeEventListener('scroll', this.scrollListener);

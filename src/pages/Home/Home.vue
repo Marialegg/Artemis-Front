@@ -50,6 +50,9 @@
                             color="orange"
                             hover
                           ></v-rating>
+                          <div class="h6-em bold">
+                            {{sliderDestacado[+index + i].price }}Ⓝ
+                          </div>
                         </div>
                       </v-card>
                     </v-col>
@@ -125,74 +128,84 @@ export default {
       carouselDestacado: 0,
       sliderDestacado: [
         {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
+          img: require("@/assets/images/python.jpg"),
+          title: "Python para Principiantes",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "4",
+          price: "5"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "1"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "6"
+        },
+        {
+          img: require("@/assets/images/excel.jpg"),
+          title: "Curso Excel Intermedio",
+          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
+          to: "#",
+          rating: "3",
+          price: "4"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "3"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "4"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "5.3"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "3"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
+          rating: "",
+          price: "5"
         },
         {
           img: require("@/assets/images/cursos.png"),
           title: "Lunaroid",
           desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
           to: "#",
-          rating: ""
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: ""
+          rating: "",
+          price: "5"
         },
       ],
       carouselReciente: 0,
