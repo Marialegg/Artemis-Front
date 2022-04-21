@@ -3,6 +3,8 @@
 // home
 #profile {
   font-size: 16px;
+  max-width: 1000px;
+  margin-inline: auto;
   .contForm {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

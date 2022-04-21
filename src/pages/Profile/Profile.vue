@@ -1,5 +1,5 @@
 <template>
-  <v-col id="profile" class="parent">
+  <v-col id="profile">
     <h2 class="h4-em">
       PERFIL
     </h2>
