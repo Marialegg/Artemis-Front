@@ -42,8 +42,8 @@
       background-color: #182833;
     }
     .logo {
-      width: 6em;
-      height: 6em;
+      width: 6.5em;
+      height: 5em;
     }
   }
   .contmiddle {
@@ -67,7 +67,7 @@
       margin-left: clamp(1em, 2vw, 2em);
       filter: $sombra-filter;
       span {
-        font-weight: 400;
+        font-weight: 600;
         color: #FFFFFF !important;
       }
     }
