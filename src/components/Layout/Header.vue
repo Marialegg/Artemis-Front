@@ -27,7 +27,7 @@
           <!-- content -->
           <v-col class="contmiddle end padd">
             <a :href="item.link" v-for="(item, index) in dataHeader" :key="index"
-              class="h9-em openMenuCollections notHover">
+              class="h9-em openMenuCollections notdefault-hover">
               {{ item.title }}
             </a>
           </v-col>

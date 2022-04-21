@@ -39,15 +39,12 @@
 /*
 default settings
 */
-/* * {
-  transition: 0.2s ease;
-} */
 *::-webkit-scrollbar {
   width: 10px;
-  background: var(--colorCartaScroll);
+  background: var(--clr-card-scroll);
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--colorScroll);
+  background: var(--clr-scroll);
 }
 :is(html, body) {
   font-size: 16px;
@@ -59,25 +56,20 @@ default settings
 a {
   text-decoration: none;
 }
+
+/*
+delete-config-default-vuetify
+*/
+/* btn */
 .v-btn {
   text-transform: none;
   letter-spacing: normal;
 }
-/*
-delete-config-default-vuetify
-*/
-/* icons-active */
-/* .v-input__icon .primary--text {
-  color: #AD0FD5 !important;
-} */
-/* btn */
-.v-overlay__scrim {
+.v-overlay__scrim:not(.notdefault-vuetify) {
   background: transparent !important;
 }
 /* list */
-.v-list,
-.v-sheet,
-.theme--light {
+:is(.v-list, .v-sheet, .theme--light):not(.notdefault-vuetify) {
   box-shadow: none !important;
 }
 </style>

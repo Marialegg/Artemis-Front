@@ -5,13 +5,16 @@
 @import "responsive";
 
 // global
+
+/* limit width */
 .parent {
   // padding-top: 3vh;
   max-width: 1500px;
   margin-inline: auto;
 }
+
 // hover effect
-a:not(.notHover) {
+a:not(.notdefault-hover) {
   position: relative;
   &::before {
     content: "";
@@ -23,7 +26,7 @@ a:not(.notHover) {
     margin: auto;
     width: 100%;
     height: 100%;
-    background-color: $color-boton;
+    background-color: $clr-btn;
     opacity: 0;
     border-radius: 50px;
     transform: scaleX(0.2);
@@ -35,3 +38,8 @@ a:not(.notHover) {
     transform: scaleX(1);
   }
 }
+
+/* icons-active */
+// .v-input__icon .primary--text {
+//   color: #AD0FD5 !important;
+// }

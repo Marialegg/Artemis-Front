@@ -36,7 +36,7 @@
                 <template v-for="(n,i) in columnsDestacado">
                   <template v-if="(+index + i) < sliderDestacado.length">
                     <v-col :key="i">
-                      <v-card color="var(colorCartas)" class="cartas divcol">
+                      <v-card color="var(clr-card)" class="cartas divcol">
                         <img :src="sliderDestacado[+index + i].img" alt="Imagen curso">
                         <div class="divcol astart">
                           <a :href="sliderDestacado[+index + i].to" class="h7-em bold"
@@ -79,7 +79,7 @@
                 <template v-for="(n,i) in columnsReciente">
                   <template v-if="(+index + i) < sliderReciente.length">
                     <v-col :key="i">
-                      <v-card color="var(colorCartas)" class="cartas divcol">
+                      <v-card color="var(clr-card)" class="cartas divcol">
                         <img :src="sliderReciente[+index + i].img" alt="Imagen curso">
                         <div class="divcol astart">
                           <a :href="sliderReciente[+index + i].to" class="h7-em bold">
