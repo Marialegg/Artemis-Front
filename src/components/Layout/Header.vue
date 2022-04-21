@@ -136,7 +136,7 @@ export default {
       dataHeader: [
         {
           title: "Inicio",
-          link: "#"
+          link: "#/"
         },
         {
           title: "Cursos",
@@ -172,7 +172,7 @@ export default {
         this.dataHeader = [
           {
             title: "Inicio",
-            link: "#"
+            link: "#/"
           },
           {
             title: "Cursos",

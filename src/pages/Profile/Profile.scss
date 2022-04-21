@@ -1,0 +1,47 @@
+@import "@/styles/app";
+
+// home
+#profile {
+  font-size: 16px;
+  .contForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0.1em clamp(1em, 4vw, 4em);
+    .v-card {
+      .v-input__slot {
+        background-color: var(--clr-card);
+        box-shadow: none !important;
+        border-radius: 16px;
+        border: 1px solid #F3F6F5;
+        padding: clamp(0.5em, 1vw, 1em);
+        &:is(:hover, :focus) {
+          border: 1px solid $clr-btn;
+        }
+        input {
+          color: var(--clr);
+          font-weight: 500;
+          font-size: var(--step-em--1);
+        }
+      }
+    }
+    .profesion {
+      grid-column: span 2;
+    }
+    .biografia {
+      grid-column: span 2;
+    }
+  }
+  .v-btn {
+    background-color: $clr-btn;
+    padding: 1.4em;
+    filter: $sombra-filter;
+    span {
+      color: $clr-text-btn;
+    }
+  }
+}
+@media (max-width: 880px) and (max-height: 1180px) {
+  #profile {
+    font-size: 12px;
+  }
+}

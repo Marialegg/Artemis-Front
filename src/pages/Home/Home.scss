@@ -89,11 +89,6 @@
   }
   .contDestacado {
     margin-top: 2em;
-    h2 {
-      font-family: 'Oswald', sans-serif !important;
-      font-weight: 600;
-      color: $clr-btn;
-    }
     .contslider {
       width: 100%;
       :is(.v-image, .v-window) {
