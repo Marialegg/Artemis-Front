@@ -121,7 +121,7 @@ export default {
         {
           icon: require("@/assets/icons/idiomas.png"),
           title: "+ de 500",
-          desc: "PROFESIONALES DE MÚLTIPLES IDIOMAS"
+          desc: "PROFESIONALES"
         },
         {
           icon: require("@/assets/icons/acceso.png"),

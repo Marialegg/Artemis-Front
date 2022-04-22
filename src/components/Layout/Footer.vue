@@ -2,7 +2,7 @@
   <v-row id="footer" no-gutters class="spacea align">
     <!-- content -->
     <aside class="dicol">
-      <img class="logoFooter" src="@/assets/logos/logoFooter.png" alt="logo Artemis">
+      <img class="logoFooter" src="@/assets/logos/logo.png" alt="logo Artemis">
       <p class="h8-em">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
         tempor incididunt ut labore et dolore m

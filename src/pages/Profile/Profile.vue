@@ -6,7 +6,7 @@
 
     <section class="contForm">
       <v-card color="transparent">
-        <label class="h7-em" for="nombre">NOMBRE</label>
+        <label class="h9-em" for="nombre">NOMBRE</label>
         <v-text-field
           v-model="nombre"
           id="nombre"
@@ -15,7 +15,7 @@
         </v-text-field>
       </v-card>
       <v-card color="transparent">
-        <label class="h7-em" for="dni">DNI</label>
+        <label class="h9-em" for="dni">DNI</label>
         <v-text-field
           v-model="dni"
           id="dni"
@@ -24,7 +24,7 @@
         </v-text-field>
       </v-card>
       <v-card color="transparent">
-        <label class="h7-em" for="apellido">APELLIDO</label>
+        <label class="h9-em" for="apellido">APELLIDO</label>
         <v-text-field
           v-model="apellido"
           id="apellido"
@@ -91,7 +91,7 @@
 
     <v-col align="center">
       <v-btn class="h7-em" rounded>
-        SAVE FORM
+        GUARDAR
       </v-btn>
     </v-col>
   </v-col>

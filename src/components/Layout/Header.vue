@@ -190,10 +190,6 @@ export default {
           {
             title: "Mi Aprendizaje",
             link: "#"
-          },
-          {
-            title: "Contacto",
-            link: "#"
           }
       ]
       }
