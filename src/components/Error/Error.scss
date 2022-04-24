@@ -29,6 +29,9 @@
           -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
         }
       }
+      span {
+        line-height: 1 !important;
+      }
       .v-btn {
         width: clamp(8em, 20vw, 20em);
         height: 4.75rem;
