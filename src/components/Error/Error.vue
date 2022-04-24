@@ -2,15 +2,11 @@
   <v-app id="error">
     <v-container fluid class="error-page center divcol">
       <v-row justify="center" align="center">
-        <v-col id="containerNotFound">
+        <v-col class="tcenter center divcol paddmobile">
           <!-- content -->
-          <span class="text404 bold">404</span>
-          <v-col class="paddtopdel center">
-            <span class="textNotFound bold">Sorry Wrong Page</span>
-          </v-col>
-          <v-col class="center">
-            <v-btn href="#/" id="buttonNotFound" class="bold">Homepage</v-btn>
-          </v-col>
+          <h1 class="p bold">404</h1>
+          <span class="h2-em bold">Sorry Wrong Page</span>
+          <v-btn href="#/" class="h4-em bold">Homepage</v-btn>
         </v-col>
       </v-row>
     </v-container>
