@@ -158,7 +158,7 @@ export default {
       const near = await connect(config);
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'contract.defixtest.testnet'
+        'contract.e-learning.testnet'
       )
     },
     async isSigned () {    
