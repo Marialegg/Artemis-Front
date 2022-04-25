@@ -18,7 +18,7 @@
           </v-btn>
           <!-- logo -->
           <router-link to="/" class="eliminarmobile">
-            <img class="logo" src="@/assets/logos/logo.png"
+            <img class="logo" src="@/assets/logos/logo.png" style="max-width: 100px; height: auto; "
               alt="logo">
           </router-link>
         </aside>
