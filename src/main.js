@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import App from './App.vue'
-import {i18n} from '@/plugins/i18n'
-import router from './Routes'
-import store from './store/index'
-import vuetify from './plugins/vuetify'
+import "vue-toastification/dist/index.css";
 import * as VueGoogleMaps from 'vue2-google-maps';
 import Toast from "vue-toastification";
-import "vue-toastification/dist/index.css";
 import axios from "axios";
+import {i18n} from '@/plugins/i18n'
 import VueAnimateOnScroll from 'vue-animate-onscroll';
 import VueApexCharts from 'vue-apexcharts'
+import router from './Routes'
+import store from './store/index'
+import Vue from 'vue'
+import App from './App.vue'
+import vuetify from './plugins/vuetify'
 
 Vue.use(VueApexCharts)
 
