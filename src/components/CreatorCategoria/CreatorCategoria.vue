@@ -111,7 +111,6 @@ export default {
         this.deleteBtn = false
         this.image = ""
         this.name = ""
-        console.log(index)
       }
     }
   }
