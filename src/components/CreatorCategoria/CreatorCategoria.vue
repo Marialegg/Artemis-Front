@@ -113,12 +113,6 @@ export default {
         this.name = ""
         console.log(index)
       }
-      // if (index) {
-      //   this.dataSlide.splice(0, 1)
-      //   this.img = ""
-      //   this.name = ""
-      //   console.log(index)
-      // }
     }
   }
 };
