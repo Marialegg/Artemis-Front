@@ -21,6 +21,7 @@
         align-items: center;
         justify-content: center;
         width: 17em;
+        aspect-ratio: 1 / 1;
         height: max-content;
         padding: 0.5em 1em;
         img {
@@ -31,18 +32,55 @@
     }
     .wrapper {
       justify-content: space-between;
-      & > div {
+      & > div:nth-child(1) {
+        gap: 0.5em;
+        max-width: max-content;
+        #archivo {
+          height: 5ch;
+          &::-webkit-file-upload-button {
+            text-transform: uppercase;
+            filter: $sombra-filter;
+            border: none;
+            border-radius: 30px;
+            background-color: #D0BFAA;
+            padding-inline: 0.5em;
+            color: #000000;
+            font-weight: bold;
+          }
+        }
+      }
+      & > div+div {
         gap: clamp(1em, 3vw, 3em);
-        & > .v-btn {
+        .v-btn {
           filter: $sombra-filter;
           padding: 0.5em 4em;
           span {color: #FFFFFF !important}
         }
-        & > div {
+      }
+    }
+  }
+  .contlista {
+    margin-top: 2em;
+    h3 {color: $clr-btn;}
+    .v-item-group {
+      .v-slide-group__content {
+        display: flex;
+        gap: 2em;
+        .v-card {
+          display: flex !important;
+          flex-direction: column;
+          border: 1px solid #F3F4F6 !important;
+          border-radius: 30px !important;
           gap: 0.5em;
-          .v-btn {
-            filter: $sombra-filter;
-            span {color: #000000 !important}
+          overflow: hidden;
+          padding-bottom: 2em;
+          width: 14em;
+          img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+          }
+          span {
+            padding-inline: 1em
           }
         }
       }
