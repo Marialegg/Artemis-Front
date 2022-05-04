@@ -70,9 +70,6 @@ export default {
     }
   },
   methods: {
-    // selectImage () {
-    //   this.$refs.fileInput.click()
-    // },
     pickFile () {
       let input = this.$refs.fileInput
       let file = input.files
