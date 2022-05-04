@@ -10,6 +10,7 @@
 .parent {
   // padding-top: 3vh;
   max-width: 1500px;
+  width: 100%;
   margin-inline: auto;
 }
 
@@ -56,4 +57,24 @@ label:not(.notdefault-typography) {
   font-family: 'Roboto', sans-serif !important;
   font-weight: 600 !important;
   color: #FF6B3B !important;
+}
+
+/* other adjust */
+
+.form {
+  .v-input__slot {
+    background-color: var(--clr-card);
+    box-shadow: none !important;
+    border-radius: 16px;
+    border: 1px solid #F3F6F5;
+    padding: clamp(0.5em, 1vw, 1em);
+    &:is(:hover, :focus) {
+      border: 1px solid $clr-btn;
+    }
+    input {
+      color: var(--clr);
+      font-weight: 500;
+      font-size: var(--step-em--1);
+    }
+  }
 }

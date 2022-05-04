@@ -27,6 +27,11 @@ export default new Router({
           name: 'Profile',
           component: () => import('@/pages/Profile/Profile'),
         },
+        {
+          path: '/creator-categoria',
+          name: 'CreatorCategoria',
+          component: () => import('@/components/CreatorCategoria/CreatorCategoria'),
+        },
       ],
     },
     // here path 3 if need

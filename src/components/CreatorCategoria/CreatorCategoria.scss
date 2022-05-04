@@ -1,0 +1,51 @@
+@import "@/styles/app";
+
+// creator categorias
+#creatorCategoria {
+  font-size: 16px;
+  .contnombre {
+    width: min(100%, 26.125em);
+    .v-input__slot {
+      background-color: #F3F6F5 !important;
+      box-shadow: none !important;
+      input {
+        font-weight: bold;
+      }
+    }
+  }
+  .contimagen {
+    gap: clamp(3em, 6vw, 6em);
+    aside:nth-child(1) {
+      .v-card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 17em;
+        height: max-content;
+        padding: 0.5em 1em;
+        img {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+        }
+      }
+    }
+    .wrapper {
+      justify-content: space-between;
+      & > div {
+        gap: clamp(1em, 3vw, 3em);
+        & > .v-btn {
+          filter: $sombra-filter;
+          padding: 0.5em 4em;
+          span {color: #FFFFFF !important}
+        }
+        & > div {
+          gap: 0.5em;
+          .v-btn {
+            filter: $sombra-filter;
+            span {color: #000000 !important}
+          }
+        }
+      }
+    }
+  }
+}

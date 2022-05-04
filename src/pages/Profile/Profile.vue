@@ -5,7 +5,7 @@
     </h2>
 
     <section class="contForm">
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h9-em" for="nombre">NOMBRE</label>
         <v-text-field
           v-model="profile.name"
@@ -14,7 +14,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h9-em" for="apellido">APELLIDO</label>
         <v-text-field
           v-model="profile.last_name"
@@ -23,7 +23,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h9-em" for="dni">DNI</label>
         <v-text-field
           v-model="profile.dni"
@@ -32,7 +32,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h7-em" for="wallet">WALLET</label>
         <v-text-field
           v-model="accountId"
@@ -41,7 +41,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h7-em" for="discord">DISCORD</label>
         <v-text-field
           v-model="profile.discord"
@@ -50,7 +50,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h7-em" for="email">EMAIL</label>
         <v-text-field
           v-model="profile.email"
@@ -77,7 +77,7 @@
         >
         </v-textarea>
       </v-card>
-      <v-card color="transparent">
+      <v-card color="transparent" class="form">
         <label class="h7-em" for="pais">PAIS</label>
         <v-text-field
           v-model="profile.country"

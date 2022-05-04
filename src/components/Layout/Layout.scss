@@ -5,7 +5,7 @@
   background: var(--bg);
   .v-main__wrap {
     // padding: 4rem $content-padding 70px $content-padding;
-    padding-inline: 0;
+    padding-inline: 2em;
     padding-bottom: clamp(20rem, 59vh, 28rem);
     padding-top: clamp(3rem, 22vh , 8rem);
     &:before {
