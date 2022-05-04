@@ -29,7 +29,8 @@
         </div>
 
         <div class="center">
-          <v-btn rounded color="#F29627" class="h8-em" @click="Guardar()">GUARDAR</v-btn>
+          <v-btn v-if="editarBtn" rounded color="#F29627" class="h8-em" @click="Guardar()">GUARDAR</v-btn>
+          <v-btn v-else rounded color="#F29627" class="h8-em" @click="GuardarEditado()">GUARDAR</v-btn>
           <v-btn v-if="deleteBtn" rounded color="#F29627" class="h8-em" @click="Delete()">ELIMINAR</v-btn>
         </div>
       </aside>
@@ -65,6 +66,7 @@ export default {
       image: "",
       name: "",
       imagePreview: false,
+      editarBtn: true,
       deleteBtn: false,
       selected: {},
     }
@@ -92,9 +94,24 @@ export default {
         this.deleteBtn = false
       }
     },
+    GuardarEditado() {
+      if (this.image != "" && this.name != "") {
+        const index = this.dataSlide.indexOf(this.selected);
+        this.dataSlide.splice(index, 1);
+
+        let object = {name: this.name, img: this.image}
+        this.dataSlide.push(object)
+        this.image = ""
+        this.name = ""
+        this.imagePreview = false
+        this.editarBtn = true
+        this.deleteBtn = false
+      }
+    },
     Editar(item) {
       this.imagePreview = true
       this.deleteBtn = true
+      this.editarBtn = false
       this.name = item.name
       this.image = item.img
       
@@ -102,13 +119,12 @@ export default {
     },
     Delete() {
       const index = this.dataSlide.indexOf(this.selected);
-      if (this.selected.name == this.name && this.selected.img == this.image) {
-        this.dataSlide.splice(index, 1);
-        this.imagePreview = false
-        this.deleteBtn = false
-        this.image = ""
-        this.name = ""
-      }
+      this.dataSlide.splice(index, 1);
+      this.imagePreview = false
+      this.editarBtn = true
+      this.deleteBtn = false
+      this.image = ""
+      this.name = ""
     }
   }
 };

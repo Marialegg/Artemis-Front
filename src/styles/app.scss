@@ -58,6 +58,10 @@ label:not(.notdefault-typography) {
   font-weight: 600 !important;
   color: #FF6B3B !important;
 }
+h3:not(.notdefault-typography) {
+  color: $clr-btn !important;
+  font-weight: 600 !important;
+}
 
 /* other adjust */
 

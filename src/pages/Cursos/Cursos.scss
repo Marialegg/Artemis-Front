@@ -1,0 +1,16 @@
+@import "@/styles/app";
+
+// cursos
+#cursos {
+  font-size: 16px;
+  .col:nth-child(1) {
+    .v-btn {span {color: #FFFFFF !important;}}
+  }
+  .col+.col {
+    .wrapper {
+      &>span {font-weight: 700;line-height: 24px;
+        &>span {margin-left: 0.2em;font-weight: 400;}
+      }
+    }
+  }
+}

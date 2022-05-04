@@ -32,6 +32,11 @@ export default new Router({
           name: 'CreatorCategoria',
           component: () => import('@/components/CreatorCategoria/CreatorCategoria'),
         },
+        {
+          path: '/cursos',
+          name: 'Cursos',
+          component: () => import('@/pages/Cursos/Cursos'),
+        },
       ],
     },
     // here path 3 if need
