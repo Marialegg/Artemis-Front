@@ -65,6 +65,10 @@ h3:not(.notdefault-typography) {
 
 /* other adjust */
 
+.botones {
+  background-color: #F29627 !important;filter: $sombra-filter;span {color: #FFFFFF !important}
+}
+
 .form {
   .v-input__slot {
     background-color: var(--clr-card);

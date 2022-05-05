@@ -7,19 +7,48 @@
 
       <div class="space divwrap gap">
         <span class="h7-em bold">DESDE ACA USTED INSTRUCTOR PODRA CREAR SUS CURSOS</span>
-        <v-btn class="marginlefta" rounded color="#F29627">NUEVO CURSO</v-btn>
+        <v-btn class="botones" rounded>NUEVO CURSO</v-btn>
       </div>
     </v-col>
 
     <v-col>
       <h3 class="h8-em">CURSOS PUBLICADOS POR EL INSTRUCTOR</h3>
       
-      <section class="wrapper">
-        <aside>
-        <img src="" alt="imagen curso">
+      <section v-for="(item, i) in dataCursos" :key="i"
+        class="wrapper">
+        <aside class="divrow">
+          <img :src="item.img" alt="imagen curso">
           <div class="divcol">
-            <span class="h8-em">{{item.name}}</span>
-            <span class="h8-em">{{item.price}}<span class="h9-em">NEAR</span></span>
+            <span class="h7-em">{{item.name}}</span>
+            <span class="h7-em">{{item.price}}<span class="h11-em">NEAR</span></span>
+          </div>
+        </aside>
+
+        <aside class="divcol">
+          <h3 class="h5-em p">{{item.earned}} NEAR</h3>
+          <span class="h7-em tcenter">Ganado este Mes</span>
+        </aside>
+        
+        <aside class="divcol">
+          <h3 class="h5-em p">{{item.inscriptions}}</h3>
+          <span class="h7-em tcenter">inscripciones de este mes</span>
+        </aside>
+        
+        <aside class="divcol">
+          <div class="divrow acenter">
+            <h3 class="h5-em p">{{item.rating}}</h3>
+            <v-rating
+              v-model="item.rating"
+              background-color="pink lighten-3"
+              color="orange"
+            ></v-rating>
+          </div>
+
+          <span class="h8-em tcenter">Valoración del curso</span>
+
+          <div class="spacee fill-w">
+            <v-btn class="botones h8-em" rounded>EDITAR</v-btn>
+            <v-btn class="botones h8-em" rounded>VER DETALLE</v-btn>
           </div>
         </aside>
       </section>
@@ -32,6 +61,32 @@ export default {
   name: "Cursos",
   data() {
     return {
+      dataCursos: [
+        {
+          img: require("@/assets/images/ips.png"),
+          name: "Rust Basico",
+          price: "0.75",
+          earned: "4,5",
+          inscriptions: "10",
+          rating: 4.5,
+        },
+        {
+          img: require("@/assets/images/ips.png"),
+          name: "Rust Basico",
+          price: "0.75",
+          earned: "4,5",
+          inscriptions: "10",
+          rating: 4.5,
+        },
+        {
+          img: require("@/assets/images/ips.png"),
+          name: "Rust Basico",
+          price: "0.75",
+          earned: "4,5",
+          inscriptions: "10",
+          rating: 4.5,
+        },
+      ]
       // dataSlide: [],
       // image: "",
       // name: "",
