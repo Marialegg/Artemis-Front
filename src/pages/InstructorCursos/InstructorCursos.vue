@@ -309,9 +309,7 @@
         </template>
 
         <template v-slot:no-data>
-          <v-btn class="botones" color="#F29627" rounded @click="initialize">
-            <span style="color: #FFFFFF !important">RESET</span>
-          </v-btn>
+          <span class="h8-em">NO HAY INFORMACION DISPONIBLE</span>
         </template>
       </v-data-table>
     </v-col>
