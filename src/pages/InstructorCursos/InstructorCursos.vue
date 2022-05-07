@@ -487,7 +487,9 @@ export default {
       }
     },
     Grabar() {
+      // console.log(this.desserts.length+1)
       let object = {
+        orden: this.desserts.length+1,
         titulo: this.descripcion_titulo,
         categoria: this.descripcion_categoria,
         descripcion: this.descripcion_descripcion,
