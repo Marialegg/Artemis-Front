@@ -65,13 +65,46 @@ h3:not(.notdefault-typography) {
 
 /* other adjust */
 
+input[type="file"] {
+  height: 4.5ch;
+  &::-webkit-file-upload-button {
+    cursor: pointer;
+    text-transform: uppercase;
+    filter: $sombra-filter;
+    border: none;
+    border-radius: 30px;
+    background-color: #D0BFAA;
+    padding-inline: 1.5em;
+    color: #000000;
+    font-weight: bold;
+  }
+}
+
+// menu select
+.v-select-list {
+  background-color: var(--clr-card-2) !important;
+  box-shadow: none !important;
+  // clip-path: $clip-path-2;
+  border-radius: 15px !important;
+  padding: clamp(0.7em, 2vw, 1em) !important;
+  font-weight: 700;
+  font-size: var(--step-em--3) !important;
+  border: 2px solid #CFCFCF !important;
+  span {color: var(--clr-text-btn) !important}
+  .v-list-item {border-radius: $border;overflow: hidden}
+  .v-list-item--active {
+    background: $clr-btn !important;
+    div {color: $clr-text-btn !important}
+  }
+}
+
 .botones {
   background-color: #F29627 !important;filter: $sombra-filter;span {color: #FFFFFF !important}
 }
 
 .form {
   .v-input__slot {
-    background-color: var(--clr-card);
+    background-color: var(--clr-card) !important;
     box-shadow: none !important;
     border-radius: 16px;
     border: 1px solid #F3F6F5;

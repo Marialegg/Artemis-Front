@@ -1,7 +1,7 @@
 @import "@/styles/app";
 
-// cursos
-#cursos {
+// instructor
+#instructor {
   font-size: 16px;
   .col+.col {
     .wrapper {
@@ -32,7 +32,7 @@
         &:nth-child(1){
           gap: 1em;
           img {
-            width: clamp(10em, 14vw, 14em);
+            width: clamp(8.5em, 10vw, 10em);
             aspect-ratio: 1 / 1;
             border: 1px solid #F3F4F6;
             border-radius: 30px;

@@ -1,5 +1,5 @@
 <template>
-  <section id="cursos" class="parent divcol gap">
+  <section id="instructor" class="parent divcol gap">
     <v-col cols="11" class="align">
       <h2 class="h4-em">
         CURSOS
@@ -7,7 +7,7 @@
 
       <div class="space divwrap gap">
         <span class="h7-em bold">DESDE ACA USTED INSTRUCTOR PODRA CREAR SUS CURSOS</span>
-        <v-btn class="botones" rounded>NUEVO CURSO</v-btn>
+        <v-btn class="botones" rounded href="#/instructor-cursos">NUEVO CURSO</v-btn>
       </div>
     </v-col>
 
@@ -140,4 +140,4 @@ export default {
 };
 </script>
 
-<style src="./Cursos.scss" lang="scss" />
+<style src="./Instructor.scss" lang="scss" />

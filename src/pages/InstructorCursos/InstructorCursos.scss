@@ -1,0 +1,63 @@
+@import "@/styles/app";
+
+// instructorCursos
+#instructorCursos {
+  font-size: 16px;
+  .v-stepper__step__step {
+    i {color: $clr-text-btn !important}
+    &.primary {background-color: $clr-btn !important}
+  }
+  .v-stepper__wrapper {
+    padding-bottom: 2em;
+    .v-stepper__content {
+      @media (min-width: 1500px) {max-width: 80%}}
+      .contimagen {
+        gap: clamp(3em, 6vw, 6em);
+        aside:nth-child(1) {
+          .v-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 17em;
+            aspect-ratio: 1 / 1;
+            height: max-content;
+            padding: 0.5em 1em;
+            img {
+              width: 100%;
+              aspect-ratio: 1 / 1;
+            }
+          }
+        }
+        .wrapper {
+          justify-content: space-between;
+          & > div {
+            gap: 0.5em;
+            max-width: max-content;
+          }
+        }
+      }
+      .v-card {
+        &.programa {
+          .referenceImg {cursor: pointer;width: clamp(4em, 5vw, 5.25em)}
+          video {max-width: 11.6875em}
+          .file-input {
+            .v-input__control {
+              min-width: 8em;
+              .v-text-field__slot {cursor: pointer !important}
+              .v-chip {
+                background-color: $clr-btn !important;
+                .v-chip__content {
+                  color: $clr-text-btn !important;
+                }
+              }
+            }
+          }
+          & > aside {
+            width: max-content;
+          }
+        }
+      }
+      .v-btn {margin-top: 3em}
+    .v-btn+.v-btn {margin-left: 2em}
+  }
+}

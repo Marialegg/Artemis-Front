@@ -59,7 +59,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent" class="profesion">
+      <v-card color="transparent" class="profesion form">
         <label class="h7-em" for="profesion">PROFESION</label>
         <v-text-field
           v-model="profile.profession"
@@ -68,7 +68,7 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent" class="biografia">
+      <v-card color="transparent" class="biografia form">
         <label class="h7-em" for="biografia">BIOGRAFIA</label>
         <v-textarea
           v-model="profile.biography"

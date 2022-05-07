@@ -176,7 +176,7 @@ export default {
           },
           {
             title: "Cursos",
-            link: "#/cursos"
+            link: "#"
           },
           // {
           //   title: "Mi Perfil",
@@ -185,7 +185,7 @@ export default {
           
           {
             title: "Instructor",
-            link: "#"
+            link: "#/instructor"
           },
           {
             title: "Mi Aprendizaje",

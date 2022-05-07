@@ -23,19 +23,24 @@ export default new Router({
           component: () => import('@/pages/Home/Home'),
         },
         {
-          path: '/user-profile',
-          name: 'Profile',
-          component: () => import('@/pages/Profile/Profile'),
-        },
-        {
           path: '/creator-categoria',
           name: 'CreatorCategoria',
           component: () => import('@/components/CreatorCategoria/CreatorCategoria'),
         },
         {
-          path: '/cursos',
-          name: 'Cursos',
-          component: () => import('@/pages/Cursos/Cursos'),
+          path: '/user-profile',
+          name: 'Profile',
+          component: () => import('@/pages/Profile/Profile'),
+        },
+        {
+          path: '/instructor',
+          name: 'Instructor',
+          component: () => import('@/pages/Instructor/Instructor'),
+        },
+        {
+          path: '/instructor-cursos',
+          name: 'InstructorCursos',
+          component: () => import('@/pages/InstructorCursos/InstructorCursos'),
         },
       ],
     },

@@ -35,19 +35,6 @@
       & > div:nth-child(1) {
         gap: 0.5em;
         max-width: max-content;
-        #archivo {
-          height: 5ch;
-          &::-webkit-file-upload-button {
-            text-transform: uppercase;
-            filter: $sombra-filter;
-            border: none;
-            border-radius: 30px;
-            background-color: #D0BFAA;
-            padding-inline: 0.5em;
-            color: #000000;
-            font-weight: bold;
-          }
-        }
       }
       & > div+div {
         gap: clamp(1em, 3vw, 3em);
