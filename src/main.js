@@ -7,9 +7,12 @@ import VueAnimateOnScroll from 'vue-animate-onscroll';
 import VueApexCharts from 'vue-apexcharts'
 import router from './Routes'
 import store from './store/index'
+import wysiwyg from "vue-wysiwyg";
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
+
+Vue.use(wysiwyg, {});
 
 Vue.use(VueApexCharts)
 

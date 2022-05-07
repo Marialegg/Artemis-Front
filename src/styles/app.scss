@@ -14,32 +14,6 @@
   margin-inline: auto;
 }
 
-// hover effect
-a:not(.notdefault-hover) {
-  position: relative;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    width: 100%;
-    height: 100%;
-    background-color: $clr-btn;
-    opacity: 0;
-    border-radius: 50px;
-    transform: scaleX(0.2);
-    transform-origin: left;
-    transition: transform 250ms ease;
-  }
-  &:is(:hover, :focus):before {
-    opacity: 0.2;
-    transform: scaleX(1);
-  }
-}
-
 /* icons-active */
 // .v-input__icon .primary--text {
 //   color: #AD0FD5 !important;
@@ -64,6 +38,13 @@ h3:not(.notdefault-typography) {
 }
 
 /* other adjust */
+
+.v-chip {
+  background-color: $clr-btn !important;
+  .v-chip__content {
+    color: $clr-text-btn !important;
+  }
+}
 
 input[type="file"] {
   height: 4.5ch;

@@ -1,4 +1,5 @@
 @import "@/styles/app";
+@import "~vue-wysiwyg/dist/vueWysiwyg.css";
 
 // instructorCursos
 #instructorCursos {
@@ -11,45 +12,38 @@
     padding-bottom: 2em;
     .v-stepper__content {
       @media (min-width: 1500px) {max-width: 80%}}
-      .contimagen {
-        gap: clamp(3em, 6vw, 6em);
-        aside:nth-child(1) {
-          .v-card {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 17em;
-            aspect-ratio: 1 / 1;
-            height: max-content;
-            padding: 0.5em 1em;
-            img {
-              width: 100%;
-              aspect-ratio: 1 / 1;
-            }
-          }
-        }
-        .wrapper {
-          justify-content: space-between;
-          & > div {
-            gap: 0.5em;
-            max-width: max-content;
-          }
-        }
-      }
       .v-card {
         &.programa {
           .referenceImg {cursor: pointer;width: clamp(4em, 5vw, 5.25em)}
+          article {
+            cursor: pointer;
+            position: relative;
+            &::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              margin: auto;
+              width: 100%;
+              height: 100%;
+              background-color: $clr-btn;
+              opacity: 0;
+              transform: scaleX(0.2);
+              transform-origin: left;
+              transition: transform 250ms ease;
+            }
+            &:is(:hover, :focus):before {
+              opacity: 0.2;
+              transform: scaleX(1);
+            }
+          }
           video {max-width: 11.6875em}
           .file-input {
             .v-input__control {
               min-width: 8em;
               .v-text-field__slot {cursor: pointer !important}
-              .v-chip {
-                background-color: $clr-btn !important;
-                .v-chip__content {
-                  color: $clr-text-btn !important;
-                }
-              }
             }
           }
           & > aside {
@@ -59,5 +53,61 @@
       }
       .v-btn {margin-top: 3em}
     .v-btn+.v-btn {margin-left: 2em}
+  }
+  #data_table {
+    th > :is(span, i) {
+      font-size: var(--step--2);
+      color: $clr-btn !important;
+    }
+  }
+}
+
+.contimagen {
+  gap: clamp(3em, 6vw, 6em);
+  aside:nth-child(1) {
+    .v-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 17em;
+      aspect-ratio: 1 / 1;
+      height: max-content;
+      padding: 0.5em 1em;
+      img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+      }
+    }
+  }
+  .wrapper {
+    justify-content: space-between;
+    & > div {
+      gap: 0.5em;
+      max-width: max-content;
+    }
+  }
+}
+article {
+  cursor: pointer;
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    background-color: $clr-btn;
+    opacity: 0;
+    transform: scaleX(0.2);
+    transform-origin: left;
+    transition: transform 250ms ease;
+  }
+  &:is(:hover, :focus):before {
+    opacity: 0.2;
+    transform: scaleX(1);
   }
 }
