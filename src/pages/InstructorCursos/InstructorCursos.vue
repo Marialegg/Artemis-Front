@@ -351,7 +351,7 @@ export default {
       // publicar
       publicar_precio: null,/*7*/
 
-      // editedIndex
+      // lista
       dialog: false,
       dialogDelete: false,
       headers: [
@@ -545,6 +545,9 @@ export default {
     },
     deleteItemConfirm () {
       this.desserts.splice(this.editedIndex, 1)
+      this.desserts.forEach(element => {
+        element.orden = this.desserts.indexOf(element)+1
+      });
       this.closeDelete()
     },
     close () {
