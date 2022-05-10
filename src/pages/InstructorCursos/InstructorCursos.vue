@@ -9,7 +9,6 @@
 
           <v-stepper
             v-model="e6"
-            vertical
             non-linear
           >
             <!-- ////////////////////////////////// -->
