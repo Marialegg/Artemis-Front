@@ -289,7 +289,7 @@ export default {
         categoria: this.descripcion_categoria,
         descripcion: this.descripcion_descripcion,
         aprendizaje: this.descripcion_aprendizaje,
-        contenidoTabla: this.desserts,
+        contenidoTabla: this.$store.state.editedCursos.contenidoTabla,
       }
       this.$store.dispatch("PublicarCursoEdited", { object });
       this.$router.push({ path: '/instructor' })
