@@ -700,8 +700,8 @@ export default {
         name: this.descripcion_titulo,
         img: this.descripcion_image,
         price: this.publicar_precio,
-        earned: null,
-        inscriptions: null,
+        earned: 0,
+        inscriptions: 0,
         rating: 0,
         //
         categoria: this.descripcion_categoria,
