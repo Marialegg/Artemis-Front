@@ -36,7 +36,7 @@
                 <template v-for="(n,i) in columnsDestacado">
                   <template v-if="(+index + i) < sliderDestacado.length">
                     <v-col :key="i">
-                      <v-card color="var(clr-card)" class="cartas divcol">
+                      <v-card color="var(clr-card)" class="cartas divcol align">
                         <img :src="sliderDestacado[+index + i].img" alt="Imagen curso">
                         <div class="divcol astart">
                           <a :href="sliderDestacado[+index + i].to" class="h7-em bold"
@@ -82,7 +82,7 @@
                 <template v-for="(n,i) in columnsReciente">
                   <template v-if="(+index + i) < sliderReciente.length">
                     <v-col :key="i">
-                      <v-card color="var(clr-card)" class="cartas divcol">
+                      <v-card color="var(clr-card)" class="cartas divcol align">
                         <img :src="sliderReciente[+index + i].img" alt="Imagen curso">
                         <div class="divcol astart">
                           <a :href="sliderReciente[+index + i].to" class="h7-em bold">
@@ -312,11 +312,11 @@ export default {
       //   return 3;
       // }
       if (this.$vuetify.breakpoint.lg) {
-        return 5;
+        return 4;
       }
 
       if (this.$vuetify.breakpoint.md) {
-        return 4;
+        return 3;
       }
 
       if (this.$vuetify.breakpoint.sm) {
@@ -334,11 +334,11 @@ export default {
       //   return 3;
       // }
       if (this.$vuetify.breakpoint.lg) {
-        return 5;
+        return 4;
       }
 
       if (this.$vuetify.breakpoint.md) {
-        return 4;
+        return 3;
       }
 
       if (this.$vuetify.breakpoint.sm) {
