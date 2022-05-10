@@ -1,5 +1,19 @@
 <template>
   <section id="creatorCategoria" class="parent divcol">
+    <v-snackbar v-model="snackbar.visible" auto-height :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <v-col>
       <h2 class="h4-em">
         {{"Categoria".toUpperCase()}}
@@ -58,6 +72,19 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
+
 export default {
   name: "CreatorCategorias",
   data() {
@@ -69,7 +96,12 @@ export default {
       editarBtn: true,
       deleteBtn: false,
       selected: {},
+
+      snackbar: {},
     }
+  },
+  mounted () {
+    this.get_categorys()
   },
   methods: {
     pickFile () {
@@ -84,48 +116,214 @@ export default {
         reader.readAsDataURL(file[0])
       }
     },
-    Guardar() {
-      if (this.image != "" && this.name != "") {
-        let object = {name: this.name, img: this.image}
-        this.dataSlide.push(object)
-        this.image = ""
-        this.name = ""
-        this.imagePreview = false
-        this.deleteBtn = false
+    async Guardar() {
+      if (this.image != "" && this.name != "") {  
+        let input = this.$refs.fileInput
+        let file = input.files
+        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const direccionIpfs = '.ipfs.dweb.link'
+        // connect to NEAR
+        
+        const near = await connect(config)
+        // create wallet connection
+        const wallet = new WalletConnection(near)
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['set_category'],
+          sender: wallet.account()
+        })
+        const formData = new FormData()
+        formData.append('file', file[0])
+
+        await this.axios.post('http://localhost:3070/api/ipfs/', formData)
+          .then((response) => {            
+            contract.set_category({
+              name: this.name,
+              img: 'https://' + response.data.data + direccionIpfs + '/' + response.data.nombre
+            }).then(() => {
+              this.get_categorys()
+              this.snackbar = {
+                color: "green",
+                icon: "check_circle",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Éxito!",
+                text: "La categoria ha sido creada",
+                visible: true
+              }
+              this.image = ""
+              this.name = ""
+              this.imagePreview = false
+              this.deleteBtn = false
+            })
+          .catch((error) => {
+            console.log(error)
+            this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Ha ocurrido un error",
+              visible: true
+            }
+          })
+        }).catch((error) => {
+            console.log(error)
+            this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Ha ocurrido un error con el IPFS",
+              visible: true
+            }
+          })
       }
     },
-    GuardarEditado() {
+    async GuardarEditado() {
       if (this.image != "" && this.name != "") {
-        const index = this.dataSlide.indexOf(this.selected);
-        this.dataSlide.splice(index, 1);
+        let input = this.$refs.fileInput
+        let file = input.files
+        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const direccionIpfs = '.ipfs.dweb.link'
+        // connect to NEAR
+        
+        const near = await connect(config)
+        // create wallet connection
+        const wallet = new WalletConnection(near)
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['put_category'],
+          sender: wallet.account()
+        })
+        const formData = new FormData()
+        formData.append('file', file[0])
 
-        let object = {name: this.name, img: this.image}
-        this.dataSlide.push(object)
-        this.image = ""
-        this.name = ""
-        this.imagePreview = false
-        this.editarBtn = true
-        this.deleteBtn = false
+        await this.axios.post('http://localhost:3070/api/ipfs/', formData)
+          .then((response) => {            
+            contract.put_category({
+              category_id: this.id,
+              name: this.name,
+              img: 'https://' + response.data.data + direccionIpfs + '/' + response.data.nombre
+            }).then(() => {
+              this.get_categorys()
+              this.snackbar = {
+                color: "green",
+                icon: "check_circle",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Éxito!",
+                text: "La categoria ha sido actualizada",
+                visible: true
+              }
+              this.image = ""
+              this.name = ""
+              this.imagePreview = false
+              this.deleteBtn = false
+            }).catch((error) => {
+              console.log(error)
+              this.snackbar = {
+                color: "red",
+                icon: "error",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Error!",
+                text: "Ha ocurrido un error",
+                visible: true
+              }
+            })
+          }).catch((error) => {
+              console.log(error)
+              this.snackbar = {
+                color: "red",
+                icon: "error",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Error!",
+                text: "Ha ocurrido un error con el IPFS",
+                visible: true
+              }
+          })
       }
     },
     Editar(item) {
       this.imagePreview = true
       this.deleteBtn = true
       this.editarBtn = false
+      this.id = item.id
       this.name = item.name
       this.image = item.img
       
       this.selected = item
     },
-    Delete() {
-      const index = this.dataSlide.indexOf(this.selected);
-      this.dataSlide.splice(index, 1);
-      this.imagePreview = false
-      this.editarBtn = true
-      this.deleteBtn = false
-      this.image = ""
-      this.name = ""
-    }
+    async Delete() {
+        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        // connect to NEAR
+        
+        const near = await connect(config)
+        // create wallet connection
+        const wallet = new WalletConnection(near)
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['delete_category'],
+          sender: wallet.account()
+        })
+        contract.delete_category({
+          category_id: this.id,
+        }).then((response) => {
+            console.log(response)
+            this.get_categorys()
+            this.snackbar = {
+                color: "green",
+                icon: "check_circle",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Éxito!",
+                text: "La categoria ha sido eliminada",
+                visible: true
+            }
+            this.imagePreview = false
+            this.editarBtn = true
+            this.deleteBtn = false
+            this.image = ""
+            this.name = ""
+        }).catch((error) => {
+            console.log(error)
+            this.snackbar = {
+                color: "red",
+                icon: "error",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Error!",
+                text: "Ha ocurrido un error",
+                visible: true
+            }
+        })
+    },
+    async get_categorys () {
+      this.dataSlide = []
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      await contract.get_category().then((response) => {
+        response.forEach((element) => {
+          this.dataSlide.push({ id: element.id, name: element.name, img: element.img })
+        })
+      })
+    },
   }
 };
 </script>

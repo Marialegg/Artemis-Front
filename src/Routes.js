@@ -23,7 +23,7 @@ export default new Router({
           component: () => import('@/pages/Home/Home'),
         },
         {
-          path: '/creator-categoria',
+          path: '/category-creator',
           name: 'CreatorCategoria',
           component: () => import('@/components/CreatorCategoria/CreatorCategoria'),
         },

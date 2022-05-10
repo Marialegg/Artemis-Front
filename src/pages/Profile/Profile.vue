@@ -6,28 +6,31 @@
 
     <section class="contForm">
       <v-card color="transparent" class="form">
-        <label class="h9-em" for="nombre">NOMBRE</label>
+        <label class="h7-em" for="nombre">NOMBRE</label>
         <v-text-field
           v-model="profile.name"
           id="nombre"
+          :rules="rules.date"
           solo
         >
         </v-text-field>
       </v-card>
       <v-card color="transparent" class="form">
-        <label class="h9-em" for="apellido">APELLIDO</label>
+        <label class="h7-em" for="apellido">APELLIDO</label>
         <v-text-field
           v-model="profile.last_name"
           id="apellido"
+          :rules="rules.date"
           solo
         >
         </v-text-field>
       </v-card>
       <v-card color="transparent" class="form">
-        <label class="h9-em" for="dni">DNI</label>
+        <label class="h7-em" for="dni">DNI</label>
         <v-text-field
           v-model="profile.dni"
           id="dni"
+          :rules="rules.date"
           solo
         >
         </v-text-field>
@@ -42,10 +45,10 @@
         </v-text-field>
       </v-card>
       <v-card color="transparent" class="form">
-        <label class="h7-em" for="discord">DISCORD</label>
+        <label class="h7-em" for="pais">PAIS</label>
         <v-text-field
-          v-model="profile.discord"
-          id="discord"
+          v-model="profile.country"
+          id="pais"
           solo
         >
         </v-text-field>
@@ -59,7 +62,16 @@
         >
         </v-text-field>
       </v-card>
-      <v-card color="transparent" class="profesion form">
+      <v-card color="transparent" class="form">
+        <label class="h7-em" for="discord">DISCORD</label>
+        <v-text-field
+          v-model="profile.discord"
+          id="discord"
+          solo
+        >
+        </v-text-field>
+      </v-card>
+      <v-card color="transparent" class="form">
         <label class="h7-em" for="profesion">PROFESION</label>
         <v-text-field
           v-model="profile.profession"
@@ -73,18 +85,10 @@
         <v-textarea
           v-model="profile.biography"
           id="biografia"
+          :rules="rules.long"
           solo
         >
         </v-textarea>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="pais">PAIS</label>
-        <v-text-field
-          v-model="profile.country"
-          id="pais"
-          solo
-        >
-        </v-text-field>
       </v-card>
     </section>
 
@@ -125,10 +129,22 @@ export default {
   name: "Profile",
   data() {
     return {
+      valid: true,
       newProfile: true,
       profile: {},
       accountId: null,
       wallet: null,
+      rules: {
+          date: [
+            v => !!v || 'El valor es requerido',
+          ],
+          long: [
+            v => (v || '' ).length <= 255 || '255 caracteres o menos',
+          ],
+          email: [
+            v => /.+@.+\..+/.test(v) || 'E-mail tiene que ser valido',
+          ]
+        },
     }
   },
   mounted () {
@@ -136,52 +152,117 @@ export default {
   },
   methods: {
     async setData () {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
-      // connect to NEAR
-      const near = await connect(config);
-      // create wallet connection
-      const wallet = new WalletConnection(near)
-      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        changeMethods: ['set_profile'],
-        sender: wallet.account()
-      })
-      if (wallet.isSignedIn()) {
-        await contract.set_profile({
-          name: this.profile.name,
-          last_name: this.profile.last_name,
-          dni: this.profile.dni,
-          profession: this.profile.profession,
-          biography: this.profile.biography,
-          discord: this.profile.discord,
-          email: this.profile.email,
-          country: this.profile.country,
+      if (this.$refs.form.validate()) {
+        const near = await connect(config);
+        const wallet = new WalletConnection(near)
+
+        if (wallet.isSignedIn()) {
+          const url = "api/v1/profile/"
+          this.axios.defaults.headers.common.Authorization='token '
+          this.axios.post(url, this.profile)
+            .then((response) => {
+              if (response.data){
+                console.log(response.data)
+              }
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
+      }
+    },
+    async setDataOld () {
+      if (this.$refs.form.validate()) {
+        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        // connect to NEAR
+        const near = await connect(config);
+        // create wallet connection
+        const wallet = new WalletConnection(near)
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['set_profile'],
+          sender: wallet.account()
         })
+        if (wallet.isSignedIn()) {
+          await contract.set_profile({
+            name: this.profile.name,
+            last_name: this.profile.last_name,
+            dni: this.profile.dni,
+            profession: this.profile.profession,
+            biography: this.profile.biography,
+            discord: this.profile.discord,
+            email: this.profile.email,
+            country: this.profile.country,
+          })
+        }
       }
     },
     async setDataEdit () {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      if (this.$refs.form.validate()) {
+        const near = await connect(config);
+        const wallet = new WalletConnection(near)
+
+        if (wallet.isSignedIn()) {
+          const url = "api/v1/profile/" + this.profile.id + "/"
+          this.axios.defaults.headers.common.Authorization='token '
+          this.axios.put(url, this.profile)
+            .then((response) => {
+              if (response.data){
+                console.log(response.data)
+              }
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
+      }
+    },
+    async setDataEditOld () {
+      if (this.$refs.form.validate()) {
+        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        // connect to NEAR
+        const near = await connect(config);
+        // create wallet connection
+        const wallet = new WalletConnection(near)
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['put_profile'],
+          sender: wallet.account()
+        })
+        if (wallet.isSignedIn()) {
+          await contract.put_profile({
+            name: this.profile.name,
+            last_name: this.profile.last_name,
+            dni: this.profile.dni,
+            profession: this.profile.profession,
+            biography: this.profile.biography,
+            discord: this.profile.discord,
+            email: this.profile.email,
+            country: this.profile.country,
+          })
+        }
+      }
+    },
+    async getData () {
       // connect to NEAR
       const near = await connect(config);
       // create wallet connection
       const wallet = new WalletConnection(near)
-      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        changeMethods: ['put_profile'],
-        sender: wallet.account()
-      })
+      this.accountId = wallet.getAccountId()
+      this.profile.wallet = this.accountId
       if (wallet.isSignedIn()) {
-        await contract.put_profile({
-          name: this.profile.name,
-          last_name: this.profile.last_name,
-          dni: this.profile.dni,
-          profession: this.profile.profession,
-          biography: this.profile.biography,
-          discord: this.profile.discord,
-          email: this.profile.email,
-          country: this.profile.country,
+        const url = "api/v1/profile/?wallet=" + this.accountId
+        this.axios.defaults.headers.common.Authorization='token'
+        this.axios.get(url)
+          .then((response) => {
+            if (response.data[0]){
+              this.profile = response.data[0]
+              this.newProfile = false
+            } else {
+              this.newProfile = true
+            }
+        }).catch((error) => {
+          console.log(error)
         })
       }
     },
-    async getData () {
+    async getDataOld () {
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config);
