@@ -9,6 +9,32 @@ export default new Vuex.Store({
   state: {
     baseURL: process.env.BASE_URL,
     theme: "light",
+    dataCursos: [
+      {
+        img: require("@/assets/images/ips.png"),
+        name: "Rust Basico",
+        price: "0.75",
+        earned: "4,5",
+        inscriptions: "10",
+        rating: 4.5,
+      },
+      {
+        img: require("@/assets/images/ips.png"),
+        name: "Rust Basico",
+        price: "0.75",
+        earned: "4,5",
+        inscriptions: "10",
+        rating: 4.5,
+      },
+      {
+        img: require("@/assets/images/ips.png"),
+        name: "Rust Basico",
+        price: "0.75",
+        earned: "4,5",
+        inscriptions: "10",
+        rating: 4.5,
+      },
+    ]
   },
   mutations: {
     CambiarTheme(state, theme) {

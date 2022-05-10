@@ -119,15 +119,6 @@
                     </div>
                   </aside>
 
-                  <aside v-if="cont_articulo" class="divwrap acenter" style="gap: 1em">
-                    <article @click.stop="PanelArticulo()">
-                      <img class="referenceImg" src="@/assets/images/articulo.png" alt="articulo">
-                    </article>
-                    <div v-if="panel_articulo" class="divwrap acenter gap">
-                      <wysiwyg v-model="articulo_file" />
-                    </div>
-                  </aside>
-
                   <aside v-if="cont_examen" class="divwrap acenter" style="gap: 1em">
                     <article @click.stop="PanelExamen()">
                       <img class="referenceImg" src="@/assets/images/examen.png" alt="examen">
@@ -204,15 +195,6 @@
                                         <div v-if="editedItem.panel_video" class="divwrap acenter gap">
                                           <input type="file" accept="video/*" @change="handleFileUploadEdited( $event )"/>
                                           <video id="video-preview-edited" controls v-show="editedItem.file != ''" />
-                                        </div>
-                                      </aside>
-
-                                      <aside v-if="editedItem.cont_articulo" class="divwrap acenter" style="gap: 1em">
-                                        <article @click.stop="PanelArticuloEdited()">
-                                          <img class="referenceImg" src="@/assets/images/articulo.png" alt="articulo">
-                                        </article>
-                                        <div v-if="editedItem.panel_articulo" class="divwrap acenter gap">
-                                          <wysiwyg v-model="editedItem.articulo_file" />
                                         </div>
                                       </aside>
 
@@ -374,7 +356,7 @@
                 <v-btn class="botones h8-em" rounded @click="stepWindow--">
                   REGRESAR
                 </v-btn>
-                <v-btn class="botones h8-em" rounded>
+                <v-btn class="botones h8-em" rounded @click="Publicar()">
                   PUBLICAR
                 </v-btn>
               </div>
@@ -448,14 +430,11 @@ export default {
       contenido_descripcion: null,
       contenido_tipo: null,/*6*/
       file: "",
-      articulo_file: null,
       examen_file: null,
       // actions contenido
       selectedPanel: false,
       cont_video: true,
       panel_video: false,
-      cont_articulo: true,
-      panel_articulo: false,
       cont_examen: true,
       panel_examen: false,
       // lista
@@ -480,14 +459,11 @@ export default {
         descripcion: null,
         tipo: "",
         file: "",
-        articulo: null,
         examen: null,
         // controls
         selectedPanel: false,
         cont_video: true,
         panel_video: false,
-        cont_articulo: true,
-        panel_articulo: false,
         cont_examen: true,
         panel_examen: false,
       },
@@ -497,14 +473,11 @@ export default {
         descripcion: null,
         tipo: "",
         file: "",
-        articulo: null,
         examen: null,
         // controls
         selectedPanel: false,
         cont_video: true,
         panel_video: false,
-        cont_articulo: true,
-        panel_articulo: false,
         cont_examen: true,
         panel_examen: false,
       },
@@ -570,32 +543,14 @@ export default {
     PanelVideo() {
       if (this.panel_video === false) {
         this.panel_video = true
-        this.cont_articulo = false
         this.cont_examen = false
         this.selectedPanel = true
         this.contenido_tipo = "video"
       } else {
         this.panel_video = false
-        this.cont_articulo = true
         this.cont_examen = true
         this.selectedPanel = false
         this.file = ''
-        this.contenido_tipo = null
-      }
-    },
-    PanelArticulo() {
-      if (this.panel_articulo === false) {
-        this.panel_articulo = true
-        this.cont_video = false
-        this.cont_examen = false
-        this.selectedPanel = true
-        this.contenido_tipo = "articulo"
-      } else {
-        this.panel_articulo = false
-        this.cont_video = true
-        this.cont_examen = true
-        this.selectedPanel = false
-        this.articulo_file = null
         this.contenido_tipo = null
       }
     },
@@ -603,43 +558,28 @@ export default {
       if (this.panel_examen === false) {
         this.panel_examen = true
         this.cont_video = false
-        this.cont_articulo = false
         this.selectedPanel = true
         this.contenido_tipo = "examen"
       } else {
         this.panel_examen = false
         this.cont_video = true
-        this.cont_articulo = true
         this.selectedPanel = false
         this.examen_file = null
         this.contenido_tipo = null
       }
     },
     Grabar() {
-      // let object = {
-      //   orden: this.desserts.length+1,
-      //   titulo: this.descripcion_titulo,
-      //   categoria: this.descripcion_categoria,
-      //   descripcion: this.descripcion_descripcion,
-      //   aprendizaje: this.descripcion_aprendizaje,
-      //   image: this.descripcion_image,
-      //   tipo: this.contenido_tipo,
-      //   precio: this.publicar_precio,
-      // }
       let object = {
         tipo: this.contenido_tipo,
         orden: this.desserts.length+1,
         titulo: this.contenido_titulo,
         descripcion: this.contenido_descripcion,
         file: this.file,
-        articulo: this.articulo_file,
         examen: this.examen_file,
         // controls
         selectedPanel: this.selectedPanel,
         cont_video: this.cont_video,
         panel_video: this.panel_video,
-        cont_articulo: this.cont_articulo,
-        panel_articulo: this.panel_articulo,
         cont_examen: this.cont_examen,
         panel_examen: this.panel_examen,
       }
@@ -650,27 +590,17 @@ export default {
         this.desserts.push(object)
       }
       this.close()
-      // this.descripcion_titulo = null
-      // this.descripcion_categoria = null
-      // this.descripcion_descripcion = null
-      // this.descripcion_aprendizaje = null
-      // this.descripcion_image = null
-      // this.imagePreview = false
-      // this.publicar_precio = null
       
       // items
       this.contenido_titulo = null
       this.contenido_descripcion = null
       this.contenido_tipo = null
       this.file = ''
-      this.articulo_file = null
       this.examen_file = null
       // clear controls
       this.selectedPanel = false
       this.cont_video = true
       this.panel_video = false
-      this.cont_articulo = true
-      this.panel_articulo = false
       this.cont_examen = true
       this.panel_examen = false
     },
@@ -696,32 +626,14 @@ export default {
     PanelVideoEdited() {
       if (this.editedItem.panel_video === false) {
         this.editedItem.panel_video = true
-        this.editedItem.cont_articulo = false
         this.editedItem.cont_examen = false
         this.editedItem.selectedPanel = true
         this.editedItem.contenido_tipo = "video"
       } else {
         this.editedItem.panel_video = false
-        this.editedItem.cont_articulo = true
         this.editedItem.cont_examen = true
         this.editedItem.selectedPanel = false
         this.editedItem.file = ''
-        this.editedItem.contenido_tipo = null
-      }
-    },
-    PanelArticuloEdited() {
-      if (this.editedItem.panel_articulo === false) {
-        this.editedItem.panel_articulo = true
-        this.editedItem.cont_video = false
-        this.editedItem.cont_examen = false
-        this.editedItem.selectedPanel = true
-        this.editedItem.contenido_tipo = "articulo"
-      } else {
-        this.editedItem.panel_articulo = false
-        this.editedItem.cont_video = true
-        this.editedItem.cont_examen = true
-        this.editedItem.selectedPanel = false
-        this.editedItem.articulo_file = null
         this.editedItem.contenido_tipo = null
       }
     },
@@ -729,13 +641,11 @@ export default {
       if (this.editedItem.panel_examen === false) {
         this.editedItem.panel_examen = true
         this.editedItem.cont_video = false
-        this.editedItem.cont_articulo = false
         this.editedItem.selectedPanel = true
         this.editedItem.contenido_tipo = "examen"
       } else {
         this.editedItem.panel_examen = false
         this.editedItem.cont_video = true
-        this.editedItem.cont_articulo = true
         this.editedItem.selectedPanel = false
         this.editedItem.examen_file = null
         this.editedItem.contenido_tipo = null
@@ -786,6 +696,22 @@ export default {
       }
       this.close()
     },
+    Publicar() {
+      let object = {
+        name: this.descripcion_titulo,
+        img: this.descripcion_image,
+        price: this.publicar_precio,
+        earned: null,
+        inscriptions: null,
+        rating: 0,
+        //
+        categoria: this.descripcion_categoria,
+        descripcion: this.descripcion_descripcion,
+        aprendizaje: this.descripcion_aprendizaje,
+        contenidoTabla: this.desserts,
+      }
+      console.log(object)
+    }
   }
 };
 </script>

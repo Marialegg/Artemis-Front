@@ -17,7 +17,7 @@
     <v-col>
       <h3 class="h8-em">CURSOS PUBLICADOS POR EL INSTRUCTOR</h3>
       
-      <section v-for="(item, i) in dataCursos" :key="i"
+      <section v-for="(item, i) in $store.state.dataCursos" :key="i"
         class="wrapper">
         <aside class="divrow">
           <img :src="item.img" alt="imagen curso">
@@ -64,32 +64,6 @@ export default {
   name: "Cursos",
   data() {
     return {
-      dataCursos: [
-        {
-          img: require("@/assets/images/ips.png"),
-          name: "Rust Basico",
-          price: "0.75",
-          earned: "4,5",
-          inscriptions: "10",
-          rating: 4.5,
-        },
-        {
-          img: require("@/assets/images/ips.png"),
-          name: "Rust Basico",
-          price: "0.75",
-          earned: "4,5",
-          inscriptions: "10",
-          rating: 4.5,
-        },
-        {
-          img: require("@/assets/images/ips.png"),
-          name: "Rust Basico",
-          price: "0.75",
-          earned: "4,5",
-          inscriptions: "10",
-          rating: 4.5,
-        },
-      ]
     }
   },
   methods: {
