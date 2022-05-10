@@ -113,7 +113,7 @@
   font-weight: bold !important;
 }
 .gap {
-  gap: 2em;
+  gap: clamp(1em, 2vw, 2em);
 }
 .padd {
   padding: 0;
@@ -334,7 +334,7 @@
     font-weight: bold !important;
   }
   .gapmobile {
-    gap: 2em !important;
+    gap: clamp(1em, 2vw, 2em) !important;
   }
   .paddmobile {
     padding: 0 !important;

@@ -1,318 +1,432 @@
 <template>
   <section id="instructorCursos" class="parent divcol gap">
-    <v-col>
-      <h2 class="h4-em">
-        CREAR CURSO
-      </h2>
+    <v-window v-model="stepWindow">
+      <v-window-item :value="1">
+        <v-col>
+          <h2 class="h4-em">
+            CREAR CURSO
+          </h2>
 
-      <v-stepper
-        v-model="e6"
-        vertical
-      >
-        <!-- ////////////////////////////////// -->
-        <v-stepper-step
-          :complete="e6 > 1"
-          step="1"
-        >
-          DESCRIPCIÓN
-        </v-stepper-step>
+          <v-stepper
+            v-model="e6"
+            vertical
+            non-linear
+          >
+            <!-- ////////////////////////////////// -->
+            <v-stepper-step
+              :complete="e6 > 1"
+              step="1"
+              editable
+            >
+              DESCRIPCIÓN
+            </v-stepper-step>
 
-        <v-stepper-content step="1">
-          <v-card color="transparent" class="form">
-            <label class="h9-em" for="descripcion_titulo">TITULO</label>
-            <v-text-field
-              v-model="descripcion_titulo"
-              id="descripcion_titulo"
-              solo
-            >
-            </v-text-field>
-          </v-card>
-          <v-card color="transparent" class="form">
-            <label class="h9-em" for="descripcion_categoria">CATEGORIA</label>
-            <v-select
-              v-model="descripcion_categoria"
-              :items="lista_descripcion_categoria"
-              id="descripcion_categoria"
-              solo
-            >
-            </v-select>
-          </v-card>
-          <v-card color="transparent" class="form">
-            <label class="h9-em" for="descripcion_descripcion">DESCRIPCIÓN</label>
-            <v-text-field
-              v-model="descripcion_descripcion"
-              id="descripcion_descripcion"
-              solo
-            >
-            </v-text-field>
-          </v-card>
-          <v-card color="transparent" class="biografia form">
-            <label class="h9-em" for="descripcion_aprendizaje">QUE APRENDERAN</label>
-            <v-textarea
-              v-model="descripcion_aprendizaje"
-              id="descripcion_aprendizaje"
-              solo
-            >
-            </v-textarea>
-          </v-card>
+            <v-stepper-content step="1">
+              <v-card color="transparent" class="form">
+                <label class="h9-em" for="descripcion_titulo">TITULO</label>
+                <v-text-field
+                  v-model="descripcion_titulo"
+                  id="descripcion_titulo"
+                  solo
+                >
+                </v-text-field>
+              </v-card>
+              <v-card color="transparent" class="form">
+                <label class="h9-em" for="descripcion_categoria">CATEGORIA</label>
+                <v-select
+                  v-model="descripcion_categoria"
+                  :items="lista_descripcion_categoria"
+                  id="descripcion_categoria"
+                  solo
+                >
+                </v-select>
+              </v-card>
+              <v-card color="transparent" class="form">
+                <label class="h9-em" for="descripcion_descripcion">DESCRIPCIÓN</label>
+                <v-text-field
+                  v-model="descripcion_descripcion"
+                  id="descripcion_descripcion"
+                  solo
+                >
+                </v-text-field>
+              </v-card>
+              <v-card color="transparent" class="biografia form">
+                <label class="h9-em" for="descripcion_aprendizaje">QUE APRENDERAN</label>
+                <v-textarea
+                  v-model="descripcion_aprendizaje"
+                  id="descripcion_aprendizaje"
+                  solo
+                >
+                </v-textarea>
+              </v-card>
 
-          <v-col class="contimagen divrow">
-            <aside class="divcol">
-              <label class="h9-em">IMAGEN</label>
-              <v-card color="#F3F6F5">
-                <img v-if="imagePreview" :src="descripcion_image" alt="Image uploaded">
+              <v-col class="contimagen divrow divwrapmobile">
+                <aside class="divcol">
+                  <label class="h9-em">IMAGEN</label>
+                  <v-card color="#F3F6F5">
+                    <img v-if="imagePreview" :src="descripcion_image" alt="Image uploaded">
+                  </v-card>
+                </aside>
+
+                <aside class="wrapper divcol fill-w">
+                  <div class="divcol">
+                    <label for="archivo">{{"Elige un archivo a subir".toUpperCase()}}</label>
+                    <input id="archivo" ref="fileInput" type="file" accept="image/*" @input="pickFile();" />
+                  </div>
+                </aside>
+              </v-col>
+            </v-stepper-content>
+            <!-- ////////////////////////////////// -->
+
+            <!-- ////////////////////////////////// -->
+            <v-stepper-step
+              :complete="e6 > 2"
+              step="2"
+              editable
+            >
+              CREAR CONTENIDO
+            </v-stepper-step>
+
+            <v-stepper-content step="2">
+              <v-card color="transparent" class="form">
+                <label class="h9-em" for="contenido_titulo">TITULO</label>
+                <v-text-field
+                  v-model="contenido_titulo"
+                  id="contenido_titulo"
+                  solo
+                >
+                </v-text-field>
+              </v-card>
+              <v-card color="transparent" class="form">
+                <label class="h9-em" for="contenido_descripcion">DESCRIPCIÓN</label>
+                <v-text-field
+                  v-model="contenido_descripcion"
+                  id="contenido_descripcion"
+                  solo
+                >
+                </v-text-field>
+              </v-card>
+              <v-card color="transparent" class="form programa">
+                <label class="h9-em">PROGRAMA</label>
+                <section class="align" :class="{center: !selectedPanel}" style="gap: clamp(2em, 4vw, 4em)">
+                  <aside v-if="cont_video" class="divwrap acenter" style="gap: 1em">
+                    <article @click.stop="PanelVideo()">
+                      <img class="referenceImg" src="@/assets/images/video.png" alt="video">
+                    </article>
+                    <div v-if="panel_video" class="divwrap acenter gap">
+                      <input type="file" accept="video/*" @change="handleFileUpload( $event )"/>
+                      <video id="video-preview" controls v-show="file != ''" />
+                    </div>
+                  </aside>
+
+                  <aside v-if="cont_articulo" class="divwrap acenter" style="gap: 1em">
+                    <article @click.stop="PanelArticulo()">
+                      <img class="referenceImg" src="@/assets/images/articulo.png" alt="articulo">
+                    </article>
+                    <div v-if="panel_articulo" class="divwrap acenter gap">
+                      <wysiwyg v-model="articulo_file" />
+                    </div>
+                  </aside>
+
+                  <aside v-if="cont_examen" class="divwrap acenter" style="gap: 1em">
+                    <article @click.stop="PanelExamen()">
+                      <img class="referenceImg" src="@/assets/images/examen.png" alt="examen">
+                    </article>
+                    <div v-if="panel_examen" class="divcol">
+                      <label class="h9-em" for="file-input">SUBE UN EXAMEN</label>
+                      <v-file-input
+                        id="file-input"
+                        class="file-input"
+                        v-model="examen_file"
+                        prepend-icon=""
+                        solo
+                        chips
+                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                      ></v-file-input>
+                    </div>
+                  </aside>
+                </section>
+
+                <div class="center fill-w">
+                  <v-btn class="botones h8-em" style="margin-top: 2em" rounded @click="Grabar()">
+                    GRABAR
+                  </v-btn>
+                  <!-- <v-btn style="position: fixed !important; left: 0; top: 0; background: green; color: black; z-index: 999">
+                  {{editedItem.examen_file}}
+                  </v-btn> -->
+                </div>
+
+                <!-- lista -->
+                <v-data-table
+                  class="data_table"
+                  :headers="headers"
+                  :items="desserts"
+                  sort-by="orden"
+                >
+                  <template v-slot:top>
+                    <v-toolbar flat>
+                      <v-dialog
+                        v-model="dialog"
+                        max-width="max-content"
+                      >
+                        <v-card>
+                          <v-card-text>
+                            <v-container>
+                              <v-row>
+                                <v-col cols="12" sm="6">
+                                  <v-card color="transparent" class="form">
+                                    <label class="h9-em">TTULO</label>
+                                    <v-text-field
+                                      v-model="editedItem.titulo"
+                                      solo
+                                    >
+                                    </v-text-field>
+                                  </v-card>
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                  <v-card color="transparent" class="form">
+                                    <label class="h9-em">DESCRIPCIÓN</label>
+                                    <v-text-field
+                                      v-model="editedItem.descripcion"
+                                      solo
+                                    >
+                                    </v-text-field>
+                                  </v-card>
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-card color="transparent" class="form programa">
+                                    <label class="h9-em">PROGRAMA</label>
+                                    <section class="align" :class="{center: !editedItem.selectedPanel}" style="gap: clamp(2em, 4vw, 4em)">
+                                      <aside v-if="editedItem.cont_video" class="divwrap acenter" style="gap: 1em">
+                                        <article @click.stop="PanelVideoEdited()">
+                                          <img class="referenceImg" src="@/assets/images/video.png" alt="video">
+                                        </article>
+                                        <div v-if="editedItem.panel_video" class="divwrap acenter gap">
+                                          <input type="file" accept="video/*" @change="handleFileUploadEdited( $event )"/>
+                                          <video id="video-preview-edited" controls v-show="editedItem.file != ''" />
+                                        </div>
+                                      </aside>
+
+                                      <aside v-if="editedItem.cont_articulo" class="divwrap acenter" style="gap: 1em">
+                                        <article @click.stop="PanelArticuloEdited()">
+                                          <img class="referenceImg" src="@/assets/images/articulo.png" alt="articulo">
+                                        </article>
+                                        <div v-if="editedItem.panel_articulo" class="divwrap acenter gap">
+                                          <wysiwyg v-model="editedItem.articulo_file" />
+                                        </div>
+                                      </aside>
+
+                                      <aside v-if="editedItem.cont_examen" class="divwrap acenter" style="gap: 1em">
+                                        <article @click.stop="PanelExamenEdited()">
+                                          <img class="referenceImg" src="@/assets/images/examen.png" alt="examen">
+                                        </article>
+                                        <div v-if="editedItem.panel_examen" class="divcol">
+                                          <label class="h9-em" for="file-input">SUBE UN EXAMEN</label>
+                                          <v-file-input
+                                            id="file-input"
+                                            class="file-input"
+                                            v-model="editedItem.examen_file"
+                                            prepend-icon=""
+                                            solo
+                                            chips
+                                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                                          ></v-file-input>
+                                        </div>
+                                      </aside>
+                                    </section>
+                                  </v-card>
+                                </v-col>
+                              </v-row>
+                            </v-container>
+                          </v-card-text>
+
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="red" rounded text @click="close">
+                              <span style="color: red !important">Cancelar</span>
+                            </v-btn>
+                            <v-btn color="#F29627" rounded text @click="save">
+                              <span style="color: #F29627 !important">Guardar</span>
+                            </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+
+                      <v-dialog v-model="dialogDelete" max-width="max-content">
+                        <v-card>
+                          <v-card-title class="text-h5">¿ QUIERES BORRAR ESTE CONTENIDO ?</v-card-title>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="red" rounded text @click="closeDelete">
+                              <span style="color: red !important">Cancelar</span>
+                            </v-btn>
+                            <v-btn color="#F29627" rounded text @click="deleteItemConfirm">
+                              <span style="color: #F29627 !important">Borrar</span>
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                    </v-toolbar>
+                  </template>
+
+                  <template v-slot:[`item.actions`]="{ item }">
+                    <v-btn icon @click="editItem(item)">
+                      <v-icon small color="#F29627" class="notdefault-clr"> mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="deleteItem(item)">
+                      <v-icon small color="red" class="notdefault-clr">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+
+                  <template v-slot:no-data>
+                    <span class="h8-em">NO HAY INFORMACION DISPONIBLE</span>
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-stepper-content>
+            <!-- ////////////////////////////////// -->
+
+            <!-- ////////////////////////////////// -->
+            <v-stepper-step
+              :complete="e6 > 3"
+              step="3"
+              editable
+            >
+              PUBLICAR
+            </v-stepper-step>
+
+            <v-stepper-content step="3">
+              <v-card color="transparent" class="form">
+                <label class="h9-em" for="publicar_precio">PRECIO</label>
+                <v-text-field
+                  v-model="publicar_precio"
+                  id="publicar_precio"
+                  solo
+                  style="max-width: 10em"
+                >
+                </v-text-field>
+              </v-card>
+
+              <v-btn class="botones h8-em" rounded @click="stepWindow++">
+                VISTA PREVIA
+              </v-btn>
+            </v-stepper-content>
+            <!-- ////////////////////////////////// -->
+          </v-stepper>
+        </v-col>
+      </v-window-item>
+
+
+
+      <v-window-item :value="2">
+        <v-col id="preview" class="divcol gap">
+          <section class="space gap divcolmobile">
+            <img class="referenceImg" src="@/assets/images/rust.png" alt="Reference Img">
+
+            <aside class="divcol fill-w" style="gap: clamp(.5em, 1vw, 1em)">
+              <h4 class="titulo h5-em bold">Rust Avanzado</h4>
+              <span class="subtitulo h8-em notdefault-clr" style="color: #747A80">
+                Creado por: <span style="color: #FF6B3B">IRON MAN</span>
+              </span>
+              <v-card class="space divwrap" style="display:Flex">
+                <div class="divcol">
+                  <span class="h8-em">Precio Actual:</span>
+                  <span class="number bold">0.75 
+                    <span class="h8 normal">NEAR </span>◎
+                  </span>
+                </div>
+
+                <v-rating
+                  background-color="pink lighten-3"
+                  color="orange"
+                ></v-rating>
               </v-card>
             </aside>
+          </section>
 
-            <aside class="wrapper divcol fill-w">
+          <section class="space gap divcolmobile">
+            <aside class="divcol gap">
+              <h4 class="h7-em semibold fill-w notdefault-clr">LO QUE APRENDERAS</h4>
               <div class="divcol">
-                <label for="archivo">{{"Elige un archivo a subir".toUpperCase()}}</label>
-                <input id="archivo" ref="fileInput" type="file" accept="image/*" @input="pickFile();" />
+                <p>Grundlagen der JavaScript-Programmierung: Umgang mit Variablen, Funktionen, Objekten, Arrays, Bedingungen (if) und Schleifen (forEach)</p>
+                <p>
+                  Einstieg in die Programmierung von HTTP-Abfragen (Schwerpunkt GET-Requests), Formulierung von Query-Strings
+                  Arbeit mit den Browser-Entwicklertools: HTML-Inspektor, Netzwerkanalyse zur Auswertung der Serverantwort, JavaScript-Konsole
+                </p>
               </div>
             </aside>
-          </v-col>
 
-          <v-btn class="botones h8-em" rounded @click="e6 = 2">
-            CONTINUAR
-          </v-btn>
-        </v-stepper-content>
-        <!-- ////////////////////////////////// -->
+            <aside class="divcol jspace fill-w gap">
+              <div clasS="divcol gap">
+                <h4 class="h7-em semibold fill-w notdefault-clr">CONTENIDO DEL CURSO</h4>
 
-        <!-- ////////////////////////////////// -->
-        <v-stepper-step
-          :complete="e6 > 2"
-          step="2"
-        >
-          CREAR CONTENIDO
-        </v-stepper-step>
+                <!-- lista -->
+                <v-data-table
+                  class="data_table"
+                  :headers="headers"
+                  :items="desserts"
+                  sort-by="orden"
+                >
+                  <template v-slot:no-data>
+                    <span class="h8-em">NO HAY INFORMACION DISPONIBLE</span>
+                  </template>
+                </v-data-table>
+              </div>
 
-        <v-stepper-content step="2">
-          <v-card color="transparent" class="form">
-            <label class="h9-em" for="contenido_titulo">CATEGORIA</label>
-            <v-text-field
-              v-model="contenido_titulo"
-              id="contenido_titulo"
-              solo
-            >
-            </v-text-field>
-          </v-card>
-          <v-card color="transparent" class="form">
-            <label class="h9-em" for="contenido_descripcion">DESCRIPCIÓN</label>
-            <v-text-field
-              v-model="contenido_descripcion"
-              id="contenido_descripcion"
-              solo
-            >
-            </v-text-field>
-          </v-card>
-          <v-card color="transparent" class="form programa">
-            <label class="h9-em">PROGRAMA</label>
-            <section class="align" :class="{center: !selectedPanel}" style="gap: clamp(2em, 4vw, 4em)">
-              <aside v-if="cont_video" class="divwrap acenter" style="gap: 1em">
-                <article @click.stop="PanelVideo()">
-                  <img class="referenceImg" src="@/assets/images/video.png" alt="video">
-                </article>
-                <div v-if="panel_video" class="divwrap acenter gap">
-                  <input type="file" accept="video/*" @change="handleFileUpload( $event )"/>
-                  <video id="video-preview" controls v-show="file != ''" />
-                </div>
-              </aside>
+              <div class="spacee gap">
+                <v-btn class="botones h8-em" rounded @click="stepWindow--">
+                  REGRESAR
+                </v-btn>
+                <v-btn class="botones h8-em" rounded>
+                  PUBLICAR
+                </v-btn>
+              </div>
+            </aside>
+          </section>
 
-              <aside v-if="cont_articulo" class="divwrap acenter" style="gap: 1em">
-                <article @click.stop="PanelArticulo()">
-                  <img class="referenceImg" src="@/assets/images/articulo.png" alt="articulo">
-                </article>
-                <div v-if="panel_articulo" class="divwrap acenter gap">
-                  <wysiwyg v-model="articulo_file" />
-                </div>
-              </aside>
+          <section>
+            <h4 class="h7-em fill-w semibold notdefault-clr">CURSOS PUBLICADOS POR EL INSTRUCTOR</h4>
 
-              <aside v-if="cont_examen" class="divwrap acenter" style="gap: 1em">
-                <article @click.stop="PanelExamen()">
-                  <img class="referenceImg" src="@/assets/images/examen.png" alt="examen">
-                </article>
-                <div v-if="panel_examen" class="divcol">
-                  <label class="h9-em" for="file-input">SUBE UN EXAMEN</label>
-                  <v-file-input
-                    id="file-input"
-                    class="file-input"
-                    v-model="examen_file"
-                    prepend-icon=""
-                    solo
-                    chips
-                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                  ></v-file-input>
-                </div>
-              </aside>
+            <section class="wrapper">
+              <v-slide-group
+                v-model="slider"
+                center-active
+                show-arrows
+                class="fill-w"
+              >
+                <v-slide-item v-for="(item, index) in dataSlider" :key="index"
+                  v-slot="{ toggle }">
+                  <v-card color="var(clr-card)" class="cartas divcol" v-ripple="{ class: 'activeRipple' }"
+                    @click="toggle">
+                    <img :src="item.img" alt="Imagen curso">
+                    <div class="divcol astart">
+                      <aside class="divcol">
+                        <span class="h7-em bold">{{item.title}}</span>
+                        <a :href="item.to" class="h9-em semibold" style="color: #FF6B3B !important">
+                          Instructor {{item.instructor }}
+                        </a>
+                      </aside>
+
+                      <aside class="space fill-w gap divwrapmobile">
+                        <span class="h5-em bold">{{item.price }} 
+                          <span class="h10 normal">NEAR</span>
+                        </span>
+                        <v-rating
+                          v-model="item.rating"
+                          background-color="pink lighten-3"
+                          color="orange"
+                        ></v-rating>
+                      </aside>
+                    </div>
+                  </v-card>
+                </v-slide-item>
+              </v-slide-group>
             </section>
-          </v-card>
-
-          <v-btn class="botones h8-em" rounded @click="e6 = 3">
-            CONTINUAR
-          </v-btn>
-          <v-btn text rounded @click="e6--">
-            VOLVER
-          </v-btn>
-        </v-stepper-content>
-        <!-- ////////////////////////////////// -->
-
-        <!-- ////////////////////////////////// -->
-        <v-stepper-step
-          :complete="e6 > 3"
-          step="3"
-        >
-          PUBLICAR
-        </v-stepper-step>
-
-        <v-stepper-content step="3">
-          <v-card color="transparent" class="form">
-            <label class="h9-em" for="publicar_precio">PRECIO</label>
-            <v-text-field
-              v-model="publicar_precio"
-              id="publicar_precio"
-              solo
-              style="max-width: 10em"
-            >
-            </v-text-field>
-          </v-card>
-
-          <v-btn v-if="grabarBtn" class="botones h8-em" rounded @click="Grabar()">
-            GRABAR
-          </v-btn>
-          <v-btn v-else class="botones h8-em" rounded
-            @click="e6 = 1, grabarBtn = true, volverBtn = true">
-            CREAR NUEVO
-          </v-btn>
-          <v-btn v-show="volverBtn" text rounded @click="e6--">
-            VOLVER
-          </v-btn>
-        </v-stepper-content>
-        <!-- ////////////////////////////////// -->
-      </v-stepper>
-
-
-      <!-- lista -->
-      <v-data-table
-        id="data_table"
-        :headers="headers"
-        :items="desserts"
-        sort-by="orden"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-dialog
-              v-model="dialog"
-              max-width="max-content"
-            >
-              <v-card>
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-card color="transparent" class="form">
-                          <label class="h9-em">TTULO</label>
-                          <v-text-field
-                            v-model="editedItem.titulo"
-                            solo
-                          >
-                          </v-text-field>
-                        </v-card>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-card color="transparent" class="form">
-                          <label class="h9-em">CATEGORIA</label>
-                          <v-select
-                            v-model="editedItem.categoria"
-                            :items="lista_descripcion_categoria"
-                            solo
-                          >
-                          </v-select>
-                        </v-card>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-card color="transparent" class="form">
-                          <label class="h9-em">DESCRIPCIÓN</label>
-                          <v-text-field
-                            v-model="editedItem.descripcion"
-                            solo
-                          >
-                          </v-text-field>
-                        </v-card>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-card color="transparent" class="biografia form">
-                          <label class="h9-em">QUE APRENDERAN</label>
-                          <v-textarea
-                            v-model="editedItem.aprendizaje"
-                            solo
-                          >
-                          </v-textarea>
-                        </v-card>
-                      </v-col>
-
-                      <v-col class="contimagen divrow">
-                        <aside class="divcol">
-                          <label class="h9-em">IMAGEN</label>
-                          <v-card color="#F3F6F5">
-                            <img :src="editedItem.image" alt="Image uploaded">
-                          </v-card>
-                        </aside>
-
-                        <aside class="wrapper divcol fill-w">
-                          <div class="divcol">
-                            <label for="archivo">ELIGE UN ARCHIVO A SUBIR</label>
-                            <input id="archivo" ref="fileInputEdited" type="file" accept="image/*" @input="pickFileEdited();" />
-                          </div>
-                        </aside>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red" rounded text @click="close">
-                    <span style="color: red !important">Cancelar</span>
-                  </v-btn>
-                  <v-btn color="#F29627" rounded text @click="save">
-                    <span style="color: #F29627 !important">Guardar</span>
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-            <v-dialog v-model="dialogDelete" max-width="max-content">
-              <v-card>
-                <v-card-title class="text-h5">¿ QUIERES BORRAR ESTE CURSO ?</v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red" rounded text @click="closeDelete">
-                    <span style="color: red !important">Cancelar</span>
-                  </v-btn>
-                  <v-btn color="#F29627" rounded text @click="deleteItemConfirm">
-                    <span style="color: #F29627 !important">Borrar</span>
-                  </v-btn>
-                  <v-spacer></v-spacer>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-toolbar>
-        </template>
-
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-btn icon @click="editItem(item)">
-            <v-icon small color="#F29627" class="notdefault-clr"> mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn icon @click="deleteItem(item)">
-            <v-icon small color="red" class="notdefault-clr">mdi-delete</v-icon>
-          </v-btn>
-        </template>
-
-        <template v-slot:no-data>
-          <span class="h8-em">NO HAY INFORMACION DISPONIBLE</span>
-        </template>
-      </v-data-table>
-    </v-col>
+          </section>
+        </v-col>
+      </v-window-item>
+    </v-window>
   </section>
 </template>
 
@@ -321,17 +435,8 @@ export default {
   name: "Cursos",
   data() {
     return {
+      stepWindow: 1,
       e6: 1,
-      // actions
-      selectedPanel: false,
-      cont_video: true,
-      panel_video: false,
-      cont_articulo: true,
-      panel_articulo: false,
-      cont_examen: true,
-      panel_examen: false,
-      grabarBtn: true,
-      volverBtn: true,
 
       // descripcion
       descripcion_titulo: null,/*1*/
@@ -341,6 +446,7 @@ export default {
       descripcion_aprendizaje: null,/*4*/
       descripcion_image: null,/*5*/
       imagePreview: false,
+
       // crear contenido
       contenido_titulo: null,
       contenido_descripcion: null,
@@ -348,9 +454,14 @@ export default {
       file: "",
       articulo_file: null,
       examen_file: null,
-      // publicar
-      publicar_precio: null,/*7*/
-
+      // actions contenido
+      selectedPanel: false,
+      cont_video: true,
+      panel_video: false,
+      cont_articulo: true,
+      panel_articulo: false,
+      cont_examen: true,
+      panel_examen: false,
       // lista
       dialog: false,
       dialogDelete: false,
@@ -365,25 +476,85 @@ export default {
       editedItem: {
         orden: 0,
         titulo: "",
-        tipo: "",
-        //
-        categoria: null,
         descripcion: null,
-        aprendizaje: null,
-        image: null,
-        precio: null,
+        tipo: "",
+        file: "",
+        articulo: null,
+        examen: null,
+        // controls
+        selectedPanel: false,
+        cont_video: true,
+        panel_video: false,
+        cont_articulo: true,
+        panel_articulo: false,
+        cont_examen: true,
+        panel_examen: false,
       },
       defaultItem: {
         orden: 0,
         titulo: "",
-        tipo: "",
-        //
-        categoria: null,
         descripcion: null,
-        aprendizaje: null,
-        image: null,
-        precio: null,
+        tipo: "",
+        file: "",
+        articulo: null,
+        examen: null,
+        // controls
+        selectedPanel: false,
+        cont_video: true,
+        panel_video: false,
+        cont_articulo: true,
+        panel_articulo: false,
+        cont_examen: true,
+        panel_examen: false,
       },
+
+      // publicar
+      publicar_precio: null,/*7*/
+
+      // slider
+      slider: "",
+      dataSlider: [
+        {
+          img: require("@/assets/images/python.jpg"),
+          title: "Rust Basico",
+          instructor: "IRON MAN",
+          to: "#",
+          price: "0.75",
+          rating: "4",
+        },
+        {
+          img: require("@/assets/images/python.jpg"),
+          title: "WEB 2.0",
+          instructor: "IRON MAN",
+          to: "#",
+          price: "0.75",
+          rating: "4",
+        },
+        {
+          img: require("@/assets/images/python.jpg"),
+          title: "WEB 2.0",
+          instructor: "IRON MAN",
+          to: "#",
+          price: "0.75",
+          rating: "4",
+        },
+        {
+          img: require("@/assets/images/python.jpg"),
+          title: "WEB 2.0",
+          instructor: "IRON MAN",
+          to: "#",
+          price: "0.75",
+          rating: "4",
+        },
+        {
+          img: require("@/assets/images/python.jpg"),
+          title: "WEB 2.0",
+          instructor: "IRON MAN",
+          to: "#",
+          price: "0.75",
+          rating: "4",
+        },
+      ],
     }
   },
   watch: {
@@ -406,17 +577,6 @@ export default {
         reader.onload = e => {
           this.descripcion_image = e.target.result
           this.imagePreview = true
-        }
-        reader.readAsDataURL(file[0])
-      }
-    },
-    pickFileEdited () {
-      let input = this.$refs.fileInputEdited
-      let file = input.files
-      if (file && file[0]) {
-        let reader = new FileReader
-        reader.onload = e => {
-          this.editedItem.image = e.target.result
         }
         reader.readAsDataURL(file[0])
       }
@@ -487,16 +647,32 @@ export default {
       }
     },
     Grabar() {
-      // console.log(this.desserts.length+1)
+      // let object = {
+      //   orden: this.desserts.length+1,
+      //   titulo: this.descripcion_titulo,
+      //   categoria: this.descripcion_categoria,
+      //   descripcion: this.descripcion_descripcion,
+      //   aprendizaje: this.descripcion_aprendizaje,
+      //   image: this.descripcion_image,
+      //   tipo: this.contenido_tipo,
+      //   precio: this.publicar_precio,
+      // }
       let object = {
-        orden: this.desserts.length+1,
-        titulo: this.descripcion_titulo,
-        categoria: this.descripcion_categoria,
-        descripcion: this.descripcion_descripcion,
-        aprendizaje: this.descripcion_aprendizaje,
-        image: this.descripcion_image,
         tipo: this.contenido_tipo,
-        precio: this.publicar_precio,
+        orden: this.desserts.length+1,
+        titulo: this.contenido_titulo,
+        descripcion: this.contenido_descripcion,
+        file: this.file,
+        articulo: this.articulo_file,
+        examen: this.examen_file,
+        // controls
+        selectedPanel: this.selectedPanel,
+        cont_video: this.cont_video,
+        panel_video: this.panel_video,
+        cont_articulo: this.cont_articulo,
+        panel_articulo: this.panel_articulo,
+        cont_examen: this.cont_examen,
+        panel_examen: this.panel_examen,
       }
 
       if (this.editedIndex > -1) {
@@ -505,28 +681,96 @@ export default {
         this.desserts.push(object)
       }
       this.close()
-      this.descripcion_titulo = null
-      this.descripcion_categoria = null
-      this.descripcion_descripcion = null
-      this.descripcion_aprendizaje = null
-      this.descripcion_image = null
+      // this.descripcion_titulo = null
+      // this.descripcion_categoria = null
+      // this.descripcion_descripcion = null
+      // this.descripcion_aprendizaje = null
+      // this.descripcion_image = null
+      // this.imagePreview = false
+      // this.publicar_precio = null
+      
+      // items
+      this.contenido_titulo = null
+      this.contenido_descripcion = null
       this.contenido_tipo = null
-      this.publicar_precio = null
-      //
-      this.imagePreview = false
+      this.file = ''
+      this.articulo_file = null
+      this.examen_file = null
+      // clear controls
+      this.selectedPanel = false
       this.cont_video = true
       this.panel_video = false
       this.cont_articulo = true
       this.panel_articulo = false
       this.cont_examen = true
       this.panel_examen = false
-      this.selectedPanel = false
-      this.file = ''
-      this.articulo_file = null
-      this.examen_file = null
+    },
 
-      this.grabarBtn = false
-      this.volverBtn = false
+    // edited functions
+    previewVideoEdited(){
+      let video = document.getElementById('video-preview-edited');
+      let reader = new FileReader();
+
+      reader.readAsDataURL( this.editedItem.file );
+      reader.addEventListener('load', function(){
+        // esta es la url
+        video.src = reader.result;
+        console.log(video.src)
+      });
+    },
+    handleFileUploadEdited( event ){
+      // esta es la informacion del archivo
+      this.editedItem.file = event.target.files[0];
+      console.log(this.editedItem.file)
+      this.previewVideoEdited();
+    },
+    PanelVideoEdited() {
+      if (this.editedItem.panel_video === false) {
+        this.editedItem.panel_video = true
+        this.editedItem.cont_articulo = false
+        this.editedItem.cont_examen = false
+        this.editedItem.selectedPanel = true
+        this.editedItem.contenido_tipo = "video"
+      } else {
+        this.editedItem.panel_video = false
+        this.editedItem.cont_articulo = true
+        this.editedItem.cont_examen = true
+        this.editedItem.selectedPanel = false
+        this.editedItem.file = ''
+        this.editedItem.contenido_tipo = null
+      }
+    },
+    PanelArticuloEdited() {
+      if (this.editedItem.panel_articulo === false) {
+        this.editedItem.panel_articulo = true
+        this.editedItem.cont_video = false
+        this.editedItem.cont_examen = false
+        this.editedItem.selectedPanel = true
+        this.editedItem.contenido_tipo = "articulo"
+      } else {
+        this.editedItem.panel_articulo = false
+        this.editedItem.cont_video = true
+        this.editedItem.cont_examen = true
+        this.editedItem.selectedPanel = false
+        this.editedItem.articulo_file = null
+        this.editedItem.contenido_tipo = null
+      }
+    },
+    PanelExamenEdited() {
+      if (this.editedItem.panel_examen === false) {
+        this.editedItem.panel_examen = true
+        this.editedItem.cont_video = false
+        this.editedItem.cont_articulo = false
+        this.editedItem.selectedPanel = true
+        this.editedItem.contenido_tipo = "examen"
+      } else {
+        this.editedItem.panel_examen = false
+        this.editedItem.cont_video = true
+        this.editedItem.cont_articulo = true
+        this.editedItem.selectedPanel = false
+        this.editedItem.examen_file = null
+        this.editedItem.contenido_tipo = null
+      }
     },
 
     // lista
@@ -534,6 +778,7 @@ export default {
       this.desserts = []
     },
     editItem (item) {
+      // problema para recibir info de programas
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true

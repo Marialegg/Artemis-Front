@@ -5,9 +5,12 @@
         CURSOS
       </h2>
 
-      <div class="space divwrap gap">
-        <span class="h7-em bold">DESDE ACA USTED INSTRUCTOR PODRA CREAR SUS CURSOS</span>
-        <v-btn class="botones" rounded href="#/instructor-cursos">NUEVO CURSO</v-btn>
+      <div class="jend divwrap gap">
+        <span class="h7-em bold marginrighta">DESDE ACA USTED INSTRUCTOR PODRA CREAR SUS CURSOS</span>
+        <aside class="divrow gap">
+          <v-btn class="botones h9-em" rounded href="#/instructor-cursos">NUEVO CURSO</v-btn>
+          <v-btn class="botones h9-em" rounded>ESTADÍSTICAS</v-btn>
+        </aside>
       </div>
     </v-col>
 
@@ -47,8 +50,8 @@
           <span class="h8-em tcenter">Valoración del curso</span>
 
           <div class="spacee fill-w">
-            <v-btn class="botones h8-em" rounded>EDITAR</v-btn>
-            <v-btn class="botones h8-em" rounded>VER DETALLE</v-btn>
+            <v-btn class="botones h9-em" rounded href="#instructor-cursos" @click="Editar(item)">EDITAR</v-btn>
+            <v-btn class="botones h9-em" rounded @click="Delete(item)">ELIMINAR</v-btn>
           </div>
         </aside>
       </section>
@@ -87,55 +90,16 @@ export default {
           rating: 4.5,
         },
       ]
-      // dataSlide: [],
-      // image: "",
-      // name: "",
-      // imagePreview: false,
-      // deleteBtn: false,
-      // selected: {},
     }
   },
   methods: {
-    // pickFile () {
-    //   let input = this.$refs.fileInput
-    //   let file = input.files
-    //   if (file && file[0]) {
-    //     let reader = new FileReader
-    //     reader.onload = e => {
-    //       this.image = e.target.result
-    //       this.imagePreview = true
-    //     }
-    //     reader.readAsDataURL(file[0])
-    //   }
-    // },
-    // Guardar() {
-    //   if (this.image != "" && this.name != "") {
-    //     let object = {name: this.name, img: this.image}
-    //     this.dataSlide.push(object)
-    //     this.image = ""
-    //     this.name = ""
-    //     this.imagePreview = false
-    //     this.deleteBtn = false
-    //   }
-    // },
-    // Editar(item) {
-    //   this.imagePreview = true
-    //   this.deleteBtn = true
-    //   this.name = item.name
-    //   this.image = item.img
-      
-    //   this.selected = item
-    // },
-    // Delete() {
-    //   const index = this.dataSlide.indexOf(this.selected);
-    //   if (this.selected.name == this.name && this.selected.img == this.image) {
-    //     this.dataSlide.splice(index, 1);
-    //     this.imagePreview = false
-    //     this.deleteBtn = false
-    //     this.image = ""
-    //     this.name = ""
-    //   }
-    // }
+    Editar(item) {
+      console.log(item)
+    },
+    Delete(item) {
+      const index = this.dataCursos.indexOf(item)
+      this.dataCursos.splice(index, 1)
+    }
   }
 };
 </script>
