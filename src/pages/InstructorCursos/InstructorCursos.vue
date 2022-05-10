@@ -321,18 +321,18 @@
 
       <v-window-item :value="2">
         <v-col id="preview" class="divcol gap">
-          <section class="space gap divcolmobile">
-            <img class="referenceImg" src="@/assets/images/rust.png" alt="Reference Img">
+          <section class="divcolmobile">
+            <img class="referenceImg alignmobile" :src="descripcion_image" alt="Reference Img">
 
             <aside class="divcol fill-w" style="gap: clamp(.5em, 1vw, 1em)">
-              <h4 class="titulo h5-em bold">Rust Avanzado</h4>
+              <h4 class="titulo h5-em bold tcentermobile">{{descripcion_titulo}}</h4>
               <span class="subtitulo h8-em notdefault-clr" style="color: #747A80">
                 Creado por: <span style="color: #FF6B3B">IRON MAN</span>
               </span>
               <v-card class="space divwrap" style="display:Flex">
                 <div class="divcol">
                   <span class="h8-em">Precio Actual:</span>
-                  <span class="number bold">0.75 
+                  <span class="number bold">{{publicar_precio}} 
                     <span class="h8 normal">NEAR </span>◎
                   </span>
                 </div>
@@ -345,15 +345,11 @@
             </aside>
           </section>
 
-          <section class="space gap divcolmobile">
-            <aside class="divcol gap">
+          <section class="divcolmobile">
+            <aside class="divcol gap fill-wmobile">
               <h4 class="h7-em semibold fill-w notdefault-clr">LO QUE APRENDERAS</h4>
               <div class="divcol">
-                <p>Grundlagen der JavaScript-Programmierung: Umgang mit Variablen, Funktionen, Objekten, Arrays, Bedingungen (if) und Schleifen (forEach)</p>
-                <p>
-                  Einstieg in die Programmierung von HTTP-Abfragen (Schwerpunkt GET-Requests), Formulierung von Query-Strings
-                  Arbeit mit den Browser-Entwicklertools: HTML-Inspektor, Netzwerkanalyse zur Auswertung der Serverantwort, JavaScript-Konsole
-                </p>
+                <p>{{descripcion_aprendizaje}}</p>
               </div>
             </aside>
 
@@ -364,7 +360,7 @@
                 <!-- lista -->
                 <v-data-table
                   class="data_table"
-                  :headers="headers"
+                  :headers="headersPreview"
                   :items="desserts"
                   sort-by="orden"
                 >
@@ -471,6 +467,11 @@ export default {
         { text: 'TIPO', value: 'tipo' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
+      headersPreview: [
+        { text: 'ORDEN', align: 'start', value: 'orden' },
+        { text: 'TITULO', value: 'titulo' },
+        { text: 'TIPO', value: 'tipo' },
+      ],
       desserts: [],
       editedIndex: -1,
       editedItem: {
@@ -517,38 +518,6 @@ export default {
         {
           img: require("@/assets/images/python.jpg"),
           title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "WEB 2.0",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "WEB 2.0",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "WEB 2.0",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "WEB 2.0",
           instructor: "IRON MAN",
           to: "#",
           price: "0.75",
