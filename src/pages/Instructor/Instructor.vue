@@ -71,8 +71,8 @@ export default {
       console.log(item)
     },
     Delete(item) {
-      const index = this.dataCursos.indexOf(item)
-      this.dataCursos.splice(index, 1)
+      const index = this.$store.state.dataCursos.indexOf(item)
+      this.$store.dispatch("EliminarCurso", { index});
     }
   }
 };

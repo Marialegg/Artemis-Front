@@ -18,6 +18,22 @@ export default new Vuex.Store({
         inscriptions: "10",
         rating: 4.5,
       },
+      {
+        img: require("@/assets/images/ips.png"),
+        name: "Rust Basico",
+        price: "0.75",
+        earned: "4,5",
+        inscriptions: "10",
+        rating: 4.5,
+      },
+      {
+        img: require("@/assets/images/ips.png"),
+        name: "Rust Basico",
+        price: "0.75",
+        earned: "4,5",
+        inscriptions: "10",
+        rating: 4.5,
+      },
     ]
   },
   mutations: {
@@ -26,6 +42,9 @@ export default new Vuex.Store({
     },
     PublicarCurso(state, object) {
       state.dataCursos.push(object)
+    },
+    EliminarCurso(state, index) {
+      state.dataCursos.splice(index, 1)
     }
   },
   actions: {
@@ -37,6 +56,9 @@ export default new Vuex.Store({
     PublicarCurso({commit}, {object}) {
       // localStorage.setItem("theme", theme);
       commit( "PublicarCurso", object)
+    },
+    EliminarCurso({commit}, {index}) {
+      commit( "EliminarCurso", index)
     },
   },
 });
