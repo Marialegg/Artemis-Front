@@ -42,6 +42,11 @@ export default new Router({
           name: 'InstructorCursos',
           component: () => import('@/pages/InstructorCursos/InstructorCursos'),
         },
+        {
+          path: '/instructor-cursos-editable',
+          name: 'InstructorCursosEdited',
+          component: () => import('@/pages/InstructorCursos/InstructorCursosEdited'),
+        },
       ],
     },
     // here path 3 if need

@@ -9,32 +9,9 @@ export default new Vuex.Store({
   state: {
     baseURL: process.env.BASE_URL,
     theme: "light",
-    dataCursos: [
-      {
-        img: require("@/assets/images/ips.png"),
-        name: "Rust Basico",
-        price: "0.75",
-        earned: "4,5",
-        inscriptions: "10",
-        rating: 4.5,
-      },
-      {
-        img: require("@/assets/images/ips.png"),
-        name: "Rust Basico",
-        price: "0.75",
-        earned: "4,5",
-        inscriptions: "10",
-        rating: 4.5,
-      },
-      {
-        img: require("@/assets/images/ips.png"),
-        name: "Rust Basico",
-        price: "0.75",
-        earned: "4,5",
-        inscriptions: "10",
-        rating: 4.5,
-      },
-    ]
+    dataCursos: [],
+    editedCursos: {},
+    editedIndex: 0,
   },
   mutations: {
     CambiarTheme(state, theme) {
@@ -45,7 +22,15 @@ export default new Vuex.Store({
     },
     EliminarCurso(state, index) {
       state.dataCursos.splice(index, 1)
-    }
+    },
+    EditarCurso(state, {object, index}) {
+      state.editedCursos = object
+      state.editedIndex = index
+    },
+    PublicarCursoEdited(state, object) {
+      state.dataCursos.splice(state.editedIndex, 1)
+      state.dataCursos.push(object)
+    },
   },
   actions: {
     CambiarTheme({state, commit}, {theme, element}) {
@@ -54,11 +39,18 @@ export default new Vuex.Store({
       commit( "CambiarTheme", theme)
     },
     PublicarCurso({commit}, {object}) {
-      // localStorage.setItem("theme", theme);
+      // localStorage.setItem("curso", object);
       commit( "PublicarCurso", object)
     },
     EliminarCurso({commit}, {index}) {
       commit( "EliminarCurso", index)
+    },
+    EditarCurso({commit}, {object, index}) {
+      commit( "EditarCurso", {object, index})
+    },
+    PublicarCursoEdited({commit}, {object}) {
+      // localStorage.setItem("curso", object);
+      commit( "PublicarCursoEdited", object)
     },
   },
 });

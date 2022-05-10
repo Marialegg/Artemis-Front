@@ -68,11 +68,14 @@ export default {
   },
   methods: {
     Editar(item) {
-      console.log(item)
+      const index = this.$store.state.dataCursos.indexOf(item)
+      let object = this.$store.state.dataCursos[index]
+      this.$store.dispatch("EditarCurso", { object, index });
+      this.$router.push({path: '/instructor-cursos-editable'})
     },
     Delete(item) {
       const index = this.$store.state.dataCursos.indexOf(item)
-      this.$store.dispatch("EliminarCurso", { index});
+      this.$store.dispatch("EliminarCurso", { index });
     }
   }
 };
