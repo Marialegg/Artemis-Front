@@ -1,5 +1,5 @@
 <template>
-  <section id="instructorCursos" class="parent divcol gap">
+  <section id="instructorCursos" class="subparent divcol gap">
     <v-window v-model="stepWindow" touchless>
       <v-window-item :value="1">
         <v-col>
@@ -121,7 +121,7 @@
 
                   <aside v-if="cont_examen" class="divwrap acenter" style="gap: 1em">
                     <article @click.stop="PanelExamen()">
-                      <img class="referenceImg" src="@/assets/images/examen.png" alt="examen">
+                      <img class="referenceImg" src="@/assets/images/articulo.png" alt="examen">
                     </article>
                     <div v-if="panel_examen" class="divcol">
                       <label class="h9-em" for="file-input">SUBE UN EXAMEN</label>
@@ -200,7 +200,7 @@
 
                                       <aside v-if="editedItem.cont_examen" class="divwrap acenter" style="gap: 1em">
                                         <article @click.stop="PanelExamenEdited()">
-                                          <img class="referenceImg" src="@/assets/images/examen.png" alt="examen">
+                                          <img class="referenceImg" src="@/assets/images/articulo.png" alt="examen">
                                         </article>
                                         <div v-if="editedItem.panel_examen" class="divcol">
                                           <label class="h9-em" for="file-input">SUBE UN EXAMEN</label>

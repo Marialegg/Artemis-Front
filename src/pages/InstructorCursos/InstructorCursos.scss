@@ -138,11 +138,11 @@ article {
   }
   section:nth-child(1) {
     display: grid;
-    grid-template-columns: 25% 1fr;
+    grid-template-columns: 30% 1fr;
     grid-gap: clamp(1em, 2vw, 2em);
     justify-content: space-between;
     .referenceImg {
-      width: clamp(13em, 19vw, 19.5625em);
+      width: clamp(13em, 18vw, 18em);
       aspect-ratio: 1 / 1;
       // width: 20%;
     }
@@ -159,12 +159,12 @@ article {
   }
   section+section:not(section:last-child) {
     display: grid;
-    grid-template-columns: 25% 1fr;
+    grid-template-columns: 30% 1fr;
     grid-gap: clamp(1em, 2vw, 2em);
     justify-content: space-between;
     margin-bottom: 2em;
     & > aside:nth-child(1) {
-      width: clamp(13em, 19vw, 19.5625em);
+      width: clamp(13em, 18vw, 18em);
       // width: 20%;
       p {
         font-weight: 500 !important;
@@ -188,7 +188,7 @@ article {
           overflow: hidden;
           transition: 0.2s ease-out;
           border-radius: $border;
-          max-width: clamp(15em, 20vw, 20em);
+          max-width: 15em;
           &:is(:hover, :focus) {
             transform: scale(.99);
             box-shadow: inset 0 0 6px 1px rgba(0, 0, 0, 0.2) !important;

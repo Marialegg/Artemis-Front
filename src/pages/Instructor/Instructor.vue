@@ -1,5 +1,5 @@
 <template>
-  <section id="instructor" class="parent divcol gap">
+  <section id="instructor" class="subparent divcol gap">
     <v-col cols="11" class="align">
       <h2 class="h4-em">
         CURSOS
