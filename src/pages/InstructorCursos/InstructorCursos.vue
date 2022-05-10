@@ -711,6 +711,8 @@ export default {
         contenidoTabla: this.desserts,
       }
       console.log(object)
+      this.$store.dispatch("PublicarCurso", { object});
+      this.$router.push({ path: '/instructor' })
     }
   }
 };
