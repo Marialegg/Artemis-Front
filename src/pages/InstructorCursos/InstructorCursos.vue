@@ -1,6 +1,6 @@
 <template>
   <section id="instructorCursos" class="parent divcol gap">
-    <v-window v-model="stepWindow">
+    <v-window v-model="stepWindow" touchless>
       <v-window-item :value="1">
         <v-col>
           <h2 class="h4-em">
