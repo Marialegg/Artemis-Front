@@ -1,96 +1,115 @@
 <template>
   <v-col id="profile">
+    <v-snackbar v-model="snackbar.visible" auto-height :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <h2 class="h4-em">
       PERFIL
     </h2>
-
-    <section class="contForm">
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="nombre">NOMBRE</label>
-        <v-text-field
-          v-model="profile.name"
-          id="nombre"
-          :rules="rules.date"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="apellido">APELLIDO</label>
-        <v-text-field
-          v-model="profile.last_name"
-          id="apellido"
-          :rules="rules.date"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="dni">DNI</label>
-        <v-text-field
-          v-model="profile.dni"
-          id="dni"
-          :rules="rules.date"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="wallet">WALLET</label>
-        <v-text-field
-          v-model="accountId"
-          solo
-          disabled
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="pais">PAIS</label>
-        <v-text-field
-          v-model="profile.country"
-          id="pais"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="email">EMAIL</label>
-        <v-text-field
-          v-model="profile.email"
-          id="email"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="discord">DISCORD</label>
-        <v-text-field
-          v-model="profile.discord"
-          id="discord"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="form">
-        <label class="h7-em" for="profesion">PROFESION</label>
-        <v-text-field
-          v-model="profile.profession"
-          id="profesion"
-          solo
-        >
-        </v-text-field>
-      </v-card>
-      <v-card color="transparent" class="biografia form">
-        <label class="h7-em" for="biografia">BIOGRAFIA</label>
-        <v-textarea
-          v-model="profile.biography"
-          id="biografia"
-          :rules="rules.long"
-          solo
-        >
-        </v-textarea>
-      </v-card>
-    </section>
+    <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+    >
+      <section class="contForm">
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="nombre">NOMBRE</label>
+          <v-text-field
+            v-model="profile.name"
+            id="nombre"
+            :rules="rules.date"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="apellido">APELLIDO</label>
+          <v-text-field
+            v-model="profile.last_name"
+            id="apellido"
+            :rules="rules.date"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="dni">DNI</label>
+          <v-text-field
+            v-model="profile.dni"
+            id="dni"
+            :rules="rules.date"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="wallet">WALLET</label>
+          <v-text-field
+            v-model="accountId"
+            solo
+            disabled
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="pais">PAIS</label>
+          <v-text-field
+            v-model="profile.country"
+            id="pais"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="email">EMAIL</label>
+          <v-text-field
+            v-model="profile.email"
+            id="email"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="discord">DISCORD</label>
+          <v-text-field
+            v-model="profile.discord"
+            id="discord"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="profesion">PROFESION</label>
+          <v-text-field
+            v-model="profile.profession"
+            id="profesion"
+            solo
+          >
+          </v-text-field>
+        </v-card>
+        <v-card color="transparent" class="biografia form">
+          <label class="h7-em" for="biografia">BIOGRAFIA</label>
+          <v-textarea
+            v-model="profile.biography"
+            id="biografia"
+            :rules="rules.long"
+            solo
+          >
+          </v-textarea>
+        </v-card>
+      </section>
+    </v-form>
 
     <v-col align="center">
       <v-btn 
@@ -129,6 +148,7 @@ export default {
   name: "Profile",
   data() {
     return {
+      snackbar: {},
       valid: true,
       newProfile: true,
       profile: {},
@@ -163,9 +183,30 @@ export default {
             .then((response) => {
               if (response.data){
                 console.log(response.data)
+                this.snackbar = {
+                  color: "green",
+                  icon: "check_circle",
+                  mode: "multi-line",
+                  position: "top",
+                  timeout: 1500,
+                  title: "Éxito!",
+                  text: "El perfil ha sido guardado",
+                  visible: true
+                }
+                this.getData()
               }
           }).catch((error) => {
             console.log(error)
+            this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Ha ocurrido un error",
+              visible: true
+            }
           })
         }
       }
@@ -207,9 +248,30 @@ export default {
             .then((response) => {
               if (response.data){
                 console.log(response.data)
+                this.snackbar = {
+                  color: "green",
+                  icon: "check_circle",
+                  mode: "multi-line",
+                  position: "top",
+                  timeout: 1500,
+                  title: "Éxito!",
+                  text: "El perfil ha sido actualizado",
+                  visible: true
+                }
+                this.getData()
               }
           }).catch((error) => {
             console.log(error)
+            this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Ha ocurrido un error",
+              visible: true
+            }
           })
         }
       }
