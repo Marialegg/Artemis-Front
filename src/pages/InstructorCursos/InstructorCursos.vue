@@ -33,10 +33,13 @@
               <v-card color="transparent" class="form">
                 <label class="h9-em" for="descripcion_categoria">CATEGORIA</label>
                 <v-select
-                  v-model="descripcion_categoria"
+                  v-model="id"
                   :items="lista_descripcion_categoria"
                   id="descripcion_categoria"
+                  item-text="name"
+                  item-value="id"
                   solo
+                  v-on:change="change(id)"
                 >
                 </v-select>
               </v-card>
@@ -408,6 +411,18 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
 export default {
   name: "Cursos",
   data() {
@@ -417,8 +432,8 @@ export default {
 
       // descripcion
       descripcion_titulo: null,/*1*/
-      descripcion_categoria: null,/*2*/
-      lista_descripcion_categoria: ["crypto", "musica", "tecnologia"],
+      descripcion_categoria: {},/*2*/
+      lista_descripcion_categoria: [],
       descripcion_descripcion: null,/*3*/
       descripcion_aprendizaje: null,/*4*/
       descripcion_image: null,/*5*/
@@ -509,7 +524,36 @@ export default {
   created () {
     this.initialize()
   },
+  mounted () {
+    this.get_categorys()
+  },
   methods: {
+    change (id) {
+      for (var i = 0; i < this.lista_descripcion_categoria.length; i++) {
+        if (this.lista_descripcion_categoria[i].id === id) {
+          this.descripcion_categoria.id = this.lista_descripcion_categoria[i].id
+          this.descripcion_categoria.name = this.lista_descripcion_categoria[i].name
+          this.descripcion_categoria.img = this.lista_descripcion_categoria[i].img
+        }
+      }
+    },
+    async get_categorys () {
+      this.lista_descripcion_categoria = []
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      await contract.get_category().then((response) => {
+        response.forEach((element) => {
+          this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
+        })
+      })
+    },
     pickFile () {
       let input = this.$refs.fileInput
       let file = input.files
@@ -558,7 +602,7 @@ export default {
         this.panel_examen = true
         this.cont_video = false
         this.selectedPanel = true
-        this.contenido_tipo = "examen"
+        this.contenido_tipo = "pdf"
       } else {
         this.panel_examen = false
         this.cont_video = true
@@ -588,12 +632,10 @@ export default {
       } else {
         this.desserts.push(object)
       }
+      console.log("desserts",this.desserts)
       this.close()
       
-      // items
-      this.contenido_titulo = null
-      this.contenido_descripcion = null
-      this.contenido_tipo = null
+      // itemsmoipo = null
       this.file = ''
       this.examen_file = null
       // clear controls
@@ -641,7 +683,7 @@ export default {
         this.editedItem.panel_examen = true
         this.editedItem.cont_video = false
         this.editedItem.selectedPanel = true
-        this.editedItem.contenido_tipo = "examen"
+        this.editedItem.contenido_tipo = "pdf"
       } else {
         this.editedItem.panel_examen = false
         this.editedItem.cont_video = true
@@ -695,7 +737,66 @@ export default {
       }
       this.close()
     },
-    Publicar() {
+    async Publicar() {
+      console.log(this.descripcion_categoria)
+      var content = []
+      const formData = new FormData()
+      for (var i = 0; i < this.desserts.length; i++) {
+        if (this.desserts[i].tipo === "video") {
+          let item = {}
+          item.title = this.desserts[i].titulo
+          item.description = this.desserts[i].descripcion
+          item.tipo = 1
+          content.push(item)
+          formData.append('files', this.desserts[i].file)
+        } else if (this.desserts[i].tipo === "pdf") {
+          let item = {}
+          item.title = this.desserts[i].titulo
+          item.description = this.desserts[i].descripcion
+          item.tipo = 1
+          content.push(item)
+          formData.append('files', this.desserts[i].examen)
+        }
+      } 
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const direccionIpfs = '.ipfs.dweb.link'
+  
+      // connect to NEAR
+        
+      const near = await connect(config)
+        // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['publish_course'],
+        sender: wallet.account()
+      })
+      console.log(contract)
+
+      await this.axios.post('http://localhost:3070/api/ipfs/files/', formData)
+          .then((response) => {            
+            console.log(response)
+            for (var i = 0; i < content.length; i++) {
+              content[i].content = 'https://' + response.data[i].data + direccionIpfs + '/' + response.data[i].nombre
+            }
+     
+            contract.publish_course({
+              title: this.descripcion_titulo,
+              categories: this.descripcion_categoria,
+              short_description: this.descripcion_descripcion,
+              long_description: this.descripcion_aprendizaje,
+              img: "https://' + response.data.data + direccionIpfs + '/' + response.data.nombre",
+              content: content,
+              price: (parseInt(this.publicar_precio)),
+            }).then((response) => {
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          }).catch((error) => {
+            console.log(error)
+          })
+      }
+      /*
       let object = {
         name: this.descripcion_titulo,
         img: this.descripcion_image,
@@ -712,7 +813,7 @@ export default {
       console.log(object)
       this.$store.dispatch("PublicarCurso", { object});
       this.$router.push({ path: '/instructor' })
-    }
+    }*/
   }
 };
 </script>

@@ -135,7 +135,8 @@ export default {
         formData.append('file', file[0])
 
         await this.axios.post('http://localhost:3070/api/ipfs/', formData)
-          .then((response) => {            
+          .then((response) => {       
+            console.log(response)     
             contract.set_category({
               name: this.name,
               img: 'https://' + response.data.data + direccionIpfs + '/' + response.data.nombre

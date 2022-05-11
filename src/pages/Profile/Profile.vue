@@ -204,7 +204,7 @@ export default {
               position: "top",
               timeout: 1500,
               title: "Error!",
-              text: "Ha ocurrido un error",
+              text: "Ha ocurrido algo",
               visible: true
             }
           })
@@ -269,7 +269,7 @@ export default {
               position: "top",
               timeout: 1500,
               title: "Error!",
-              text: "Ha ocurrido un error",
+              text: "Ha ocurrido algo",
               visible: true
             }
           })
