@@ -737,8 +737,10 @@ export default {
       }
       this.close()
     },
-    async Publicar() {
-      console.log(this.descripcion_categoria)
+    async Publicar() {  
+      let input = this.$refs.fileInput
+      let file = input.files
+      var imgFinal
       var content = []
       const formData = new FormData()
       for (var i = 0; i < this.desserts.length; i++) {
@@ -758,6 +760,8 @@ export default {
           formData.append('files', this.desserts[i].examen)
         }
       } 
+      formData.append('files', file[0])
+
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
   
@@ -770,21 +774,25 @@ export default {
         changeMethods: ['publish_course'],
         sender: wallet.account()
       })
-      console.log(contract)
 
-      await this.axios.post('http://localhost:3070/api/ipfs/files/', formData)
+      this.axios.post('http://localhost:3070/api/ipfs/files/', formData)
           .then((response) => {            
             console.log(response)
-            for (var i = 0; i < content.length; i++) {
-              content[i].content = 'https://' + response.data[i].data + direccionIpfs + '/' + response.data[i].nombre
+            for (var i = 0; i < response.data.length; i++) {
+              if (response.data.length === (i+1)) {
+                imgFinal = 'https://' + response.data[i].data + direccionIpfs + '/' + response.data[i].nombre
+              } else {
+                content[i].content = 'https://' + response.data[i].data + direccionIpfs + '/' + response.data[i].nombre
+              }
             }
+            console.log("Imagen",imgFinal)
      
             contract.publish_course({
               title: this.descripcion_titulo,
               categories: this.descripcion_categoria,
               short_description: this.descripcion_descripcion,
               long_description: this.descripcion_aprendizaje,
-              img: "https://' + response.data.data + direccionIpfs + '/' + response.data.nombre",
+              img: imgFinal,
               content: content,
               price: (parseInt(this.publicar_precio)),
             }).then((response) => {
