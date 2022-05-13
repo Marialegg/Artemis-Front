@@ -19,7 +19,7 @@
       
       <section v-for="(item, i) in dataCursos" :key="i"
         class="wrapper">
-        <aside class="divrow">
+        <aside class="firstAside divrow">
           <img :src="item.img" alt="imagen curso">
           <div class="divcol">
             <span class="h7-em">{{item.title}}</span>
