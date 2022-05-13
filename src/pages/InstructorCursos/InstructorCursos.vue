@@ -1,5 +1,19 @@
 <template>
   <section id="instructorCursos" class="subparent divcol gap">
+    <v-snackbar v-model="snackbar.visible" auto-height :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <v-window v-model="stepWindow" touchless>
       <v-window-item :value="1">
         <v-col>
@@ -427,6 +441,7 @@ export default {
   name: "Cursos",
   data() {
     return {
+      snackbar: {},
       stepWindow: 1,
       e6: 1,
 
@@ -755,7 +770,7 @@ export default {
           let item = {}
           item.title = this.desserts[i].titulo
           item.description = this.desserts[i].descripcion
-          item.tipo = 1
+          item.tipo = 2
           content.push(item)
           formData.append('files', this.desserts[i].examen)
         }
@@ -785,7 +800,6 @@ export default {
                 content[i].content = 'https://' + response.data[i].data + direccionIpfs + '/' + response.data[i].nombre
               }
             }
-            console.log("Imagen",imgFinal)
      
             contract.publish_course({
               title: this.descripcion_titulo,
@@ -797,11 +811,57 @@ export default {
               price: (parseInt(this.publicar_precio)),
             }).then((response) => {
               console.log(response)
+              this.snackbar = {
+                  color: "green",
+                  icon: "check_circle",
+                  mode: "multi-line",
+                  position: "top",
+                  timeout: 1500,
+                  title: "Éxito!",
+                  text: "Tu curso ha sido publicado",
+                  visible: true
+              }
+              let object = {
+                name: this.descripcion_titulo,
+                img: this.descripcion_image,
+                price: this.publicar_precio,
+                earned: 0,
+                inscriptions: 0,
+                rating: 0,
+                //
+                categoria: this.descripcion_categoria,
+                descripcion: this.descripcion_descripcion,
+                aprendizaje: this.descripcion_aprendizaje,
+                contenidoTabla: this.desserts,
+              }
+          
+              this.$store.dispatch("PublicarCurso", { object});
+              this.$router.push({ path: '/instructor' })
             }).catch((error) => {
               console.log(error)
+              this.snackbar = {
+                color: "red",
+                icon: "error",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Error!",
+                text: "Ha ocurrido algo",
+                visible: true
+              }
             })
           }).catch((error) => {
             console.log(error)
+            this.snackbar = {
+                color: "red",
+                icon: "error",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Error!",
+                text: "Ha ocurrido un error con el IPFS",
+                visible: true
+              }
           })
       }
       /*
