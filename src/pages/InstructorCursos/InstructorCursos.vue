@@ -325,13 +325,13 @@
             <aside class="divcol fill-w" style="gap: clamp(.5em, 1vw, 1em)">
               <h4 class="titulo h5-em bold tcentermobile">{{descripcion_titulo}}</h4>
               <span class="subtitulo h8-em notdefault-clr" style="color: #747A80">
-                Creado por: <span style="color: #FF6B3B">IRON MAN</span>
+                Creado por: <span style="color: #FF6B3B">{{ accountId }}</span>
               </span>
               <v-card class="space divwrap" style="display:Flex">
                 <div class="divcol">
                   <span class="h8-em">Precio Actual:</span>
                   <span class="number bold">{{publicar_precio}} 
-                    <span class="h8 normal">NEAR </span>◎
+                    <span class="h8 normal">NEAR <span class="h6">Ⓝ</span></span>
                   </span>
                 </div>
 
@@ -372,8 +372,18 @@
                 <v-btn class="botones h8-em" rounded @click="stepWindow--">
                   REGRESAR
                 </v-btn>
-                <v-btn class="botones h8-em" rounded @click="Publicar()">
+                <v-btn v-if="!progress" class="botones h8-em" rounded @click="Publicar()">
                   PUBLICAR
+                </v-btn>
+
+                <v-btn v-if="progress" class="botones h8-em" disabled rounded @click="Publicar()">
+                  PUBLICAR
+
+                  <v-progress-circular
+                    :size="18"
+                    :width="4"
+                    indeterminate
+                  ></v-progress-circular>
                 </v-btn>
               </div>
             </aside>
@@ -441,6 +451,8 @@ export default {
   name: "Cursos",
   data() {
     return {
+      progress: false,
+      accountId: "",
       snackbar: {},
       stepWindow: 1,
       e6: 1,
@@ -559,6 +571,7 @@ export default {
       const near = await connect(config)
       // create wallet connection
       const wallet = new WalletConnection(near)
+      this.accountId = wallet.getAccountId()
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
         viewMethods: ['get_category'],
         sender: wallet.account()
@@ -653,6 +666,8 @@ export default {
       // itemsmoipo = null
       this.file = ''
       this.examen_file = null
+      this.contenido_titulo=""
+      this.contenido_descripcion=""
       // clear controls
       this.selectedPanel = false
       this.cont_video = true
@@ -753,6 +768,7 @@ export default {
       this.close()
     },
     async Publicar() {  
+      this.progress = true
       let input = this.$refs.fileInput
       let file = input.files
       var imgFinal
@@ -849,6 +865,7 @@ export default {
                 text: "Ha ocurrido algo",
                 visible: true
               }
+              this.progress = false
             })
           }).catch((error) => {
             console.log(error)
@@ -862,6 +879,7 @@ export default {
                 text: "Ha ocurrido un error con el IPFS",
                 visible: true
               }
+            this.progress = false
           })
       }
       /*

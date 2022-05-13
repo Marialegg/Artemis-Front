@@ -116,6 +116,7 @@ export default {
             }
             this.dataCursos.push(item)
           }
+          this.dataCursos = this.dataCursos.reverse()
           //response.forEach((element) => {
           //  this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
           //})
