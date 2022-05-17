@@ -106,7 +106,6 @@ export default {
   },
   methods: {
     async getCourcesInstructor() {
-      this.lista_descripcion_categoria = []
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)

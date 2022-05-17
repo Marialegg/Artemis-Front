@@ -113,6 +113,18 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
 export default {
   name: "Home",
   data() {
@@ -218,88 +230,7 @@ export default {
         },
       ],
       carouselReciente: 0,
-      sliderReciente: [
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "2"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "3"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "6"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "4"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "2"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "6"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "8"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "5"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "3"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "4"
-        },
-      ],
+      sliderReciente: [],
     }
   },
   computed: {
@@ -348,9 +279,39 @@ export default {
       return 1;
     },
   },
+  mounted () {
+    this.getRecentCources()
+  },
   methods: {
     SelectCardDestacado(item) {
       console.log(item)
+    },
+    async getRecentCources() {
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_recent_cources'],
+        sender: wallet.account()
+      })
+      await contract.get_recent_cources({
+        number_courses: 12,
+      })
+        .then((response) => {
+          for (var i = 0; i < response.length; i++) {
+            var item = {}
+            item.title = response[i].title
+            item.price = response[i].price
+            item.img = response[i].img
+            item.desc = response[i].short_description
+            item.rating = 0
+            item.to = "#"
+            this.sliderReciente.push(item)
+          }
+          this.sliderReciente = this.sliderReciente.reverse()
+        })
     },
   }
 };
