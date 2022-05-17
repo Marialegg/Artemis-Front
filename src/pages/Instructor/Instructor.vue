@@ -72,8 +72,23 @@
 
           <div class="spacee fill-Ⓝw">
             <v-btn class="botones h9-em" rounded :to="'/instructor-editar-curso/' + item.id">EDITAR</v-btn>
-            <v-btn class="botones h9-em" rounded @click="Delete(item)">ELIMINAR</v-btn>
+            <v-btn class="botones h9-em" rounded @click="showDialog(item.id)">ELIMINAR</v-btn>
           </div>
+          <v-dialog v-model="dialog" max-width="max-content">
+                        <v-card>
+                          <v-card-title class="text-h5">¿ QUIERES ELIMINAR ESTE CURSO ?</v-card-title>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="red" rounded text @click="cerrarDialogo">
+                              <span style="color: red !important">Cancelar</span>
+                            </v-btn>
+                            <v-btn color="#F29627" rounded text @click="DeleteCource()">
+                              <span style="color: #F29627 !important">Eliminar</span>
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                          </v-card-actions>
+                        </v-card>
+          </v-dialog>
         </aside>
       </section>
     </v-col>
@@ -98,13 +113,19 @@ export default {
   data() {
     return {
       dataCursos: [],
-      snackbar: {}
+      snackbar: {},
+      dialog: false,
+      item_id: null,
     }
   },
   mounted () {
     this.getCourcesInstructor()
   },
   methods: {
+    showDialog (item) {
+      this.item_id = item
+        this.dialog = !this.dialog
+      },
     async getCourcesInstructor() {
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
@@ -138,9 +159,6 @@ export default {
             this.dataCursos.push(item)
           }
           this.dataCursos = this.dataCursos.reverse()
-          //response.forEach((element) => {
-          //  this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
-          //})
         })
     },
     async newCource () {
@@ -183,10 +201,12 @@ export default {
         return response
       }
     },
-    Delete(item) {
-      const index = this.$store.state.dataCursos.indexOf(item)
-      this.$store.dispatch("EliminarCurso", { index });
-    }
+    DeleteCource() {
+      console.log(this.item_id)
+    },
+    cerrarDialogo: function () {
+        this.dialog = !this.dialog
+    },
   }
 };
 </script>

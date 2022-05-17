@@ -85,7 +85,8 @@
                       <v-card color="var(clr-card)" class="cartas divcol align">
                         <img :src="sliderReciente[+index + i].img" alt="Imagen curso">
                         <div class="divcol astart">
-                          <a :href="sliderReciente[+index + i].to" class="h7-em bold">
+                          <a :href="sliderReciente[+index + i].to" class="h7-em bold"
+                            style="color: #FF6B3B !important">
                             {{sliderReciente[+index + i].title }}
                           </a>
                           <p class="h8-em p">{{sliderReciente[+index + i].desc}}</p>
@@ -94,7 +95,6 @@
                             background-color="pink lighten-3"
                             color="orange"
                             hover
-                            disabled
                           ></v-rating>
                           <div class="h6-em bold">
                             {{sliderReciente[+index + i].price }}Ⓝ
