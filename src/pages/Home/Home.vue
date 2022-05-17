@@ -20,7 +20,7 @@
     </v-card>
 
     <v-col class="contDestacado">
-      <h2 class="h4-em tcenter">LO MAS DESTACADO</h2>
+      <h2 class="h4-em tcenter">LOS MÁS DESTACADOS</h2>
       <aside class="contslider">
         <v-carousel
           v-model="carouselDestacado"
@@ -66,7 +66,7 @@
     </v-col>
     
     <v-col class="contDestacado">
-      <h2 class="h4-em tcenter">LO MAS RECIENTE</h2>
+      <h2 class="h4-em tcenter">LOS MÁS RECIENTES</h2>
       <aside class="contslider">
         <v-carousel
           v-model="carouselReciente"
