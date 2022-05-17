@@ -94,6 +94,7 @@
                             background-color="pink lighten-3"
                             color="orange"
                             hover
+                            disabled
                           ></v-rating>
                           <div class="h6-em bold">
                             {{sliderReciente[+index + i].price }}Ⓝ

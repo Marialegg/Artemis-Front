@@ -71,7 +71,7 @@
           <span class="h8-em tcenter">Valoración del curso</span>
 
           <div class="spacee fill-Ⓝw">
-            <v-btn class="botones h9-em" rounded href="#instructor-cursos" @click="Editar(item)">EDITAR</v-btn>
+            <v-btn class="botones h9-em" rounded :to="'/instructor-editar-curso/' + item.id">EDITAR</v-btn>
             <v-btn class="botones h9-em" rounded @click="Delete(item)">ELIMINAR</v-btn>
           </div>
         </aside>
@@ -121,6 +121,7 @@ export default {
         .then((response) => {
           for (var i = 0; i < response.length; i++) {
             var item = {}
+            item.id = response[i].id
             item.title = response[i].title
             item.price = response[i].price
             item.img = response[i].img
@@ -181,12 +182,6 @@ export default {
         })
         return response
       }
-    },
-    Editar(item) {
-      const index = this.$store.state.dataCursos.indexOf(item)
-      let object = this.$store.state.dataCursos[index]
-      this.$store.dispatch("EditarCurso", { object, index });
-      this.$router.push({path: '/instructor-cursos-editable'})
     },
     Delete(item) {
       const index = this.$store.state.dataCursos.indexOf(item)

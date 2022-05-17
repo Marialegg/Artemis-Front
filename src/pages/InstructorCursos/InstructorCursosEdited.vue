@@ -4,7 +4,7 @@
       <v-window-item :value="1">
         <v-col>
           <h2 class="h4-em">
-            CREAR CURSO
+            EDITAR CURSO
           </h2>
 
           <v-stepper
@@ -33,10 +33,13 @@
               <v-card color="transparent" class="form">
                 <label class="h9-em" for="descripcion_categoria">CATEGORIA</label>
                 <v-select
-                  v-model="descripcion_categoria"
+                  v-model="id"
                   :items="lista_descripcion_categoria"
                   id="descripcion_categoria"
+                  item-text="name"
+                  item-value="id"
                   solo
+                  v-on:change="change(id)"
                 >
                 </v-select>
               </v-card>
@@ -217,9 +220,22 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
 export default {
   name: "Cursos",
   mounted() {
+    /*
     const edited = this.$store.state.editedCursos;
     // descripcion
     this.descripcion_titulo = edited.name
@@ -228,17 +244,21 @@ export default {
     this.descripcion_aprendizaje = edited.aprendizaje
     this.descripcion_image = edited.img
     // publicar
-    this.publicar_precio = edited.price
+    this.publicar_precio = edited.price*/
+    this.get_categorys()
+    this.getCourceEdit()
   },
   data() {
     return {
+      id: null,
+      cource_id: this.$route.params.id,
       stepWindow: 1,
       e6: 1,
 
       // descripcion
       descripcion_titulo: null,/*1*/
-      descripcion_categoria: null,/*2*/
-      lista_descripcion_categoria: ["crypto", "musica", "tecnologia"],
+      descripcion_categoria: {},/*2*/
+      lista_descripcion_categoria: [],
       descripcion_descripcion: null,/*3*/
       descripcion_aprendizaje: null,/*4*/
       descripcion_image: null,/*5*/
@@ -266,6 +286,15 @@ export default {
     }
   },
   methods: {
+    change (id) {
+      for (var i = 0; i < this.lista_descripcion_categoria.length; i++) {
+        if (this.lista_descripcion_categoria[i].id === id) {
+          this.descripcion_categoria.id = this.lista_descripcion_categoria[i].id
+          this.descripcion_categoria.name = this.lista_descripcion_categoria[i].name
+          this.descripcion_categoria.img = this.lista_descripcion_categoria[i].img
+        }
+      }
+    },
     pickFile () {
       let input = this.$refs.fileInput
       let file = input.files
@@ -276,6 +305,50 @@ export default {
         }
         reader.readAsDataURL(file[0])
       }
+    },
+    async get_categorys () {
+      this.lista_descripcion_categoria = []
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      this.accountId = wallet.getAccountId()
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      await contract.get_category().then((response) => {
+        response.forEach((element) => {
+          this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
+        })
+      })
+    },
+    async getCourceEdit() {
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_market_cources'],
+        sender: wallet.account()
+      })
+      await contract.get_market_cources({
+        cource_id: parseInt(this.cource_id),
+      })
+        .then((response) => {
+          this.descripcion_titulo = response[0].title
+          this.descripcion_categoria = response[0].categories
+          this.id = this.descripcion_categoria.id
+          this.descripcion_descripcion = response[0].short_description
+          this.descripcion_aprendizaje = response[0].long_description
+          this.publicar_precio = response[0].price
+          this.descripcion_image = response[0].img
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     PublicarEdited() {
       let object = {
