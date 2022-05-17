@@ -1,5 +1,19 @@
 <template>
   <section id="instructor" class="subparent divcol gap">
+    <v-snackbar v-model="snackbar.visible" auto-height :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <v-col cols="11" class="align">
       <h2 class="h4-em">
         CURSOS
@@ -8,7 +22,13 @@
       <div class="jend divwrap gap">
         <span class="h7-em bold marginrighta">DESDE ACA USTED INSTRUCTOR PODRA CREAR SUS CURSOS</span>
         <aside class="divrow gap">
-          <v-btn class="botones h9-em" rounded href="#/instructor-cursos">NUEVO CURSO</v-btn>
+          <v-btn 
+            class="botones h9-em" 
+            rounded
+            @click="newCource()"
+          >
+          NUEVO CURSO
+          </v-btn>
           <v-btn class="botones h9-em" rounded>ESTADÍSTICAS</v-btn>
         </aside>
       </div>
@@ -77,7 +97,8 @@ export default {
   name: "Cursos",
   data() {
     return {
-      dataCursos: []
+      dataCursos: [],
+      snackbar: {}
     }
   },
   mounted () {
@@ -121,6 +142,46 @@ export default {
           //  this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
           //})
         })
+    },
+    async newCource () {
+      const response = await this.getData()
+
+      if (response === true) {
+        this.$router.push({ path: '/instructor-cursos' })
+      } else {
+        this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Completa tu perfil para poder crear cursos",
+              visible: true
+        }
+      }
+    },
+    async getData () {
+      // connect to NEAR
+      const near = await connect(config);
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      let accountId = wallet.getAccountId()
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/profile/?wallet=" + accountId
+        this.axios.defaults.headers.common.Authorization='token'
+        const response = this.axios.get(url)
+          .then((response) => {
+            if (response.data[0]){
+              return true
+            } else {
+              return false
+            }
+        }).catch((error) => {
+          console.log(error)
+        })
+        return response
+      }
     },
     Editar(item) {
       const index = this.$store.state.dataCursos.indexOf(item)

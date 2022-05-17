@@ -199,7 +199,25 @@ export default {
       const wallet = new WalletConnection(near)
       wallet.signOut()
       this.sesion = false
-      this.$router.go()
+      this.dataHeader = [
+        {
+          title: "Inicio",
+          link: "#/"
+        },
+        {
+          title: "Cursos",
+          link: "#"
+        },
+        // {
+        //   title: "Mi Perfil",
+        //   link: "#"
+        // },
+        {
+          title: "Contacto",
+          link: "#"
+        }
+      ]
+      this.$router.push({ path: '/' })
     },
     ShowDrawer() {
       this.$refs.menu.ShowDrawer();
