@@ -35,7 +35,7 @@
     </v-col>
 
     <v-col>
-      <h3 class="h8-em">CURSOS PUBLICADOS POR EL INSTRUCTOR</h3>
+      <h3 class="h8-em">TUS CURSOS PUBLICADOS:</h3>
       
       <section v-for="(item, i) in dataCursos" :key="i"
         class="wrapper">

@@ -43,7 +43,7 @@
             rounded
             @click="signIn()"
           >
-            Connect Wallet
+            Conectar con NEAR
           </v-btn>
           <div
               v-show="sesion"
