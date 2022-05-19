@@ -18,6 +18,7 @@
           filled
           shaped
           hide-details
+          background-color="var(--clr-card-2)"
           class="filterCategories"
         >
           <template v-slot:[`slotProps.item`]>
@@ -31,6 +32,7 @@
           filled
           shaped
           hide-details
+          background-color="var(--clr-card-2)"
           class="filterPrice"
         >
           <template v-slot:[`slotProps.item`]>
