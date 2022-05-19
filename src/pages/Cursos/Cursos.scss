@@ -4,7 +4,7 @@
 #cursos {
   font-size: 16px;
   a.notdefault-clr {color: $clr-btn}
-  .v-input__slot {label {font-weight: 400 !important}}
+  .v-input__slot {label {color: #F29627 !important; font-weight: 500 !important}}
   .filterCategories {
     max-width: max-content;
     .v-select__selections {max-width: clamp(4.5em, 5vw, 5em)}
