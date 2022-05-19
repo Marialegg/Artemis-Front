@@ -1,5 +1,19 @@
 <template>
   <section id="instructor" class="subparent divcol gap">
+    <v-snackbar v-model="snackbar.visible" auto-height :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <v-col cols="11" class="align">
       <h2 class="h4-em">
         CURSOS
@@ -8,14 +22,20 @@
       <div class="jend divwrap gap">
         <span class="h7-em bold marginrighta">DESDE ACA USTED INSTRUCTOR PODRA CREAR SUS CURSOS</span>
         <aside class="divrow gap">
-          <v-btn class="botones h9-em" rounded href="#/instructor-cursos">NUEVO CURSO</v-btn>
+          <v-btn 
+            class="botones h9-em" 
+            rounded
+            @click="newCource()"
+          >
+          NUEVO CURSO
+          </v-btn>
           <v-btn class="botones h9-em" rounded>ESTADÍSTICAS</v-btn>
         </aside>
       </div>
     </v-col>
 
     <v-col>
-      <h3 class="h8-em">CURSOS PUBLICADOS POR EL INSTRUCTOR</h3>
+      <h3 class="h8-em">TUS CURSOS PUBLICADOS:</h3>
       
       <section v-for="(item, i) in dataCursos" :key="i"
         class="wrapper">
@@ -51,9 +71,24 @@
           <span class="h8-em tcenter">Valoración del curso</span>
 
           <div class="spacee fill-Ⓝw">
-            <v-btn class="botones h9-em" rounded href="#instructor-cursos" @click="Editar(item)">EDITAR</v-btn>
-            <v-btn class="botones h9-em" rounded @click="Delete(item)">ELIMINAR</v-btn>
+            <v-btn class="botones h9-em" rounded :to="'/instructor-editar-curso/' + item.id">EDITAR</v-btn>
+            <v-btn class="botones h9-em" rounded @click="showDialog(item.id)">ELIMINAR</v-btn>
           </div>
+          <v-dialog v-model="dialog" max-width="max-content">
+                        <v-card>
+                          <v-card-title class="text-h5">¿ QUIERES ELIMINAR ESTE CURSO ?</v-card-title>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="red" rounded text @click="cerrarDialogo">
+                              <span style="color: red !important">Cancelar</span>
+                            </v-btn>
+                            <v-btn color="#F29627" rounded text @click="DeleteCource()">
+                              <span style="color: #F29627 !important">Eliminar</span>
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                          </v-card-actions>
+                        </v-card>
+          </v-dialog>
         </aside>
       </section>
     </v-col>
@@ -77,15 +112,21 @@ export default {
   name: "Cursos",
   data() {
     return {
-      dataCursos: []
+      dataCursos: [],
+      snackbar: {},
+      dialog: false,
+      item_id: null,
     }
   },
   mounted () {
     this.getCourcesInstructor()
   },
   methods: {
+    showDialog (item) {
+      this.item_id = item
+        this.dialog = !this.dialog
+      },
     async getCourcesInstructor() {
-      this.lista_descripcion_categoria = []
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
@@ -101,6 +142,7 @@ export default {
         .then((response) => {
           for (var i = 0; i < response.length; i++) {
             var item = {}
+            item.id = response[i].id
             item.title = response[i].title
             item.price = response[i].price
             item.img = response[i].img
@@ -117,21 +159,54 @@ export default {
             this.dataCursos.push(item)
           }
           this.dataCursos = this.dataCursos.reverse()
-          //response.forEach((element) => {
-          //  this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
-          //})
         })
     },
-    Editar(item) {
-      const index = this.$store.state.dataCursos.indexOf(item)
-      let object = this.$store.state.dataCursos[index]
-      this.$store.dispatch("EditarCurso", { object, index });
-      this.$router.push({path: '/instructor-cursos-editable'})
+    async newCource () {
+      const response = await this.getData()
+
+      if (response === true) {
+        this.$router.push({ path: '/instructor-cursos' })
+      } else {
+        this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Completa tu perfil para poder crear cursos",
+              visible: true
+        }
+      }
     },
-    Delete(item) {
-      const index = this.$store.state.dataCursos.indexOf(item)
-      this.$store.dispatch("EliminarCurso", { index });
-    }
+    async getData () {
+      // connect to NEAR
+      const near = await connect(config);
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      let accountId = wallet.getAccountId()
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/profile/?wallet=" + accountId
+        this.axios.defaults.headers.common.Authorization='token'
+        const response = this.axios.get(url)
+          .then((response) => {
+            if (response.data[0]){
+              return true
+            } else {
+              return false
+            }
+        }).catch((error) => {
+          console.log(error)
+        })
+        return response
+      }
+    },
+    DeleteCource() {
+      console.log(this.item_id)
+    },
+    cerrarDialogo: function () {
+        this.dialog = !this.dialog
+    },
   }
 };
 </script>

@@ -182,7 +182,7 @@
                               <v-row>
                                 <v-col cols="12" sm="6">
                                   <v-card color="transparent" class="form">
-                                    <label class="h9-em">TTULO</label>
+                                    <label class="h9-em">TITULO</label>
                                     <v-text-field
                                       v-model="editedItem.titulo"
                                       solo
