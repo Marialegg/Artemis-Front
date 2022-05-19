@@ -33,6 +33,16 @@ export default new Router({
           component: () => import('@/pages/Profile/Profile'),
         },
         {
+          path: '/cursos',
+          name: 'Cursos',
+          component: () => import('@/pages/Cursos/Cursos'),
+        },
+        {
+          path: '/detalle-curso',
+          name: 'DetalleCurso',
+          component: () => import('@/pages/Cursos/DetalleCurso'),
+        },
+        {
           path: '/instructor',
           name: 'Instructor',
           component: () => import('@/pages/Instructor/Instructor'),

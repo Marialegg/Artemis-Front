@@ -176,7 +176,7 @@ export default {
           },
           {
             title: "Cursos",
-            link: "#"
+            link: "#/cursos"
           },
           // {
           //   title: "Mi Perfil",
