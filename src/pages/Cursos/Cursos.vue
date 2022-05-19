@@ -51,7 +51,7 @@
           <aside class="divcol">
             <span class="h7-em bold">{{item.title}}</span>
             <a :href="item.to" class="h9-em semibold" style="color: #FF6B3B !important">
-              Instructor {{item.instructor }}
+              {{item.instructor }}
             </a>
           </aside>
 
@@ -68,83 +68,113 @@
         </div>
       </v-card>
     </v-col>
+    <template>
+        <div class="text-center">
+          <v-pagination
+            v-model="page"
+            :length="size_pagination"
+            circle
+            @input="pagination()"
+          ></v-pagination>
+        </div>
+      </template>
   </section>
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
 export default {
   name: "Cursos",
   data() {
     return {
+      page: 1,
+      size_pagination: null,
+      len_pagination: 0,
+      limit: 3,
       search: '',
       filter: {
         categories: ['Frontend', 'Backend', 'Cripto'],
         price: ['Low to High', 'High to Low'],
       },
-      dataCursos: [
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-      ],
+      dataCursos: [],
     }
+  },
+  mounted () {
+    this.getMarketCourses()
+    this.sizePagination()
   },
   methods: {
     clear() {
       console.log("clear")
-    }
+    },
+    pagination() {
+      if (this.page === 1) {
+        this.len_pagination = 0
+      } else {
+        this.len_pagination = (this.page - 1) * this.limit
+      }
+      this.getMarketCourses()
+    },
+    async sizePagination() {
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_course_size'],
+        sender: wallet.account()
+      })
+      await contract.get_course_size()
+        .then((response) => {
+          this.size_pagination = response / this.limit
+          this.size_pagination = Math.ceil(this.size_pagination)
+          console.log(Math.ceil(this.size_pagination))
+        })
+    },
+    async getMarketCourses() {
+      this.dataCursos = []
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_market_courses'],
+        sender: wallet.account()
+      })
+      await contract.get_market_courses({
+        from_index: this.len_pagination,
+        limit: this.limit
+      })
+        .then((response) => {
+          for (var i = 0; i < response.length; i++) {
+            var item = {}
+            item.id = response[i].id
+            item.instructor = response[i].creator_id
+            item.title = response[i].title
+            item.desc = response[i].short_description
+            item.price = response[i].price
+            item.img = response[i].img
+            if (response[i].reviews === null) {
+              item.rating = 0
+            }
+            this.dataCursos.push(item)
+          }
+          this.dataCursos = this.dataCursos.sort()
+        })
+    },
   }
 };
 </script>

@@ -824,7 +824,7 @@ export default {
               long_description: this.descripcion_aprendizaje,
               img: imgFinal,
               content: content,
-              price: (parseInt(this.publicar_precio)),
+              price: (this.publicar_precio),
             }).then((response) => {
               console.log(response)
               this.snackbar = {

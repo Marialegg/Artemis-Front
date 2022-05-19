@@ -246,12 +246,12 @@ export default {
     // publicar
     this.publicar_precio = edited.price*/
     this.get_categorys()
-    this.getCourceEdit()
+    this.getCourseEdit()
   },
   data() {
     return {
       id: null,
-      cource_id: this.$route.params.id,
+      course_id: this.$route.params.id,
       stepWindow: 1,
       e6: 1,
       accountId: "",
@@ -325,18 +325,18 @@ export default {
         })
       })
     },
-    async getCourceEdit() {
+    async getCourseEdit() {
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_market_cources'],
+        viewMethods: ['get_market_courses'],
         sender: wallet.account()
       })
-      await contract.get_market_cources({
-        cource_id: parseInt(this.cource_id),
+      await contract.get_market_courses({
+        course_id: parseInt(this.course_id),
       })
         .then((response) => {
           this.descripcion_titulo = response[0].title

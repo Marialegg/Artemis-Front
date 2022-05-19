@@ -281,23 +281,23 @@ export default {
     },
   },
   mounted () {
-    this.getRecentCources()
+    this.getRecentCourses()
   },
   methods: {
     SelectCardDestacado(item) {
       console.log(item)
     },
-    async getRecentCources() {
+    async getRecentCourses() {
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_recent_cources'],
+        viewMethods: ['get_recent_courses'],
         sender: wallet.account()
       })
-      await contract.get_recent_cources({
+      await contract.get_recent_courses({
         number_courses: 12,
       })
         .then((response) => {
