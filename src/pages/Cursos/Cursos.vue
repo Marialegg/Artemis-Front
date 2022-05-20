@@ -101,7 +101,7 @@ export default {
       page: 1,
       size_pagination: null,
       len_pagination: 0,
-      limit: 3,
+      limit: 6,
       search: '',
       filter: {
         categories: ['Frontend', 'Backend', 'Cripto'],

@@ -140,7 +140,7 @@ export default {
         },
         {
           title: "Cursos",
-          link: "#"
+          link: "#/cursos"
         },
         // {
         //   title: "Mi Perfil",
@@ -206,7 +206,7 @@ export default {
         },
         {
           title: "Cursos",
-          link: "#"
+          link: "#/cursos"
         },
         // {
         //   title: "Mi Perfil",
