@@ -4,22 +4,29 @@
       <a class="h8-em notdefault-clr hover-line" @click="clear()">Clear All</a>
       <v-text-field
         v-model="search"
+        dense
         filled
         shaped
         hide-details
         prepend-inner-icon="mdi-magnify"
-        placeholder="Search.."
+        placeholder="Search by author.."
+        v-on:input="searchByAuthor(search)"
       ></v-text-field>
 
       <div class="contFilters divrow gap spacemobile fill-wmobile">
         <v-select
+          v-model="category_id"
           :items="filter.categories"
+          item-text="name"
+          item-value="id"
           label="Categorie"
           filled
+          dense
           shaped
           hide-details
           background-color="var(--clr-card-2)"
           class="filterCategories"
+          v-on:change="changeCategory(category_id)"
         >
           <template v-slot:[`slotProps.item`]>
             <span>{{ slotProps.item }}</span>
@@ -27,13 +34,19 @@
         </v-select>
         
         <v-select
+          v-model="price"
           :items="filter.price"
           label="Price"
+          item-text="text"
+          item-value="tipo"
           filled
+          dense
           shaped
           hide-details
           background-color="var(--clr-card-2)"
           class="filterPrice"
+          v-on:change="changePrice(price)"
+          
         >
           <template v-slot:[`slotProps.item`]>
             <span>{{ slotProps.item }}</span>
@@ -100,23 +113,28 @@ export default {
     return {
       page: 1,
       size_pagination: null,
+      category_id: null,
+      price: null,
       len_pagination: 0,
       limit: 6,
-      search: '',
+      search: null,
       filter: {
-        categories: ['Frontend', 'Backend', 'Cripto'],
-        price: ['Low to High', 'High to Low'],
+        categories: [],
+        price: [{tipo: 1, text: 'Low to High'}, {tipo: 2, text: 'High to Low'}],
       },
       dataCursos: [],
     }
   },
   mounted () {
     this.getMarketCourses()
-    this.sizePagination()
+    this.get_categorys()
   },
   methods: {
     clear() {
-      console.log("clear")
+      this.category_id = null
+      this.price = null
+      this.search = null
+      this.getMarketCourses(this.search, this.category_id)
     },
     pagination() {
       if (this.page === 1) {
@@ -124,9 +142,62 @@ export default {
       } else {
         this.len_pagination = (this.page - 1) * this.limit
       }
-      this.getMarketCourses()
+      this.getMarketCourses(this.search, this.category_id)
     },
-    async sizePagination() {
+    async Search(search) {
+      await this.getMarketCourses(null, this.category_id)
+      await this.SearchArray(this.dataCursos, search)
+    },
+    SearchArray(array, search) {
+      this.dataCursos = []
+      this.dataCursos = array.filter(function(objeto){
+        return objeto['title'].toLowerCase().includes(search.toLowerCase());
+      });
+    },
+    async searchByAuthor(search) {
+      this.search = search
+      await this.getMarketCourses(this.search, this.category_id)
+    },    
+    async changeCategory(id) {
+      this.category_id = id
+      await this.getMarketCourses(this.search, this.category_id)
+    },
+    changePrice(tipo) {
+      if (tipo === 1) {
+        this.ArrayLowHigh(this.dataCursos, 'price')
+      } else if (tipo === 2) {
+        this.ArrayHighLow(this.dataCursos, 'price')
+      }
+    },
+    ArrayLowHigh(array, variable) {
+      array.sort(function (a, b) {
+          return a[variable] - b[variable];
+      });
+    },
+    ArrayHighLow(array, variable) {
+      array.sort(function (a, b) {
+          return b[variable] - a[variable];
+      });
+    },
+    async get_categorys () {
+      this.filter.categories = []
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      this.accountId = wallet.getAccountId()
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      await contract.get_category().then((response) => {
+        response.forEach((element) => {
+          this.filter.categories.push({ id: element.id, name: element.name, img: element.img })
+        })
+      })
+    },
+    async sizePagination(creator, category) {
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
@@ -136,14 +207,19 @@ export default {
         viewMethods: ['get_course_size'],
         sender: wallet.account()
       })
-      await contract.get_course_size()
+      await contract.get_course_size({
+        creator_id: creator,
+        category_id: category
+      })
         .then((response) => {
           this.size_pagination = response / this.limit
           this.size_pagination = Math.ceil(this.size_pagination)
-          console.log(Math.ceil(this.size_pagination))
         })
     },
-    async getMarketCourses() {
+    async getMarketCourses(creator, category) {
+      if (creator === '') {
+        creator = null
+      }
       this.dataCursos = []
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
@@ -155,6 +231,8 @@ export default {
         sender: wallet.account()
       })
       await contract.get_market_courses({
+        creator_id: creator,
+        category_id: category,
         from_index: this.len_pagination,
         limit: this.limit
       })
@@ -173,6 +251,8 @@ export default {
             this.dataCursos.push(item)
           }
           this.dataCursos = this.dataCursos.sort()
+          this.sizePagination(creator, category)
+         
         })
     },
   }
