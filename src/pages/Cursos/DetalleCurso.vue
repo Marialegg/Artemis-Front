@@ -2,12 +2,12 @@
   <section id="cursos" class="subparent divcol gap">
     <v-col id="preview" class="divcol gap">
       <section class="divcolmobile">
-        <img class="referenceImg alignmobile" :src="descripcion_image" alt="Reference Img">
+        <img class="referenceImg alignmobile" :src="image" alt="Reference Img">
 
         <aside class="divcol fill-w" style="gap: clamp(.5em, 1vw, 1em)">
-          <h4 class="titulo h5-em bold tcentermobile">{{descripcion_titulo}}</h4>
+          <h4 class="titulo h5-em bold tcentermobile">{{titulo}}</h4>
           <span class="subtitulo h8-em notdefault-clr" style="color: #747A80">
-            Creado por: <span style="color: #FF6B3B">{{ accountId }}</span>
+            Creado por: <span style="color: #FF6B3B">{{ instructor }}</span>
           </span>
           <v-card class="divcol gap" style="display:Flex">
             <aside class="space divwrap">
@@ -15,10 +15,9 @@
                 <span class="h8-em">Precio Actual:</span>
                 <div class="divrow aend" style="gap: .2em">
                   <span class="h3-em bold aend" style="height: min-content; line-height: 1">
-                    <span class="h4 normal">◎</span>
-                    {{publicar_precio}}
+                    {{formatPrice(precio)}}
                   </span>
-                  <span class="h7 normal" style="transform:translateY(-2px)">NEAR</span>
+                  <span class="h6 normal" style="transform:translateY(-2px)">NEAR</span>
                 </div>
               </div>
 
@@ -29,7 +28,12 @@
             </aside>
 
             <aside class="start">
-              <v-btn class="h7-em normal">Comprar</v-btn>
+              <v-btn 
+                class="h7-em normal"
+                @click="courseBuy()"
+              >
+                Comprar
+              </v-btn>
             </aside>
           </v-card>
         </aside>
@@ -39,7 +43,7 @@
         <aside class="divcol gap fill-wmobile">
           <h4 class="h7-em semibold fill-w notdefault-clr">LO QUE APRENDERAS</h4>
           <div class="divcol">
-            <p>{{descripcion_aprendizaje}}</p>
+            <p>{{aprendizaje}}</p>
           </div>
         </aside>
 
@@ -86,7 +90,7 @@
                   </aside>
 
                   <aside class="space fill-w gap divwrapmobile">
-                    <span class="h5-em bold">{{item.price }} 
+                    <span class="h5-em bold">{{price}} 
                       <span class="h10 normal">NEAR</span>
                     </span>
                     <v-rating
@@ -107,7 +111,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
 const config = {
@@ -122,11 +126,15 @@ export default {
   name: "DetalleCursos",
   data() {
     return {
+      titulo: null,
+      instructor: null,
+      categoria: null,
+      descripcion: null,
+      aprendizaje: null,
+      precio: null,
+      image: null,
       accountId: "",
-      descripcion_image: null,
-      descripcion_titulo: null,
-      descripcion_aprendizaje: null,
-      publicar_precio: 0,
+      item: {},
       headersPreview: [
         { text: 'ORDEN', align: 'start', value: 'orden' },
         { text: 'TITULO', value: 'titulo' },
@@ -134,6 +142,7 @@ export default {
       ],
       desserts: [],
       slider: "",
+      course_id: this.$route.params.id,
       dataSlider: [
         {
           img: require("@/assets/images/python.jpg"),
@@ -147,27 +156,53 @@ export default {
     }
   },
   mounted () {
-    this.get_categorys()
+    this.getCourse()
   },
   methods: {
-    async get_categorys () {
-      this.lista_descripcion_categoria = []
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    },
+    async getCourse() {
       const CONTRACT_NAME = 'contract.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
       const wallet = new WalletConnection(near)
-      this.accountId = wallet.getAccountId()
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_category'],
+        viewMethods: ['get_market_courses'],
         sender: wallet.account()
       })
-      await contract.get_category().then((response) => {
-        response.forEach((element) => {
-          this.lista_descripcion_categoria.push({ id: element.id, name: element.name, img: element.img })
-        })
+      await contract.get_market_courses({
+        course_id: parseInt(this.course_id),
       })
+        .then((response) => {
+          this.titulo = response[0].title
+          this.instructor = response[0].creator_id
+          this.categoria = response[0].categories
+          this.descripcion = response[0].short_description
+          this.aprendizaje = response[0].long_description
+          this.precio = response[0].price
+          this.image = response[0].img
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
+    async courseBuy () {
+      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['course_buy'],
+        sender: wallet.account()
+      })
+      await contract.course_buy({
+        course_id: parseInt(this.course_id),
+      }, '300000000000000', // attached GAS (optional)
+      utils.format.parseNearAmount((Number(this.formatPrice(this.precio)) + 0.015).toString()))
+    }
   }
 };
 </script>

@@ -57,7 +57,7 @@
 
     <!-- bajo modificacion -->
     <v-col class="wrapper">
-      <v-card v-for="(item,i) in dataCursos" :key="i" href="#/detalle-curso"
+      <v-card v-for="(item,i) in dataCursos" :key="i" :href="'#/curso/' + item.id"
         color="var(clr-card)" class="cartas align divcol" v-ripple="{ class: 'activeRipple' }">
         <img :src="item.img" alt="Imagen curso">
         <div class="divcol astart">
@@ -69,7 +69,7 @@
           </aside>
 
           <aside class="space fill-w gap divwrapmobile">
-            <span class="h5-em bold">{{item.price }} 
+            <span class="h5-em bold">{{formatPrice(item.price)}} 
               <span class="h10 normal">NEAR</span>
             </span>
             <v-rating
@@ -96,7 +96,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract,utils } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
 const config = {
@@ -130,6 +130,9 @@ export default {
     this.get_categorys()
   },
   methods: {
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    },
     clear() {
       this.category_id = null
       this.price = null
@@ -142,6 +145,7 @@ export default {
       } else {
         this.len_pagination = (this.page - 1) * this.limit
       }
+      this.price = null
       this.getMarketCourses(this.search, this.category_id)
     },
     async Search(search) {
@@ -155,12 +159,14 @@ export default {
       });
     },
     async searchByAuthor(search) {
+      this.page = 1
       this.search = search
-      await this.getMarketCourses(this.search, this.category_id)
+      this.pagination()
     },    
     async changeCategory(id) {
+      this.page = 1
       this.category_id = id
-      await this.getMarketCourses(this.search, this.category_id)
+      this.pagination()
     },
     changePrice(tipo) {
       if (tipo === 1) {

@@ -302,6 +302,7 @@
                   id="publicar_precio"
                   solo
                   style="max-width: 10em"
+                  number
                 >
                 </v-text-field>
               </v-card>
@@ -436,7 +437,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
 const config = {
@@ -767,7 +768,7 @@ export default {
       }
       this.close()
     },
-    async Publicar() {  
+    async Publicar() {   
       this.progress = true
       let input = this.$refs.fileInput
       let file = input.files
@@ -824,9 +825,8 @@ export default {
               long_description: this.descripcion_aprendizaje,
               img: imgFinal,
               content: content,
-              price: parseFloat(this.publicar_precio),
-            }).then((response) => {
-              console.log(response)
+              price: utils.format.parseNearAmount(this.publicar_precio),
+            }).then(() => {
               this.snackbar = {
                   color: "green",
                   icon: "check_circle",
@@ -850,7 +850,6 @@ export default {
                 aprendizaje: this.descripcion_aprendizaje,
                 contenidoTabla: this.desserts,
               }
-          
               this.$store.dispatch("PublicarCurso", { object});
               this.$router.push({ path: '/instructor' })
             }).catch((error) => {
@@ -882,24 +881,6 @@ export default {
             this.progress = false
           })
       }
-      /*
-      let object = {
-        name: this.descripcion_titulo,
-        img: this.descripcion_image,
-        price: this.publicar_precio,
-        earned: 0,
-        inscriptions: 0,
-        rating: 0,
-        //
-        categoria: this.descripcion_categoria,
-        descripcion: this.descripcion_descripcion,
-        aprendizaje: this.descripcion_aprendizaje,
-        contenidoTabla: this.desserts,
-      }
-      console.log(object)
-      this.$store.dispatch("PublicarCurso", { object});
-      this.$router.push({ path: '/instructor' })
-    }*/
   }
 };
 </script>

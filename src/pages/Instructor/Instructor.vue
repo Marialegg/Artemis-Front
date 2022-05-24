@@ -97,7 +97,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
 const config = {
@@ -126,6 +126,9 @@ export default {
     showDialog () {
       this.dialog = !this.dialog
     },
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    },
     async getCoursesInstructor() {
       this.dataCursos = []
       const CONTRACT_NAME = 'contract.e-learning.testnet'
@@ -140,19 +143,19 @@ export default {
       await contract.get_courses_intructor({
         user_id: wallet.getAccountId(),
       })
-        .then((response) => {
+        .then(async (response) => {
           for (var i = 0; i < response.length; i++) {
             var item = {}
             item.id = response[i].id
             item.title = response[i].title
-            item.price = response[i].price
+            item.price = this.formatPrice(response[i].price)
             item.img = response[i].img
-            if (response[i].inscriptions === null) {
+            if (response[i].inscriptions.length === 0) {
               item.profits = 0
               item.inscriptions = 0
             } else {
               item.inscriptions = response[i].inscriptions.length
-              item.profits = response[i].inscriptions.length * response[i].price
+              item.profits = ((response[i].inscriptions.length * this.formatPrice(response[i].price)) * 0.95).toFixed(2)
             }
             if (response[i].reviews === null) {
               item.rating = 0

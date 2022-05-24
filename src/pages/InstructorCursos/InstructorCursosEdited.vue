@@ -125,7 +125,7 @@
               <v-card class="space divwrap" style="display:Flex">
                 <div class="divcol">
                   <span class="h8-em">Precio Actual:</span>
-                  <span class="number bold">{{publicar_precio}} 
+                  <span class="number bold">{{formatPrice(publicar_precio)}} 
                     <span class="h8 normal">NEAR <span class="h6">Ⓝ</span></span>
                   </span>
                 </div>
@@ -198,7 +198,7 @@
                       </aside>
 
                       <aside class="space fill-w gap divwrapmobile">
-                        <span class="h5-em bold">{{item.price }} 
+                        <span class="h5-em bold">{{formatPrice(item.price)}} 
                           <span class="h10 normal">NEAR</span>
                         </span>
                         <v-rating
@@ -221,7 +221,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
 const config = {
@@ -235,16 +235,6 @@ const config = {
 export default {
   name: "Cursos",
   mounted() {
-    /*
-    const edited = this.$store.state.editedCursos;
-    // descripcion
-    this.descripcion_titulo = edited.name
-    this.descripcion_categoria = edited.categoria
-    this.descripcion_descripcion = edited.descripcion
-    this.descripcion_aprendizaje = edited.aprendizaje
-    this.descripcion_image = edited.img
-    // publicar
-    this.publicar_precio = edited.price*/
     this.get_categorys()
     this.getCourseEdit()
   },
@@ -287,6 +277,9 @@ export default {
     }
   },
   methods: {
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    },
     change (id) {
       for (var i = 0; i < this.lista_descripcion_categoria.length; i++) {
         if (this.lista_descripcion_categoria[i].id === id) {
@@ -344,7 +337,7 @@ export default {
           this.id = this.descripcion_categoria.id
           this.descripcion_descripcion = response[0].short_description
           this.descripcion_aprendizaje = response[0].long_description
-          this.publicar_precio = response[0].price
+          this.publicar_precio = this.formatPrice(response[0].price)
           this.descripcion_image = response[0].img
         })
         .catch((error) => {

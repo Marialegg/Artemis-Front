@@ -38,7 +38,7 @@ export default new Router({
           component: () => import('@/pages/Cursos/Cursos'),
         },
         {
-          path: '/detalle-curso',
+          path: '/curso/:id?',
           name: 'DetalleCurso',
           component: () => import('@/pages/Cursos/DetalleCurso'),
         },
