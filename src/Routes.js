@@ -57,6 +57,16 @@ export default new Router({
           name: 'InstructorCursosEdited',
           component: () => import('@/pages/InstructorCursos/InstructorCursosEdited'),
         },
+        {
+          path: '/aprendizaje',
+          name: 'Aprendizaje',
+          component: () => import('@/pages/Aprendizaje/Aprendizaje'),
+        },
+        {
+          path: '/examenCreator',
+          name: 'ExamenCreator',
+          component: () => import('@/pages/ExamenCreator/ExamenCreator'),
+        },
       ],
     },
     // here path 3 if need

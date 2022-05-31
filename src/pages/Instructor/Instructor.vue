@@ -70,7 +70,7 @@
 
           <span class="h8-em tcenter">Valoración del curso</span>
 
-          <div class="spacee fill-Ⓝw">
+          <div class="spacee fill-w">
             <v-btn class="botones h9-em" rounded :to="'/instructor-editar-curso/' + item.id">EDITAR</v-btn>
             <v-btn class="botones h9-em" rounded @click="showDialog()">ELIMINAR</v-btn>
           </div>
