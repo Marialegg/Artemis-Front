@@ -63,9 +63,9 @@ export default new Router({
           component: () => import('@/pages/Aprendizaje/Aprendizaje'),
         },
         {
-          path: '/examenCreator',
-          name: 'ExamenCreator',
-          component: () => import('@/pages/ExamenCreator/ExamenCreator'),
+          path: '/ver-curso/:id?',
+          name: 'VerCurso',
+          component: () => import('@/pages/Aprendizaje/VerCurso/VerCurso'),
         },
       ],
     },

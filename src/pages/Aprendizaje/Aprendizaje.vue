@@ -7,15 +7,6 @@
 
       <div class="jend divwrap gap">
         <span class="h7-em bold marginrighta">DESDE ACA PODRA GESTIONAR SUS EXAMENES</span>
-        <aside class="divrow gap">
-          <v-btn 
-            class="botones h9-em" 
-            rounded
-            @click="newTest()"
-          >
-            NUEVO EXAMEN
-          </v-btn>
-        </aside>
       </div>
     </v-col>
 
@@ -39,11 +30,11 @@
         </aside>
         
         <aside class="divcol">
-          <h3 class="h7-em p">Creado por:</h3>
-          <span class="h7-em tcenter">IRON MAN</span>
+          <h3 class="h7-em p" style="color: #747A80 !important">Creado por:</h3>
+          <span class="h7-em tcenter" style="color: #FF6B3B">IRON MAN</span>
         </aside>
 
-        <v-btn class="botones h9-em" rounded>VER CURSO</v-btn>
+        <v-btn class="botones h9-em" rounded @click="$router.push('/ver-curso')">VER CURSO</v-btn>
       </section>
     </v-col>
   </section>
