@@ -17,7 +17,7 @@
 
         <v-stepper-content :step="i+1" :key="i">
           <section class="sectionTop" v-if="item.type == 'article'">
-            <!-- <pdf src="@/assets/articles/a.pdf"></pdf> -->
+            <VueDocPreview :value="docPreview.value" :type="docPreview.type" />
           </section>
 
           <section class="sectionTop" v-if="item.type == 'video'">
@@ -131,11 +131,11 @@
 </template>
 
 <script>
-// import pdf from 'vue-pdf'
+import VueDocPreview from 'vue-doc-preview'
 
 export default {
   name: "VerCurso",
-  // components: { pdf },
+  components: { VueDocPreview },
   data() {
     return {
       e6: 0,
@@ -182,7 +182,11 @@ export default {
             },
           ],
         },
-      ]
+      ],
+      docPreview: {
+        value: "https://www.sample-videos.com/doc/Sample-doc-file-100kb.doc",
+        type: "office",
+      }
     }
   },
   mounted () {

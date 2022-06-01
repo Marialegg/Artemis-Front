@@ -39,19 +39,28 @@
   .sectionTop {
     --border: 15px;
     width: 99%;
-    height: 34em;
+    height: 33.14em;
     background-color: #FFFFFF;
     box-shadow: 0px 0px 5px rgb(0, 0, 0, 0.5) !important;
     border-radius: var(--border);
     margin: auto;
     margin-block: 5px calc(16px * 2);
     >* {
-      --size: .5em;
+      --size: 0em;
       box-sizing: border-box;
       margin: var(--size);
       border-radius: var(--border);
       width: calc(100% - (var(--size) * 2)) !important;
       height: calc(100% - (var(--size) * 2)) !important;
+    }
+    #VueDocPreviewRoot {
+      --size: 0em;
+      box-sizing: border-box;
+      margin: var(--size);
+      border-radius: var(--border);
+      width: calc(100% - (var(--size) * 2)) !important;
+      height: calc(100% - (var(--size) * 2)) !important;
+      overflow: hidden;
     }
     .v-window__container {
       padding: 2em;
