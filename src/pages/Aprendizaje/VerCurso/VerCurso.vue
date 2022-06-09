@@ -1,65 +1,52 @@
 <template>
   <section id="verCurso" class="subparent divcol gap">
-    <v-stepper
-      v-model="e6"
-      non-linear
-    >
-      <h2 class="h4-em">{{title}}</h2>
-      <!-- ////////////////////////////////// -->
-      <template v-for="(item,i) in dataStepper">
-        <v-stepper-step
-          :step="i+1"
-          editable
-          :key="i"
-        >
-          {{item.listTitle}}
-        </v-stepper-step>
+    <h2 class="h4-em">{{title}}</h2>
+    <v-tabs v-model="tabs" vertical>
 
-        <v-stepper-content :step="i+1" :key="i">
-          <section class="sectionTop" v-if="item.type == 'article'">
-            <VueDocPreview :value="docPreview.value" :type="docPreview.type" />
-          </section>
+    <!-- ////////////////////////////////// -->
+      <v-tab v-for="(item,i) in dataStepper" :key="i" active-class="activeClass" class="jstart">
+        <v-icon left class="notdefault-clr">
+          mdi-numeric-{{i+1}}-circle
+        </v-icon>
+        {{item.listTitle}}
+      </v-tab>
+      <v-tab>CERTIFICACIÓN</v-tab>
+    <!-- ////////////////////////////////// -->
 
-          <section class="sectionTop" v-if="item.type == 'video'">
-            <video :src="item.course.video" controls />
-          </section>
+      <v-tab-item v-for="(item,i) in dataStepper" :key="i">
+        <section class="sectionTop" v-if="item.type == 'article'">
+          <VueDocPreview :value="docPreview.value" :type="docPreview.type" />
+        </section>
 
-          <aside class="divcol">
-            <h4 class="h7-em semibold fill-w notdefault-clr">DESCRIPCIÓN</h4>
-            <p>{{item.course.desc}}</p>
-          </aside>
-          
-          <aside class="divcol">
-            <h4 class="h7-em semibold fill-w notdefault-clr">LO QUE APRENDERAS</h4>
-            <p v-html="item.course.aprendizaje"></p>
-          </aside>
+        <section class="sectionTop" v-if="item.type == 'video'">
+          <video :src="item.course.video" controls />
+        </section>
 
-          <aside class="divcol">
-            <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
-            <div class="space">
-              <p>Puedes optar por la certificacion ahota. puedes optar 1 vez.</p>
-              <v-btn class="botones h9-em" rounded  @click="e6 = dataStepper+1">CERTIFICATE</v-btn>
-            </div>
-          </aside>
+        <aside class="divcol">
+          <h4 class="h7-em semibold fill-w notdefault-clr">DESCRIPCIÓN</h4>
+          <p>{{item.course.desc}}</p>
+        </aside>
+        
+        <aside class="divcol">
+          <h4 class="h7-em semibold fill-w notdefault-clr">LO QUE APRENDERAS</h4>
+          <p v-html="item.course.aprendizaje"></p>
+        </aside>
 
-          <aside class="space">
-            <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
-            <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
-          </aside>
-        </v-stepper-content>
-      </template>
-      <!-- ////////////////////////////////// -->
+        <aside class="divcol">
+          <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
+          <div class="space">
+            <p>Puedes optar por la certificacion ahota. puedes optar 1 vez.</p>
+            <v-btn class="botones h9-em" rounded  @click="tabs=dataStepper.length">CERTIFICATE</v-btn>
+          </div>
+        </aside>
 
-      <!-- ////////////////////////////////// -->
-      <v-stepper-step
-        :step="dataStepper+1"
-        editable
-        complete
-      >
-        CERTIFICACIÓN
-      </v-stepper-step>
-
-      <v-stepper-content :step="dataStepper+1">
+        <aside class="space">
+          <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
+          <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
+        </aside>
+      </v-tab-item>
+    <!-- ////////////////////////////////// -->
+      <v-tab-item>
         <section class="sectionTop">
           <v-window v-model="PresentacionExamen" touchless>
             <v-window-item v-for="(item,i) in dataPresentacionExamen" :key="i" :value="i+1">
@@ -116,7 +103,9 @@
           <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
           <div class="space">
             <p>Puedes optar por la certificacion ahota. puedes optar 1 vez.</p>
-            <v-btn class="botones h9-em" rounded>CERTIFICATE</v-btn>
+            <v-btn class="botones h9-em" rounded @click="tabs=dataStepper.length">
+              CERTIFICATE
+            </v-btn>
           </div>
         </aside>
 
@@ -124,9 +113,8 @@
           <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
           <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
         </aside>
-      </v-stepper-content>
-      <!-- ////////////////////////////////// -->
-    </v-stepper>
+      </v-tab-item>
+    </v-tabs>
   </section>
 </template>
 
@@ -138,7 +126,7 @@ export default {
   components: { VueDocPreview },
   data() {
     return {
-      e6: 0,
+      tabs: 0,
       title: "Blockchain y NEAR Protocol: Fundamentos Esenciales",
       dataStepper: [
         {
