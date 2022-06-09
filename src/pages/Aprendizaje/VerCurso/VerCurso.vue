@@ -15,7 +15,7 @@
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
         <section class="sectionTop" v-if="item.type == 'article'">
-          <VueDocPreview :value="docPreview.value" :type="docPreview.type" />
+          <VueDocPreview style="height: 33.14em !important" :value="docPreview.value" :type="docPreview.type" />
         </section>
 
         <section class="sectionTop" v-if="item.type == 'video'">
