@@ -15,7 +15,7 @@
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
         <section class="sectionTop" v-if="item.type == 'article'">
-          <VueDocPreview style="height: 33.14em !important" :value="docPreview.value" :type="docPreview.type" />
+          <VueDocPreview style="height: 33.14em !important" :value="item.docPreview.value" :type="item.docPreview.type" />
         </section>
 
         <section class="sectionTop" v-if="item.type == 'video'">
@@ -132,6 +132,10 @@ export default {
         {
           listTitle: "INTRODUCCIÓN",
           type: "article",
+          docPreview: {
+            value: "https://www.sample-videos.com/doc/Sample-doc-file-100kb.doc",
+            type: "office",
+          },
           course: {
             desc: "Aprende los principales elementos de blockchain (cadena de bloques) y NEAR Protocol en este curso en video.",
             aprendizaje: "Tendrás un claro entendimiento de lo que es la tecnología blockchain, también conocida como cadena de bloques, y cómo funciona. <br>Entenderás lo que es Bitcoin y cómo puedes empezar a usar Bitcoin. <br>Conocerás , entenderás y podrás hablar con confianza acerca de los principales términos y conceptos relacionados a blockchain y Bitcoin."
@@ -171,10 +175,6 @@ export default {
           ],
         },
       ],
-      docPreview: {
-        value: "https://www.sample-videos.com/doc/Sample-doc-file-100kb.doc",
-        type: "office",
-      }
     }
   },
   mounted () {
