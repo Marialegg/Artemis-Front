@@ -1,16 +1,16 @@
 <template>
   <section id="verCurso" class="subparent divcol gap">
     <h2 class="h4-em">{{title}}</h2>
-    <v-tabs v-model="tabs" vertical>
+    <v-tabs v-model="tabs" vertical >
 
     <!-- ////////////////////////////////// -->
-      <v-tab v-for="(item,i) in dataStepper" :key="i" active-class="activeClass" class="jstart">
+      <v-tab v-for="(item,i) in dataStepper" :key="i" active-class="activeClass" class="jstart h9-em">
         <v-icon left class="notdefault-clr">
           mdi-numeric-{{i+1}}-circle
         </v-icon>
         {{item.listTitle}}
       </v-tab>
-      <v-tab>CERTIFICACIÓN</v-tab>
+      <v-tab class="h9-em">CERTIFICACIÓN</v-tab>
     <!-- ////////////////////////////////// -->
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
@@ -38,11 +38,6 @@
             <p>Puedes optar por la certificacion ahota. puedes optar 1 vez.</p>
             <v-btn class="botones h9-em" rounded  @click="tabs=dataStepper.length">CERTIFICATE</v-btn>
           </div>
-        </aside>
-
-        <aside class="space">
-          <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
-          <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
         </aside>
       </v-tab-item>
     <!-- ////////////////////////////////// -->
@@ -77,7 +72,29 @@
               <aside class="contControls spacee gap">
                 <v-btn rounded v-if="i >= 1" @click="PresentacionExamen--">ANTERIOR</v-btn>
                 <v-btn v-if="i > dataPresentacionExamen.length" rounded @click="PresentacionExamen++">SIGUIENTE</v-btn>
-                <v-btn v-else rounded>Finalizar</v-btn>
+                <v-btn v-else rounded @click="PresentacionExamen++">Finalizar</v-btn>
+              </aside>
+            </v-window-item>
+
+            <v-window-item :value="dataPresentacionExamen.length+1">
+              <aside class="divcol">
+                <h5>VALORA ESTE CURSO</h5>
+                <v-rating
+                  v-model="feedback.rating"
+                  background-color="pink lighten-3"
+                  color="orange"
+                ></v-rating>
+
+                <h5>DANOS TU OPINION</h5>
+                <v-textarea
+                  v-model="feedback.coment"
+                  filled
+                  no-resize
+                ></v-textarea>
+              </aside>
+
+              <aside class="contControls center">
+                <v-btn rounded>GRABAR</v-btn>
               </aside>
             </v-window-item>
           </v-window>
@@ -99,20 +116,10 @@
           </p>
         </aside>
 
-        <aside class="divcol">
-          <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
-          <div class="space">
-            <p>Puedes optar por la certificacion ahota. puedes optar 1 vez.</p>
-            <v-btn class="botones h9-em" rounded @click="tabs=dataStepper.length">
-              CERTIFICATE
-            </v-btn>
-          </div>
-        </aside>
-
-        <aside class="space">
+        <!-- <aside class="space">
           <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
           <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
-        </aside>
+        </aside> -->
       </v-tab-item>
     </v-tabs>
   </section>
@@ -175,6 +182,7 @@ export default {
           ],
         },
       ],
+      feedback: { rating: null, coment: null }
     }
   },
   mounted () {
