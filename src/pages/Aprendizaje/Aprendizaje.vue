@@ -20,13 +20,13 @@
         </aside>
 
         <aside class="divcol">
-          <h3 class="h7-em p alignmobile" style="margin-right: auto">LO QUE APRENDERAS</h3>
-          <span class="h7-em tcentermobile">{{item.desc}}</span>
+          <h3 class="h7-em p alignmobile" style="margin-right: auto">TITULO</h3>
+          <span class="h8-em descLimiter tcentermobile">{{item.title}}</span>
         </aside>
         
         <aside class="divcol">
-          <h3 class="h6-em p">{{item.valoracion}}</h3>
-          <span class="h7-em tcenter">Valoracion del curso</span>
+          <h3 class="h7-em p alignmobile" style="margin-right: auto">LO QUE APRENDERAS</h3>
+          <span class="h8-em descLimiter tspacemobile">{{item.desc}}</span>
         </aside>
         
         <aside class="divcol">
@@ -59,8 +59,9 @@ export default {
     return {
       dataCursos: [
         {
+          title: "rust",
           img: require('@/assets/images/rust.png'),
-          desc: "Grundlagen der JavaScript-Programmierung:jekten, Arrays, orEa ...",
+          desc: "Grundlagen der JavaScript-Programmierung:jekten, Arrays, orEa ...Grundlagen der JavaScript-Programmierung:jekten, Arrays, orEa ...Grundlagen der JavaScript-Programmierung:jekten, Arrays, orEa ...",
           valoracion: 4.5,
         },
       ],
