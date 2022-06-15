@@ -23,7 +23,7 @@
           <h3 class="h7-em p alignmobile" style="margin-right: auto">TITULO</h3>
           <span class="h8-em descLimiter tcentermobile">{{item.title}}</span>
         </aside>
-        
+
         <aside class="divcol">
           <h3 class="h7-em p alignmobile" style="margin-right: auto">LO QUE APRENDERAS</h3>
           <span class="h8-em descLimiter tspacemobile">{{item.desc}}</span>
