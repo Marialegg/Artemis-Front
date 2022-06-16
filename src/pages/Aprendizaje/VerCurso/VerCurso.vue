@@ -15,7 +15,8 @@
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
         <section class="sectionTop" v-if="item.type == 2">
-          <VueDocPreview style="height: 33.14em !important" :value="item.docPreview.value" :type="item.docPreview.type" />
+          <VueDocPreview v-if="item.docPreview.type" style="height: 33.14em !important" :value="item.docPreview.value" :type="item.docPreview.type" />
+          <ejs-pdfviewer v-if="item.documentPath" id="pdfViewer" style="height: 33.14em !important" :serviceUrl="serviceUrl" :documentPath="documentPath"></ejs-pdfviewer>
         </section>
 
         <section class="sectionTop" v-if="item.type == 1">
@@ -139,12 +140,20 @@ const config = {
         explorerUrl: "https://explorer.testnet.near.org",
 };
 import VueDocPreview from 'vue-doc-preview'
+import { PdfViewerPlugin, Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner } from '@syncfusion/ej2-vue-pdfviewer';
+import Vue from 'vue';
+Vue.use(PdfViewerPlugin);
 
 export default {
   name: "VerCurso",
   components: { VueDocPreview },
+  provide: {
+    PdfViewer: [Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner]
+  },
   data() {
     return {
+      serviceUrl:"https://ej2services.syncfusion.com/production/web-services/api/pdfviewer",
+      documentPath:"PDF_Succinctly.pdf",
       course_id: this.$route.params.id,
       tabs: 0,
       title: '',

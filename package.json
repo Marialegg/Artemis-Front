@@ -12,6 +12,7 @@
     "@mdi/font": "^6.5.95",
     "@mdi/js": "^6.5.95",
     "@metamask/detect-provider": "^1.2.0",
+    "@syncfusion/ej2-vue-pdfviewer": "^20.1.60",
     "apexcharts": "^3.33.2",
     "axios": "^0.26.0",
     "core-js": "^3.10.1",

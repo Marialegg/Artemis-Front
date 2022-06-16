@@ -11,6 +11,9 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import VueAnimateOnScroll from 'vue-animate-onscroll';
 import VueApexCharts from 'vue-apexcharts'
+import { PdfViewerPlugin } from '@syncfusion/ej2-vue-pdfviewer';
+
+Vue.use(PdfViewerPlugin);
 
 Vue.use(VueApexCharts)
 
