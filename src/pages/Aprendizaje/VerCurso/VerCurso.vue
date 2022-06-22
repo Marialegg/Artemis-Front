@@ -15,8 +15,8 @@
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
         <section class="sectionTop" v-if="item.type == 2">
-          <VueDocPreview v-if="item.docPreview.type" style="height: 33.14em !important" :value="item.docPreview.value" :type="item.docPreview.type" />
-          <ejs-pdfviewer v-if="item.documentPath" id="pdfViewer" style="height: 33.14em !important" :serviceUrl="serviceUrl" :documentPath="documentPath"></ejs-pdfviewer>
+          <embed :src="item.documentPath" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+          <!-- <ejs-pdfviewer v-if="item.documentPath" id="pdfViewer" style="height: 33.14em !important" :serviceUrl="serviceUrl" :documentPath="documentPath"></ejs-pdfviewer> -->
         </section>
 
         <section class="sectionTop" v-if="item.type == 1">
@@ -117,6 +117,8 @@
           </p>
         </aside>
 
+        <embed src="https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+
         <!-- <aside class="space">
           <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
           <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
@@ -139,27 +141,48 @@ const config = {
         helperUrl: "https://helper.testnet.near.org",
         explorerUrl: "https://explorer.testnet.near.org",
 };
-import VueDocPreview from 'vue-doc-preview'
+//import VueDocPreview from 'vue-doc-preview'
 import { PdfViewerPlugin, Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner } from '@syncfusion/ej2-vue-pdfviewer';
 import Vue from 'vue';
 Vue.use(PdfViewerPlugin);
 
 export default {
   name: "VerCurso",
-  components: { VueDocPreview },
+  //components: { VueDocPreview },
   provide: {
     PdfViewer: [Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner]
   },
   data() {
     return {
       serviceUrl:"https://ej2services.syncfusion.com/production/web-services/api/pdfviewer",
-      documentPath:"PDF_Succinctly.pdf",
+      documentPath: "https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf",
       course_id: this.$route.params.id,
       tabs: 0,
       title: '',
       dataStepper: [],
       PresentacionExamen: 1,
       dataPresentacionExamen: [
+        {
+          question1: "¿Qué casos reales de uso tienen hoy los 'smart contracts'?",
+          options: [
+            {
+              option: "Deuda en la biblioteca",
+              isSelected: false,
+            },
+            {
+              option: "Non Funfile Tokens",
+              isSelected: false,
+            },
+            {
+              option: "Lavado de Autos",
+              isSelected: false,
+            },
+            {
+              option: "Estudios Universitarios",
+              isSelected: false,
+            },
+          ],
+        },
         {
           question1: "¿Qué casos reales de uso tienen hoy los 'smart contracts'?",
           options: [
@@ -213,10 +236,11 @@ export default {
               item = {
                 listTitle: response.content[i].title,
                 type: response.content[i].tipo,
-                docPreview: {
-                  value: response.content[i].content,
-                  type: "code"
-                },
+                // docPrevieww: {
+                //   value: response.content[i].content,
+                //   type: "code"
+                // },
+                documentPath: response.content[i].content,
                 course: {
                   desc: response.short_description,
                   aprendizaje: response.long_description
@@ -233,9 +257,9 @@ export default {
                 }
               }
             }
-
             this.dataStepper.push(item)
           }
+          this.tabs = 1
         })
         .catch((error) => {
           console.log(error)
