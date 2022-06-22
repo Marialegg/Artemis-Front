@@ -1,12 +1,4 @@
 @import "@/styles/app";
-@import '../../../../node_modules/@syncfusion/ej2-base/styles/material.css';
-@import '../../../../node_modules/@syncfusion/ej2-buttons/styles/material.css';
-@import '../../../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
-@import '../../../../node_modules/@syncfusion/ej2-inputs/styles/material.css';
-@import '../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
-@import '../../../../node_modules/@syncfusion/ej2-popups/styles/material.css';
-@import '../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
-@import "../../../../node_modules/@syncfusion/ej2-vue-pdfviewer/styles/material.css";
 
 // verCurso
 #verCurso {
@@ -55,7 +47,7 @@
   .sectionTop {
     --border: 15px;
     width: 99%;
-    height: max-content;
+    height: 450.53px;
     background-color: #FFFFFF;
     border-radius: var(--border);
     margin: auto;
@@ -97,6 +89,16 @@
           span {color: #FFFFFF !important}
         }
       }
+    }
+
+    // presentar examen
+    .warningExamnen {
+      display: flex;
+      text-align: justify;
+      justify-content: center;
+      align-items: center;
+      height: max-content !important;
+      padding: 4em 2em;
     }
   }
 }

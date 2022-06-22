@@ -99,6 +99,14 @@ input[type="file"] {
   background-color: #F29627 !important;filter: $sombra-filter;span {color: #FFFFFF !important}
 }
 
+.botones2 {
+  min-width: min(100%, 22.5em);
+  min-height: 2.4em;
+  background-color: #D0BFAA !important;
+  filter: $sombra-filter;
+  span {color: #FFFFFF !important}
+}
+
 .form {
   .v-input__slot {
     background-color: var(--clr-card) !important;

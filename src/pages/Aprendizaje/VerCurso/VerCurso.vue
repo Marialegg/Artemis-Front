@@ -10,7 +10,7 @@
         </v-icon>
         {{item.listTitle}}
       </v-tab>
-      <v-tab class="h9-em">CERTIFICACIÓN</v-tab>
+      <v-tab class="h9-em" style="display:none">VALORAR CURSO</v-tab>
     <!-- ////////////////////////////////// -->
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
@@ -33,51 +33,24 @@
           <p v-html="item.course.aprendizaje"></p>
         </aside>
 
+        <aside class="space">
+          <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
+          <v-btn class="botones h9-em" rounded @click="tabs=dataStepper.length+1">VALORAR CURSO</v-btn>
+        </aside>
+
         <aside class="divcol">
           <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
           <div class="space">
-            <p>Puedes optar por la certificacion ahota. puedes optar 1 vez.</p>
-            <v-btn class="botones h9-em" rounded  @click="tabs=dataStepper.length">CERTIFICATE</v-btn>
+            <p>Puedes optar por la certificacion ahora. puedes optar 1 vez.</p>
+            <v-btn class="botones h9-em" rounded to="/presentar-examen">CERTIFICATE</v-btn>
           </div>
         </aside>
       </v-tab-item>
     <!-- ////////////////////////////////// -->
       <v-tab-item>
         <section class="sectionTop">
-          <v-window v-model="PresentacionExamen" touchless>
-            <v-window-item v-for="(item,i) in dataPresentacionExamen" :key="i" :value="i+1">
-              <aside class="divcol">
-                <h5>PREGUNTA # {{i+1}}</h5>
-                <span>{{item.question1}}</span>
-              </aside>
-
-              <aside class="divcol">
-                <div class="space">
-                  <h5>OPCIONES</h5>
-                  <h5>SELECCIÓN</h5>
-                </div>
-                <ul class="divcol">
-                  <li v-for="(item2,i) in item.options" :key="i"
-                    class="space">
-                    <span>{{item2.option}}</span>
-                    <v-checkbox
-                      v-model="item2.isSelected"
-                      hide-details
-                      @click="item.options.forEach(element=>{element.isSelected=false});item2.isSelected=true"
-                      style="margin-top: 0"
-                    ></v-checkbox>
-                  </li>
-                </ul>
-              </aside>
-
-              <aside class="contControls spacee gap">
-                <v-btn rounded v-if="i >= 1" @click="PresentacionExamen--">ANTERIOR</v-btn>
-                <v-btn v-if="i > dataPresentacionExamen.length" rounded @click="PresentacionExamen++">SIGUIENTE</v-btn>
-                <v-btn v-else rounded @click="PresentacionExamen++">Finalizar</v-btn>
-              </aside>
-            </v-window-item>
-
-            <v-window-item :value="dataPresentacionExamen.length+1">
+          <v-window touchless>
+            <v-window-item>
               <aside class="divcol">
                 <h5>VALORA ESTE CURSO</h5>
                 <v-rating
@@ -101,11 +74,11 @@
           </v-window>
         </section>
 
-        <aside class="divcol">
+        <!-- <aside class="divcol">
           <h4 class="h7-em semibold fill-w notdefault-clr">DESCRIPCIÓN</h4>
           <p>Aprende los principales elementos de blockchain (cadena de bloques) y NEAR Protocol en este curso en video.</p>
         </aside>
-        
+
         <aside class="divcol">
           <h4 class="h7-em semibold fill-w notdefault-clr">LO QUE APRENDERAS</h4>
           <p>
@@ -115,14 +88,15 @@
             Conocerás , entenderás y podrás hablar con confianza acerca de los principales 
             términos y conceptos relacionados a blockchain y Bitcoin.
           </p>
-        </aside>
-
-        <embed src="https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
-
-        <!-- <aside class="space">
-          <h4 class="h7-em semibold fill-w notdefault-clr">DANOS TU OPINION</h4>
-          <v-btn class="botones h9-em" rounded>VALORAR CURSO</v-btn>
         </aside> -->
+
+        <aside class="divcol">
+          <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
+          <div class="space">
+            <p>Puedes optar por la certificacion ahora. puedes optar 1 vez.</p>
+            <v-btn class="botones h9-em" rounded to="/presentar-examen">CERTIFICATE</v-btn>
+          </div>
+        </aside>
       </v-tab-item>
     </v-tabs>
   </section>
@@ -142,69 +116,24 @@ const config = {
         explorerUrl: "https://explorer.testnet.near.org",
 };
 //import VueDocPreview from 'vue-doc-preview'
-import { PdfViewerPlugin, Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner } from '@syncfusion/ej2-vue-pdfviewer';
-import Vue from 'vue';
-Vue.use(PdfViewerPlugin);
+// import { PdfViewerPlugin, Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner } from '@syncfusion/ej2-vue-pdfviewer';
+// import Vue from 'vue';
+// Vue.use(PdfViewerPlugin);
 
 export default {
   name: "VerCurso",
   //components: { VueDocPreview },
-  provide: {
-    PdfViewer: [Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner]
-  },
+  // provide: {
+  //   PdfViewer: [Toolbar, Magnification, Navigation, LinkAnnotation, BookmarkView, ThumbnailView, Print, TextSelection, TextSearch, Annotation, FormFields, FormDesigner]
+  // },
   data() {
     return {
-      serviceUrl:"https://ej2services.syncfusion.com/production/web-services/api/pdfviewer",
-      documentPath: "https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf",
+      // serviceUrl:"https://ej2services.syncfusion.com/production/web-services/api/pdfviewer",
+      // documentPath: "https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf",
       course_id: this.$route.params.id,
       tabs: 0,
       title: '',
       dataStepper: [],
-      PresentacionExamen: 1,
-      dataPresentacionExamen: [
-        {
-          question1: "¿Qué casos reales de uso tienen hoy los 'smart contracts'?",
-          options: [
-            {
-              option: "Deuda en la biblioteca",
-              isSelected: false,
-            },
-            {
-              option: "Non Funfile Tokens",
-              isSelected: false,
-            },
-            {
-              option: "Lavado de Autos",
-              isSelected: false,
-            },
-            {
-              option: "Estudios Universitarios",
-              isSelected: false,
-            },
-          ],
-        },
-        {
-          question1: "¿Qué casos reales de uso tienen hoy los 'smart contracts'?",
-          options: [
-            {
-              option: "Deuda en la biblioteca",
-              isSelected: false,
-            },
-            {
-              option: "Non Funfile Tokens",
-              isSelected: false,
-            },
-            {
-              option: "Lavado de Autos",
-              isSelected: false,
-            },
-            {
-              option: "Estudios Universitarios",
-              isSelected: false,
-            },
-          ],
-        },
-      ],
       feedback: { rating: null, coment: null }
     }
   },
