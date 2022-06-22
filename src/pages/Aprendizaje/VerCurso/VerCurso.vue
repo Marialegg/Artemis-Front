@@ -1,7 +1,8 @@
 <template>
-  <section id="verCurso" class="subparent divcol gap">
+  <section id="verCurso" class="subparent divcol gap relative">
+      <img v-for="n in 3" :key="n" class="decoration" src="@/assets/images/decoration.png">
     <h2 class="h4-em">{{title}}</h2>
-    <v-tabs v-model="tabs" vertical >
+    <v-tabs v-model="tabs" vertical>
 
     <!-- ////////////////////////////////// -->
       <v-tab v-for="(item,i) in dataStepper" :key="i" active-class="activeClass" class="jstart h9-em">
@@ -15,7 +16,7 @@
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
         <section class="sectionTop" v-if="item.type == 2">
-          <embed :src="item.documentPath" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+          <embed class="embed" :src="item.documentPath" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
           <!-- <ejs-pdfviewer v-if="item.documentPath" id="pdfViewer" style="height: 33.14em !important" :serviceUrl="serviceUrl" :documentPath="documentPath"></ejs-pdfviewer> -->
         </section>
 
