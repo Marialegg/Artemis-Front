@@ -1,6 +1,5 @@
 <template>
   <section id="verCurso" class="subparent divcol gap relative">
-      <img v-for="n in 3" :key="n" class="decoration" src="@/assets/images/decoration.png">
     <h2 class="h4-em">{{title}}</h2>
     <v-tabs v-model="tabs" vertical>
 
