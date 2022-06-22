@@ -29,7 +29,37 @@
           >
           NUEVO CURSO
           </v-btn>
-          <v-btn class="botones h9-em" rounded>ESTADÍSTICAS</v-btn>
+
+          <v-dialog
+            v-model="dialogEstadisticas"
+            max-width="800px"
+            scrollable
+            overlay-opacity="0.4"
+          >
+            <template v-slot:activator="{on, attrs}">
+              <v-btn class="botones h9-em" rounded v-on="on" v-bind="attrs">ESTADÍSTICAS</v-btn>
+            </template>
+
+            <v-card class="cardEstadisticas">
+              <v-card-title class="center">
+                <h3 class="h5-em">ESTADÍSTICAS</h3>
+              </v-card-title>
+
+              <v-data-table
+                :headers="tableHeaders"
+                :items="tableEstadisticas"
+                hide-default-footer
+              >
+                <template v-slot:[`item.ganado`]="{ item }">
+                  {{item.ganado}} <span class="bold" style="color:var(--clr-btn)">NEAR</span>
+                </template>
+              </v-data-table>
+
+              <v-card-action class="end">
+                <v-btn class="h8-em botones" rounded @click="dialogEstadisticas=false">CERRAR</v-btn>
+              </v-card-action>
+            </v-card>
+          </v-dialog>
         </aside>
       </div>
     </v-col>
@@ -117,6 +147,33 @@ export default {
       dialog: false,
       item_id: {},
       disabled_delete: false,
+      dialogEstadisticas: false,
+      tableHeaders: [
+        { align: 'end', sortable: false, value: 'name' },
+        { align: 'center', text: 'Ganado', value: 'ganado' },
+        { align: 'center', text: 'Cursos Vendidos', value: 'vendido' },
+        { align: 'center', text: 'Valoraciones', value: 'valoracion' },
+      ],
+      tableEstadisticas: [
+        {
+          name: 'Esta semana',
+          ganado: 10,
+          vendido: 3,
+          valoracion: 4.5,
+        },
+        {
+          name: 'Ultimos 30 días',
+          ganado: 100,
+          vendido: 10,
+          valoracion: 4.6,
+        },
+        {
+          name: 'Instructor',
+          ganado: 250,
+          vendido: 17,
+          valoracion: 4.5,
+        },
+      ]
     }
   },
   mounted () {

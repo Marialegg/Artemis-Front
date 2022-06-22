@@ -11,7 +11,7 @@
         {{item.listTitle}}
       </v-tab>
       <v-tab class="h9-em" style="display:none">VALORAR CURSO</v-tab>
-    <!-- ////////////////////////////////// -->
+      <!-- ////////////////////////////////// -->
 
       <v-tab-item v-for="(item,i) in dataStepper" :key="i">
         <section class="sectionTop" v-if="item.type == 2">

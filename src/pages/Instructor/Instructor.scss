@@ -41,20 +41,28 @@
             padding: 0.2em;
           }
         }
-        &+aside {
-          gap: 1em;
-        }
+        &+aside {gap: 1em}
         &:last-child {
-          & > div {
-            gap: 0.5em;
-          }
+          & > div {gap: 0.5em}
           & div:nth-child(1) {
-            button {
-              padding: 0;
-            }
+            button {padding: 0}
           }
         }
       }
     }
   }
+}
+
+// dialog
+.cardEstadisticas {
+  padding: 2em;
+  border-radius:40px !important;
+  border: 2px ridge black;
+  :is(td, th) {
+    --size: clamp(1em, 1.2vw, 1.2em);
+    font-size: var(--size) !important;
+    & span {font-size: var(--size) !important}
+  }
+  td:not(td:first-child) {color: $clr-btn !important}
+  & .v-data-table__mobile-row__header {color: var(--clr) !important}
 }
