@@ -90,13 +90,13 @@
           </p>
         </aside> -->
 
-        <aside class="divcol">
+        <!-- <aside class="divcol">
           <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
           <div class="space">
             <p>Puedes optar por la certificacion ahora. puedes optar 1 vez.</p>
             <v-btn class="botones h9-em" rounded to="/presentar-examen">CERTIFICATE</v-btn>
           </div>
-        </aside>
+        </aside> -->
       </v-tab-item>
     </v-tabs>
   </section>
@@ -131,7 +131,7 @@ export default {
       // serviceUrl:"https://ej2services.syncfusion.com/production/web-services/api/pdfviewer",
       // documentPath: "https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf",
       course_id: this.$route.params.id,
-      tabs: 0,
+      tabs: 1,
       title: '',
       dataStepper: [],
       feedback: { rating: null, coment: null }

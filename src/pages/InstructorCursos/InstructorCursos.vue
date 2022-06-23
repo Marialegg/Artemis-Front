@@ -1663,33 +1663,51 @@ export default {
               content: content,
               price: utils.format.parseNearAmount(this.publicar_precio),
             })
-            .then((response) => {
-              console.log("response", response)
-              this.snackbar = {
-                color: "green",
-                icon: "check_circle",
-                mode: "multi-line",
-                position: "top",
-                timeout: 1500,
-                title: "Éxito!",
-                text: "Tu curso ha sido publicado",
-                visible: true,
-              };
-              let object = {
-                name: this.descripcion_titulo,
-                img: this.descripcion_image,
-                price: this.publicar_precio,
-                earned: 0,
-                inscriptions: 0,
-                rating: 0,
-                //
-                categoria: this.descripcion_categoria,
-                descripcion: this.descripcion_descripcion,
-                aprendizaje: this.descripcion_aprendizaje,
-                contenidoTabla: this.desserts,
-              };
-              this.$store.dispatch("PublicarCurso", { object });
-              this.$router.push({ path: "/instructor" });
+            .then(() => {
+              const url = "api/v1/profile/"
+              this.axios.defaults.headers.common.Authorization='token '
+              this.axios.post(url, this.profile)
+                .then((response) => {
+                  if (response.data){
+                    this.snackbar = {
+                      color: "green",
+                      icon: "check_circle",
+                      mode: "multi-line",
+                      position: "top",
+                      timeout: 1500,
+                      title: "Éxito!",
+                      text: "Tu curso ha sido publicado",
+                      visible: true,
+                    };
+                    let object = {
+                      name: this.descripcion_titulo,
+                      img: this.descripcion_image,
+                      price: this.publicar_precio,
+                      earned: 0,
+                      inscriptions: 0,
+                      rating: 0,
+                      //
+                      categoria: this.descripcion_categoria,
+                      descripcion: this.descripcion_descripcion,
+                      aprendizaje: this.descripcion_aprendizaje,
+                      contenidoTabla: this.desserts,
+                    };
+                    this.$store.dispatch("PublicarCurso", { object });
+                    this.$router.push({ path: "/instructor" });
+                  }
+              }).catch((error) => {
+                console.log(error)
+                this.snackbar = {
+                  color: "red",
+                  icon: "error",
+                  mode: "multi-line",
+                  position: "top",
+                  timeout: 1500,
+                  title: "Error!",
+                  text: "Ha ocurrido algo",
+                  visible: true
+                }
+              })
             })
             .catch((error) => {
               console.log("error", error);
