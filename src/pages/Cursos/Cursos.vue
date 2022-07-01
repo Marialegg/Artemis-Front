@@ -75,6 +75,7 @@
             <v-rating
               v-model="item.rating"
               background-color="pink lighten-3"
+              half-increments
               color="orange"
             ></v-rating>
           </aside>
@@ -116,7 +117,7 @@ export default {
       category_id: null,
       price: null,
       len_pagination: 0,
-      limit: 6,
+      limit: 24,
       search: null,
       filter: {
         categories: [],
@@ -187,7 +188,7 @@ export default {
     },
     async get_categorys () {
       this.filter.categories = []
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -204,7 +205,7 @@ export default {
       })
     },
     async sizePagination(creator, category) {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -227,7 +228,7 @@ export default {
         creator = null
       }
       this.dataCursos = []
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -251,8 +252,14 @@ export default {
             item.desc = response[i].short_description
             item.price = response[i].price
             item.img = response[i].img
-            if (response[i].reviews === null) {
+            if (response[i].reviews.length === 0) {
               item.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[i].reviews.length; j++) {
+                rating += response[i].reviews[j].critics
+              }
+              item.rating = rating / response[i].reviews.length
             }
             this.dataCursos.push(item)
           }

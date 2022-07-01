@@ -1,5 +1,30 @@
 <template>
   <section id="verCurso" class="subparent divcol gap relative">
+    <v-snackbar
+      v-model="snackbar.visible"
+      auto-height
+      :color="snackbar.color"
+      :multi-line="snackbar.mode === 'multi-line'"
+      :timeout="snackbar.timeout"
+      :top="snackbar.position === 'top'"
+    >
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn
+        v-if="snackbar.timeout === 0"
+        icon
+        @click="snackbar.visible = false"
+      >
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <h2 class="h4-em">{{title}}</h2>
     <v-tabs v-model="tabs" vertical>
 
@@ -42,7 +67,7 @@
           <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
           <div class="space">
             <p>Puedes optar por la certificacion ahora. puedes optar 1 vez.</p>
-            <v-btn class="botones h9-em" rounded to="/presentar-examen">CERTIFICATE</v-btn>
+            <v-btn class="botones h9-em" rounded @click="$router.push('/presentar-examen/'+course_id)">CERTIFICATE</v-btn>
           </div>
         </aside>
       </v-tab-item>
@@ -68,7 +93,28 @@
               </aside>
 
               <aside class="contControls center">
-                <v-btn rounded>GRABAR</v-btn>
+                <v-btn
+                  v-if="!progress"
+                  rounded
+                  @click="setReview()"
+                >
+                  GRABAR
+                </v-btn>
+
+                <v-btn
+                  v-if="progress"
+                  disabled
+                  rounded
+                  @click="setReview()"
+                >
+                  GRABAR
+
+                  <v-progress-circular
+                    :size="18"
+                    :width="4"
+                    indeterminate
+                  ></v-progress-circular>
+                </v-btn>
               </aside>
             </v-window-item>
           </v-window>
@@ -128,6 +174,8 @@ export default {
   // },
   data() {
     return {
+      progress: false,
+      snackbar: {},
       // serviceUrl:"https://ej2services.syncfusion.com/production/web-services/api/pdfviewer",
       // documentPath: "https://bafybeid6o3onclvh4sgusl7a7s3iudqgfej634dmzdtldpp4nyxo5bjrxu.ipfs.dweb.link/Sistema_descentralizado_para_publicar_y_revisar_articulos_cientificos.pdf",
       course_id: this.$route.params.id,
@@ -139,10 +187,87 @@ export default {
   },
   mounted () {
     this.getCourse()
+    this.getReview()
   },
   methods: {
+    async setReview() {
+      if (this.feedback.rating != null && this.feedback.coment != "" && this.feedback.coment != null) {  
+        this.progress = true
+        const CONTRACT_NAME = 'contract2.e-learning.testnet'
+        // connect to NEAR
+        
+        const near = await connect(config)
+        // create wallet connection
+        const wallet = new WalletConnection(near)
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['set_review'],
+          sender: wallet.account()
+        }) 
+
+        contract.set_review({
+          course_id: parseInt(this.course_id),
+          review: this.feedback.coment,
+          critics: this.feedback.rating
+        }).then(() => {
+          this.snackbar = {
+            color: "green",
+            icon: "check_circle",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Éxito!",
+            text: "La review ha sido guardada",
+            visible: true
+          }
+          this.progress = false
+        })
+        .catch((error) => {
+          console.log(error)
+          this.snackbar = {
+            color: "red",
+            icon: "error",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Error!",
+            text: error,//"Ha ocurrido un error",
+            visible: true
+          }
+          this.progress = false
+        })
+      }
+    },
+    async getReview() {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_review'],
+        sender: wallet.account()
+      })
+      await contract.get_review({
+        user_id: wallet.getAccountId(),
+        course_id: parseInt(this.course_id),
+      })
+        .then((response) => {
+          if (response[0]) {
+            this.feedback.coment = response[0].review
+            this.feedback.rating = response[0].critics
+          } else {
+            this.feedback.coment = null
+            this.feedback.rating = null
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          this.feedback.coment = null
+          this.feedback.rating = null
+        })
+    },
     async getCourse() {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection

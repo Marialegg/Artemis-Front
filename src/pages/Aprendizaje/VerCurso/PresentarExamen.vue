@@ -16,7 +16,8 @@
 
         <v-card-action class="center gap">
           <v-btn class="botones2" rounded to="/aprendizaje">CANCELAR</v-btn>
-          <v-btn class="botones" rounded @click="testInit=false">CERTIFICATE</v-btn>
+          <v-btn class="botones" :disabled="pass_certification" rounded @click="passBuy()">COMPRAR PASE</v-btn>
+          <v-btn class="botones" :disabled="!pass_certification" rounded @click="testInit=false">CERTIFICATE</v-btn>
         </v-card-action>
       </v-card>
 
@@ -59,13 +60,30 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+};
+
 export default {
   name: "PresentarExamen",
   data() {
     return {
       testInit: true,
       course_id: this.$route.params.id,
-      title: 'Blockchain y NEAR Protocol: Fundamentos Esenciales',
+      pass_certification: null,
+      price_certification: null,
+      disabled1: null,
+      disabled2: null,
+      title: null,
       PresentacionExamen: 1,
       dataPresentacionExamen: [
         {
@@ -114,9 +132,75 @@ export default {
       feedback: { rating: null, coment: null }
     }
   },
+  mounted () {
+    this.getCourse()
+    this.getPass()
+  },
   methods: {
     anyfunction() {
       console.log('hacer funcion')
+    },
+    async getCourse() {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_course_id'],
+        sender: wallet.account()
+      })
+      await contract.get_course_id({
+        user_id: wallet.getAccountId(),
+        course_id: parseInt(this.course_id),
+      })
+        .then((response) => {
+          console.log(response)
+          this.title = response.title
+          this.price_certification = response.price_certification
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    async getPass() {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_pass_certification'],
+        sender: wallet.account()
+      })
+      await contract.get_pass_certification({
+        user_id: wallet.getAccountId(),
+        course_id: parseInt(this.course_id),
+      })
+        .then((response) => {
+          this.pass_certification = response.pass_certification
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    async passBuy () {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['pass_certification_buy'],
+        sender: wallet.account()
+      })
+      await contract.pass_certification_buy({
+        course_id: parseInt(this.course_id),
+      }, '300000000000000', // attached GAS (optional)
+      utils.format.parseNearAmount((Number(this.formatPrice(this.price_certification)) + 0.015).toString()))
+    },
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     }
   }
 };

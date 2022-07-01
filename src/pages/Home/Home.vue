@@ -46,12 +46,13 @@
                           <p class="h8-em p">{{sliderDestacado[+index + i].desc}}</p>
                           <v-rating
                             v-model="sliderDestacado[+index + i].rating"
+                            half-increments
                             background-color="pink lighten-3"
                             color="orange"
                             hover
                           ></v-rating>
                           <div class="h6-em bold">
-                            {{sliderDestacado[+index + i].price }}Ⓝ
+                            {{formatPrice(sliderDestacado[+index + i].price)}}Ⓝ
                           </div>
                         </div>
                       </v-card>
@@ -92,6 +93,7 @@
                           <p class="h8-em p">{{sliderReciente[+index + i].desc}}</p>
                           <v-rating
                             v-model="sliderReciente[+index + i].rating"
+                            half-increments
                             background-color="pink lighten-3"
                             color="orange"
                             hover
@@ -148,88 +150,7 @@ export default {
         }
       ],
       carouselDestacado: 0,
-      sliderDestacado: [
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Python para Principiantes",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "4",
-          price: "5"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "1"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "6"
-        },
-        {
-          img: require("@/assets/images/excel.jpg"),
-          title: "Curso Excel Intermedio",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "3",
-          price: "4"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "3"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "4"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "5.3"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "3"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "5"
-        },
-        {
-          img: require("@/assets/images/cursos.png"),
-          title: "Lunaroid",
-          desc: "Lunaroid is the first high art-intensive NFT hitting the block...",
-          to: "#",
-          rating: "",
-          price: "5"
-        },
-      ],
+      sliderDestacado: [],
       carouselReciente: 0,
       sliderReciente: [],
     }
@@ -282,6 +203,7 @@ export default {
   },
   mounted () {
     this.getRecentCourses()
+    this.getCoursesRating()
   },
   methods: {
     formatPrice (price) {
@@ -291,7 +213,7 @@ export default {
       console.log(item)
     },
     async getRecentCourses() {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -311,10 +233,50 @@ export default {
             item.price = response[i].price
             item.img = response[i].img
             item.desc = response[i].short_description
-            item.rating = 0
+            if (response[i].reviews.length === 0) {
+              item.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[i].reviews.length; j++) {
+                rating += response[i].reviews[j].critics
+              }
+              item.rating = rating / response[i].reviews.length
+            }
             this.sliderReciente.push(item)
           }
           this.sliderReciente = this.sliderReciente.reverse()
+        })
+    },
+    async getCoursesRating() {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_courses_rating'],
+        sender: wallet.account()
+      })
+      await contract.get_courses_rating()
+        .then((response) => {
+          for (var i = 0; i < response.length; i++) {
+            var item = {}
+            item.title = response[i].title
+            item.id = response[i].id
+            item.price = response[i].price
+            item.img = response[i].img
+            item.desc = response[i].short_description
+            if (response[i].reviews.length === 0) {
+              item.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[i].reviews.length; j++) {
+                rating += response[i].reviews[j].critics
+              }
+              item.rating = rating / response[i].reviews.length
+            }
+            this.sliderDestacado.push(item)
+          }
         })
     },
   }

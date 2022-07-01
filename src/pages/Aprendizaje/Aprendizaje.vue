@@ -79,7 +79,7 @@ export default {
     },
     async getCourses() {
       this.dataCursos = []
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
