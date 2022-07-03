@@ -17,7 +17,7 @@
         <v-card-action class="center gap">
           <v-btn class="botones2" rounded to="/aprendizaje">CANCELAR</v-btn>
           <v-btn class="botones" :disabled="pass_certification" rounded @click="passBuy()">COMPRAR PASE</v-btn>
-          <v-btn class="botones" :disabled="!pass_certification" rounded @click="testInit=false">CERTIFICATE</v-btn>
+          <v-btn class="botones" :disabled="!pass_certification" rounded @click="getCertificacion(),testInit=false">CERTIFICATE</v-btn>
         </v-card-action>
       </v-card>
 
@@ -85,50 +85,7 @@ export default {
       disabled2: null,
       title: null,
       PresentacionExamen: 1,
-      dataPresentacionExamen: [
-        {
-          question: "¿Qué casos reales de uso tienen hoy los 'smart contracts'?",
-          options: [
-            {
-              option: "Deuda en la biblioteca",
-              isSelected: false,
-            },
-            {
-              option: "Non Funfile Tokens",
-              isSelected: false,
-            },
-            {
-              option: "Lavado de Autos",
-              isSelected: false,
-            },
-            {
-              option: "Estudios Universitarios",
-              isSelected: false,
-            },
-          ],
-        },
-        {
-          question: "pregunta 2?",
-          options: [
-            {
-              option: "Deuda en la biblioteca",
-              isSelected: false,
-            },
-            {
-              option: "Non Funfile Tokens",
-              isSelected: false,
-            },
-            {
-              option: "Lavado de Autos",
-              isSelected: false,
-            },
-            {
-              option: "Estudios Universitarios",
-              isSelected: false,
-            },
-          ],
-        },
-      ],
+      dataPresentacionExamen: [],
       feedback: { rating: null, coment: null }
     }
   },
@@ -183,6 +140,37 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    async getCertificacion() {
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/get-certificacion/"
+        this.axios.defaults.headers.common.Authorization='token '
+        let item = {
+          course_id: this.course_id
+        }
+        this.axios.post(url, item)
+          .then((response) => {
+            if (response.data){
+              this.dataPresentacionExamen = response.data
+            }
+        }).catch((error) => {
+          console.log(error)
+          this.snackbar = {
+            color: "red",
+            icon: "error",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Error!",
+            text: "Ha ocurrido algo",
+            visible: true
+          }
+        })
+      }
+      
     },
     async passBuy () {
       const CONTRACT_NAME = 'contract2.e-learning.testnet'

@@ -39,7 +39,7 @@
                       <v-card color="var(clr-card)" class="cartas divcol align">
                         <img :src="sliderDestacado[+index + i].img" alt="Imagen curso">
                         <div class="divcol astart">
-                          <a :href="sliderDestacado[+index + i].to" class="h7-em bold"
+                          <a :href="'#/curso/' + sliderDestacado[+index + i].id" class="h7-em bold"
                             style="color: #FF6B3B !important">
                             {{sliderDestacado[+index + i].title }}
                           </a>
