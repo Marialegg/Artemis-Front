@@ -70,7 +70,7 @@
         <div class="center gap">
           <v-btn class="botones" style="background-color: #D0BFAA !important" rounded height="30px"
             @click="warningModal=false">REGRESAR</v-btn>
-          <v-btn class="botones" rounded height="30px" @click="$router.push('/congrats')">FINALIZAR</v-btn>
+          <v-btn class="botones" rounded height="30px" @click="revisionCertificacion()">FINALIZAR</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -198,7 +198,8 @@ export default {
         const url = "http://localhost:3070/api/v1/revision-certificacion/"
         let item = {
           course_id: this.course_id,
-          datos: this.dataPresentacionExamen
+          datos: this.dataPresentacionExamen,
+          user_id: wallet.getAccountId()
         }
         this.axios.post(url, item)
           .then((response) => {
