@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     anyfunction() {
-      console.log('hacer funcion')
+      this.revisionCertificacion()
     },
     async getCourse() {
       const CONTRACT_NAME = 'contract2.e-learning.testnet'
@@ -170,7 +170,36 @@ export default {
           }
         })
       }
-      
+    },
+    async revisionCertificacion() {
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+
+      if (wallet.isSignedIn()) {
+        const url = "http://localhost:3070/api/v1/revision-certificacion/"
+        let item = {
+          course_id: this.course_id,
+          datos: this.dataPresentacionExamen
+        }
+        this.axios.post(url, item)
+          .then((response) => {
+            if (response.data){
+              console.log(response.data)
+            }
+        }).catch((error) => {
+          console.log(error)
+          this.snackbar = {
+            color: "red",
+            icon: "error",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Error!",
+            text: "Ha ocurrido algo",
+            visible: true
+          }
+        })
+      }
     },
     async passBuy () {
       const CONTRACT_NAME = 'contract2.e-learning.testnet'
