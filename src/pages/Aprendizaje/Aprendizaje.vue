@@ -5,8 +5,9 @@
         APRENDIZAJE
       </h2>
 
-      <div class="jend divwrap gap">
-        <span class="h7-em bold marginrighta">DESDE ACA PODRA GESTIONAR SUS CURSOS Y EXAMENES</span>
+      <div class="divwrap gap">
+        <span class="h7-em bold marginrighta center">DESDE ACA PODRA GESTIONAR SUS CURSOS Y EXAMENES</span>
+        <v-btn class="botones marginlefta" rounded to="/certificados">VER CERTIFICADOS</v-btn>
       </div>
     </v-col>
 
@@ -28,7 +29,7 @@
           <h3 class="h7-em p alignmobile" style="margin-right: auto">LO QUE APRENDERAS</h3>
           <span class="h8-em descLimiter tspacemobile">{{item.desc}}</span>
         </aside>
-        
+
         <aside class="divcol">
           <h3 class="h7-em p" style="color: #747A80 !important">Creado por:</h3>
           <span class="h7-em tcenter" style="color: #FF6B3B">{{item.creador}}</span>

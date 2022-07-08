@@ -72,6 +72,16 @@ export default new Router({
           name: 'PresentarExamen',
           component: () => import('@/pages/Aprendizaje/VerCurso/PresentarExamen'),
         },
+        {
+          path: '/certificados',
+          name: 'Certificados',
+          component: () => import('@/pages/Certificados/Certificados'),
+        },
+        {
+          path: '/congrats',
+          name: 'Congrats',
+          component: () => import('@/pages/Congrats/Congrats'),
+        },
       ],
     },
     // here path 3 if need

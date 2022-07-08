@@ -49,12 +49,30 @@
           <aside class="contControls spacee gap">
             <v-btn rounded v-if="i >= 1" @click="PresentacionExamen--">ANTERIOR</v-btn>
             <v-btn v-if="PresentacionExamen == dataPresentacionExamen.length" rounded
-              @click="anyfunction()">Finalizar</v-btn>
+              @click="warningModal=true">Finalizar</v-btn>
             <v-btn v-else rounded @click="PresentacionExamen++">SIGUIENTE</v-btn>
           </aside>
         </v-window-item>
       </v-window>
     </section>
+
+    <v-dialog v-model="warningModal" max-width="850px">
+      <v-card class="divcol gap" style="box-shadow:0 0 2px 3px rgba(0,0,0,1) !important;padding:2em">
+        <span class="h8-em">
+          Esta usted seguro que desea finalizar la prueba de certificacion? Una vez confirmado la 
+          finalizacion no podra volver a las preguntas y automaticamente se procedera a evaluar su prueba. 
+          En caso de no cubrir la nota minima aptobatoria que es 10 puntos, usted reprobara y no podra contar 
+          con el certificado digital. En caso de requerir nuevamente optar por la prueba de certificacion 
+          usted tedra que cancelar el costo del mismo.
+        </span>
+
+        <div class="center gap">
+          <v-btn class="botones" style="background-color: #D0BFAA !important" rounded height="30px"
+            @click="warningModal=false">REGRESAR</v-btn>
+          <v-btn class="botones" rounded height="30px" @click="$router.push('/congrats')">FINALIZAR</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
   </section>
 </template>
 
@@ -63,6 +81,7 @@ export default {
   name: "PresentarExamen",
   data() {
     return {
+      warningModal: false,
       testInit: true,
       course_id: this.$route.params.id,
       title: 'Blockchain y NEAR Protocol: Fundamentos Esenciales',
@@ -115,9 +134,6 @@ export default {
     }
   },
   methods: {
-    anyfunction() {
-      console.log('hacer funcion')
-    }
   }
 };
 </script>
