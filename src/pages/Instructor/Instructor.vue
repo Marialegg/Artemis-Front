@@ -95,6 +95,7 @@
               background-color="pink lighten-3"
               color="orange"
               half-increments
+              disabled
             ></v-rating>
           </div>
 
@@ -144,6 +145,9 @@ export default {
     return {
       dataCursos: [],
       snackbar: {},
+      total_val: 0,
+      total_ven: 0,
+      total_gan: 0,
       dialog: false,
       item_id: {},
       disabled_delete: false,
@@ -157,21 +161,21 @@ export default {
       tableEstadisticas: [
         {
           name: 'Esta semana',
-          ganado: 10,
-          vendido: 3,
-          valoracion: 4.5,
+          ganado: "...",
+          vendido: "...",
+          valoracion: "...",
         },
         {
           name: 'Ultimos 30 días',
-          ganado: 100,
-          vendido: 10,
-          valoracion: 4.6,
+          ganado: "...",
+          vendido: "...",
+          valoracion: "...",
         },
         {
-          name: 'Instructor',
-          ganado: 250,
-          vendido: 17,
-          valoracion: 4.5,
+          name: 'Totales',
+          ganado: 0,
+          vendido: 0,
+          valoracion: 0,
         },
       ]
     }
@@ -188,7 +192,7 @@ export default {
     },
     async getCoursesInstructor() {
       this.dataCursos = []
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -214,13 +218,33 @@ export default {
               item.inscriptions = response[i].inscriptions.length
               item.profits = ((response[i].inscriptions.length * this.formatPrice(response[i].price)) * 0.95).toFixed(2)
             }
-            if (response[i].reviews === null) {
+            if (response[i].reviews.length === 0) {
               item.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[i].reviews.length; j++) {
+                rating += response[i].reviews[j].critics
+              }
+              item.rating = rating / response[i].reviews.length
             }
             this.dataCursos.push(item)
           }
           this.dataCursos = this.dataCursos.reverse()
+          this.getStats()
         })
+    },
+    async getStats () {
+      this.total_val = 0
+      this.total_ven = 0
+      this.total_gan = 0
+      for (var i = 0; i < this.dataCursos.length; i++) {
+        this.total_ven += this.dataCursos[i].inscriptions
+        this.total_gan += parseFloat(this.dataCursos[i].profits)
+        this.total_val += this.dataCursos[i].rating
+      }
+      this.tableEstadisticas[2].ganado = this.total_gan.toFixed(2)
+      this.tableEstadisticas[2].vendido = this.total_ven
+      this.tableEstadisticas[2].valoracion = (this.total_val / this.dataCursos.length).toFixed(2)
     },
     async newCourse () {
       const response = await this.getData()
@@ -263,8 +287,9 @@ export default {
       }
     },
     async DeleteCourse(item) {
+      console.log(item)
       this.disabled_delete = true
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
         
       const near = await connect(config)
         // create wallet connection

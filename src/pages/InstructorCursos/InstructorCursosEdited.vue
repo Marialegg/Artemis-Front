@@ -302,7 +302,7 @@ export default {
     },
     async get_categorys () {
       this.lista_descripcion_categoria = []
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -319,7 +319,7 @@ export default {
       })
     },
     async getCourseEdit() {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection

@@ -16,7 +16,8 @@
 
         <v-card-action class="center gap">
           <v-btn class="botones2" rounded to="/aprendizaje">CANCELAR</v-btn>
-          <v-btn class="botones" rounded @click="testInit=false">CERTIFICATE</v-btn>
+          <v-btn class="botones" :disabled="pass_certification" rounded @click="passBuy()">COMPRAR PASE</v-btn>
+          <v-btn class="botones" :disabled="!pass_certification" rounded @click="getCertificacion(),testInit=false">CERTIFICATE</v-btn>
         </v-card-action>
       </v-card>
 
@@ -77,6 +78,19 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+};
+
 export default {
   name: "PresentarExamen",
   data() {
@@ -84,56 +98,146 @@ export default {
       warningModal: false,
       testInit: true,
       course_id: this.$route.params.id,
-      title: 'Blockchain y NEAR Protocol: Fundamentos Esenciales',
+      pass_certification: null,
+      price_certification: null,
+      disabled1: null,
+      disabled2: null,
+      title: null,
       PresentacionExamen: 1,
-      dataPresentacionExamen: [
-        {
-          question: "¿Qué casos reales de uso tienen hoy los 'smart contracts'?",
-          options: [
-            {
-              option: "Deuda en la biblioteca",
-              isSelected: false,
-            },
-            {
-              option: "Non Funfile Tokens",
-              isSelected: false,
-            },
-            {
-              option: "Lavado de Autos",
-              isSelected: false,
-            },
-            {
-              option: "Estudios Universitarios",
-              isSelected: false,
-            },
-          ],
-        },
-        {
-          question: "pregunta 2?",
-          options: [
-            {
-              option: "Deuda en la biblioteca",
-              isSelected: false,
-            },
-            {
-              option: "Non Funfile Tokens",
-              isSelected: false,
-            },
-            {
-              option: "Lavado de Autos",
-              isSelected: false,
-            },
-            {
-              option: "Estudios Universitarios",
-              isSelected: false,
-            },
-          ],
-        },
-      ],
+      dataPresentacionExamen: [],
       feedback: { rating: null, coment: null }
     }
   },
+  mounted () {
+    this.getCourse()
+    this.getPass()
+  },
   methods: {
+    anyfunction() {
+      this.revisionCertificacion()
+    },
+    async getCourse() {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_course_id'],
+        sender: wallet.account()
+      })
+      await contract.get_course_id({
+        user_id: wallet.getAccountId(),
+        course_id: parseInt(this.course_id),
+      })
+        .then((response) => {
+          console.log(response)
+          this.title = response.title
+          this.price_certification = response.price_certification
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    async getPass() {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_pass_certification'],
+        sender: wallet.account()
+      })
+      await contract.get_pass_certification({
+        user_id: wallet.getAccountId(),
+        course_id: parseInt(this.course_id),
+      })
+        .then((response) => {
+          this.pass_certification = response.pass_certification
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    async getCertificacion() {
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/get-certificacion/"
+        this.axios.defaults.headers.common.Authorization='token '
+        let item = {
+          course_id: this.course_id
+        }
+        this.axios.post(url, item)
+          .then((response) => {
+            if (response.data){
+              this.dataPresentacionExamen = response.data
+            }
+        }).catch((error) => {
+          console.log(error)
+          this.snackbar = {
+            color: "red",
+            icon: "error",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Error!",
+            text: "Ha ocurrido algo",
+            visible: true
+          }
+        })
+      }
+    },
+    async revisionCertificacion() {
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+
+      if (wallet.isSignedIn()) {
+        const url = "http://localhost:3070/api/v1/revision-certificacion/"
+        let item = {
+          course_id: this.course_id,
+          datos: this.dataPresentacionExamen
+        }
+        this.axios.post(url, item)
+          .then((response) => {
+            if (response.data){
+              console.log(response.data)
+            }
+        }).catch((error) => {
+          console.log(error)
+          this.snackbar = {
+            color: "red",
+            icon: "error",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Error!",
+            text: "Ha ocurrido algo",
+            visible: true
+          }
+        })
+      }
+    },
+    async passBuy () {
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['pass_certification_buy'],
+        sender: wallet.account()
+      })
+      await contract.pass_certification_buy({
+        course_id: parseInt(this.course_id),
+      }, '300000000000000', // attached GAS (optional)
+      utils.format.parseNearAmount((Number(this.formatPrice(this.price_certification)) + 0.015).toString()))
+    },
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    }
   }
 };
 </script>

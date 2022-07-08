@@ -120,7 +120,7 @@ export default {
       if (this.image != "" && this.name != "") {  
         let input = this.$refs.fileInput
         let file = input.files
-        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const CONTRACT_NAME = 'contract2.e-learning.testnet'
         const direccionIpfs = '.ipfs.dweb.link'
         // connect to NEAR
         
@@ -189,7 +189,7 @@ export default {
       if (this.image != "" && this.name != "") {
         let input = this.$refs.fileInput
         let file = input.files
-        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const CONTRACT_NAME = 'contract2.e-learning.testnet'
         const direccionIpfs = '.ipfs.dweb.link'
         // connect to NEAR
         
@@ -264,7 +264,7 @@ export default {
       this.selected = item
     },
     async Delete() {
-        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const CONTRACT_NAME = 'contract2.e-learning.testnet'
         // connect to NEAR
         
         const near = await connect(config)
@@ -310,7 +310,7 @@ export default {
     },
     async get_categorys () {
       this.dataSlide = []
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection

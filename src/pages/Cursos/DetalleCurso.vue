@@ -22,7 +22,9 @@
               </div>
 
               <v-rating
+                v-model="rating"
                 background-color="pink lighten-3"
+                half-increments
                 color="orange"
               ></v-rating>
             </aside>
@@ -95,6 +97,7 @@
                     </span>
                     <v-rating
                       v-model="item.rating"
+                      half-increments
                       background-color="pink lighten-3"
                       color="orange"
                     ></v-rating>
@@ -133,6 +136,7 @@ export default {
       aprendizaje: null,
       precio: null,
       image: null,
+      rating: null,
       accountId: "",
       item: {},
       headersPreview: [
@@ -143,27 +147,19 @@ export default {
       desserts: [],
       slider: "",
       course_id: this.$route.params.id,
-      dataSlider: [
-        {
-          img: require("@/assets/images/python.jpg"),
-          title: "Rust Basico",
-          instructor: "IRON MAN",
-          to: "#",
-          price: "0.75",
-          rating: "4",
-        },
-      ],
+      dataSlider: [],
     }
   },
-  mounted () {
-    this.getCourse()
+  async mounted () {
+    await this.getCourse()
+    this.getCoursesInstructor()
   },
   methods: {
     formatPrice (price) {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
     async getCourse() {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -183,13 +179,73 @@ export default {
           this.aprendizaje = response[0].long_description
           this.precio = response[0].price
           this.image = response[0].img
+          if (response[0].reviews.length === 0) {
+              this.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[0].reviews.length; j++) {
+                rating += response[0].reviews[j].critics
+              }
+              this.rating = rating / response[0].reviews.length
+            }
+          
+          for (var k = 0; k < response[0].content.length; k++) {
+            var tipo
+            if (response[0].content[k].tipo == 1) {
+              tipo = "video"
+            } else if (response[0].content[k].tipo == 2) {
+              tipo = "pdf"
+            }
+            let item = {
+              orden: (k+1),
+              titulo: response[0].content[k].title,
+              tipo: tipo
+            }
+            this.desserts.push(item)
+          }
         })
         .catch((error) => {
           console.log(error)
         })
     },
+    async getCoursesInstructor() {
+      this.dataSlider = []
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_courses_intructor'],
+        sender: wallet.account()
+      })
+      await contract.get_courses_intructor({
+        user_id: this.instructor,
+      })
+        .then(async (response) => {
+          for (var i = 0; i < response.length; i++) {
+            var item = {}
+            item.id = response[i].id
+            item.instructor = response[0].creator_id
+            item.title = response[i].title
+            item.price = this.formatPrice(response[i].price)
+            item.img = response[i].img
+            if (response[i].reviews.length === 0) {
+              item.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[i].reviews.length; j++) {
+                rating += response[i].reviews[j].critics
+              }
+              item.rating = rating / response[i].reviews.length
+            }
+            this.dataSlider.push(item)
+          }
+          this.dataSlider = this.dataCursos.reverse()
+        })
+    },
     async courseBuy () {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection

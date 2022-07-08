@@ -614,9 +614,18 @@
                   number
                 >
                 </v-text-field>
+                <label class="h9-em" for="publicar_precio">PRECIO CERTIFICADO</label>
+                <v-text-field
+                  v-model="publicar_certificado"
+                  id="publicar_precio"
+                  solo
+                  style="max-width: 10em"
+                  number
+                >
+                </v-text-field>
               </v-card>
 
-              <v-btn class="botones h8-em" rounded @click="stepWindow++">
+              <v-btn class="botones h8-em" rounded @click="validacion">
                 VISTA PREVIA
               </v-btn>
             </v-stepper-content>
@@ -875,6 +884,7 @@ export default {
 
       // publicar
       publicar_precio: null /*7*/,
+      publicar_certificado: null,
 
       // slider
       slider: "",
@@ -1299,6 +1309,7 @@ export default {
           sortable: false,
         },
       ],
+      profile: null,
     };
   },
   watch: {
@@ -1314,8 +1325,77 @@ export default {
   },
   mounted() {
     this.get_categorys();
+    this.getData()
   },
   methods: {
+    validacion() {
+      console.log(this.desserts)
+      if ((this.descripcion_titulo !== null && this.descripcion_titulo !== '') && (this.descripcion_descripcion !== null && this.descripcion_descripcion !== '') && (this.descripcion_aprendizaje !== null && this.descripcion_aprendizaje !== '') && (this.descripcion_image !== null && this.descripcion_image !== '') && (this.descripcion_categoria !== null && this.descripcion_categoria !== {})) {
+        if (this.desserts !== [] && this.desserts !== null && this.desserts !== undefined && this.desserts.length !== 0) {
+          if (this.validacionExamen()) {
+            if ((this.publicar_precio !== 0 && this.publicar_precio !== null && this.publicar_precio !== '') && (this.publicar_certificado !== 0 && this.publicar_certificado !== null && this.publicar_certificado !== '')) {
+              this.stepWindow = 2
+            } else {
+              this.snackbar = {
+                color: "red",
+                icon: "error",
+                mode: "multi-line",
+                position: "top",
+                timeout: 1500,
+                title: "Error!",
+                text: "No ha llenado todos los campos",
+                visible: true
+              }
+              this.e6 = 4
+            }
+          } else {
+            this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "No ha cargado el modelo de certificación",
+              visible: true
+            }
+            this.e6 = 3
+          }
+        } else {
+          this.snackbar = {
+            color: "red",
+            icon: "error",
+            mode: "multi-line",
+            position: "top",
+            timeout: 1500,
+            title: "Error!",
+            text: "No ha cargado ningun contenido",
+            visible: true
+          }
+          this.e6 = 2
+        }
+      } else {
+        this.snackbar = {
+          color: "red",
+          icon: "error",
+          mode: "multi-line",
+          position: "top",
+          timeout: 1500,
+          title: "Error!",
+          text: "No ha llenado todos los campos necesarios",
+          visible: true
+        }
+        this.e6 = 1
+      }
+    },
+    validacionExamen () {
+      for (var i = 0; i < this.dessertsExamen.length; i++) {
+        if (this.dessertsExamen[i].tipo === null) {
+          return false
+        }
+      }
+      return true
+    },
     change(id) {
       for (var i = 0; i < this.lista_descripcion_categoria.length; i++) {
         if (this.lista_descripcion_categoria[i].id === id) {
@@ -1330,7 +1410,7 @@ export default {
     },
     async get_categorys() {
       this.lista_descripcion_categoria = [];
-      const CONTRACT_NAME = "contract.e-learning.testnet";
+      const CONTRACT_NAME = "contract2.e-learning.testnet";
       // connect to NEAR
       const near = await connect(config);
       // create wallet connection
@@ -1592,6 +1672,26 @@ export default {
       const ClearEditedIndex = -1;
       this.editedExamenIndex = ClearEditedIndex;
     },
+    async getData () {
+      // connect to NEAR
+      const near = await connect(config);
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      this.accountId = wallet.getAccountId()
+
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/profile/?wallet=" + this.accountId
+        this.axios.defaults.headers.common.Authorization='token'
+        this.axios.get(url)
+          .then((response) => {
+            if (response.data[0]){
+              this.profile = response.data[0]
+            }
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+    },
     async Publicar() {
       this.progress = true;
       let input = this.$refs.fileInput;
@@ -1618,7 +1718,7 @@ export default {
       }
       formData.append("files", file[0]);
 
-      const CONTRACT_NAME = "contract.e-learning.testnet";
+      const CONTRACT_NAME = "contract2.e-learning.testnet";
       const direccionIpfs = ".ipfs.dweb.link";
 
       // connect to NEAR
@@ -1662,34 +1762,60 @@ export default {
               img: imgFinal,
               content: content,
               price: utils.format.parseNearAmount(this.publicar_precio),
+              price_certification: utils.format.parseNearAmount(this.publicar_certificado),
             })
             .then((response) => {
-              console.log("response", response)
-              this.snackbar = {
-                color: "green",
-                icon: "check_circle",
-                mode: "multi-line",
-                position: "top",
-                timeout: 1500,
-                title: "Éxito!",
-                text: "Tu curso ha sido publicado",
-                visible: true,
-              };
-              let object = {
-                name: this.descripcion_titulo,
-                img: this.descripcion_image,
-                price: this.publicar_precio,
-                earned: 0,
-                inscriptions: 0,
-                rating: 0,
-                //
-                categoria: this.descripcion_categoria,
-                descripcion: this.descripcion_descripcion,
-                aprendizaje: this.descripcion_aprendizaje,
-                contenidoTabla: this.desserts,
-              };
-              this.$store.dispatch("PublicarCurso", { object });
-              this.$router.push({ path: "/instructor" });
+              let item = {}
+              item.id = this.profile.id
+              item.course_id = response.id
+              item.score_approve = 10
+              item.certificacion = this.dessertsExamen
+              const url = "api/v1/guardar-certificacion/"
+              this.axios.defaults.headers.common.Authorization='token '
+              this.axios.post(url, item)
+                .then((response) => {
+                  if (response){
+                    this.snackbar = {
+                      color: "green",
+                      icon: "check_circle",
+                      mode: "multi-line",
+                      position: "top",
+                      timeout: 1500,
+                      title: "Éxito!",
+                      text: "Tu curso ha sido publicado",
+                      visible: true,
+                    };
+                    let object = {
+                      name: this.descripcion_titulo,
+                      img: this.descripcion_image,
+                      price: this.publicar_precio,
+                      earned: 0,
+                      inscriptions: 0,
+                      rating: 0,
+                      //
+                      categoria: this.descripcion_categoria,
+                      descripcion: this.descripcion_descripcion,
+                      aprendizaje: this.descripcion_aprendizaje,
+                      contenidoTabla: this.desserts,
+                    };
+                    this.progress = false;
+                    this.$store.dispatch("PublicarCurso", { object });
+                    this.$router.push({ path: "/instructor" });
+                  }
+              }).catch((error) => {
+                console.log(error)
+                this.snackbar = {
+                  color: "red",
+                  icon: "error",
+                  mode: "multi-line",
+                  position: "top",
+                  timeout: 1500,
+                  title: "Error!",
+                  text: "Ha ocurrido algo",
+                  visible: true
+                }
+                this.progress = false;
+              })
             })
             .catch((error) => {
               console.log("error", error);

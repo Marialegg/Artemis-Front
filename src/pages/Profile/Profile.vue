@@ -213,7 +213,7 @@ export default {
     },
     async setDataOld () {
       if (this.$refs.form.validate()) {
-        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const CONTRACT_NAME = 'contract2.e-learning.testnet'
         // connect to NEAR
         const near = await connect(config);
         // create wallet connection
@@ -278,7 +278,7 @@ export default {
     },
     async setDataEditOld () {
       if (this.$refs.form.validate()) {
-        const CONTRACT_NAME = 'contract.e-learning.testnet'
+        const CONTRACT_NAME = 'contract2.e-learning.testnet'
         // connect to NEAR
         const near = await connect(config);
         // create wallet connection
@@ -325,7 +325,7 @@ export default {
       }
     },
     async getDataOld () {
-      const CONTRACT_NAME = 'contract.e-learning.testnet'
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config);
       // create wallet connection

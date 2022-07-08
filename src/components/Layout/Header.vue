@@ -136,11 +136,11 @@ export default {
       dataHeader: [
         {
           title: "Inicio",
-          link: "#/"
+          link: "/"
         },
         {
           title: "Cursos",
-          link: "#/cursos"
+          link: "/cursos"
         },
         // {
         //   title: "Mi Perfil",
@@ -158,7 +158,7 @@ export default {
       const near = await connect(config);
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'contract.e-learning.testnet'
+        'contract2.e-learning.testnet'
       )
     },
     async isSigned () {    
@@ -202,11 +202,11 @@ export default {
       this.dataHeader = [
         {
           title: "Inicio",
-          link: "#/"
+          link: "/"
         },
         {
           title: "Cursos",
-          link: "#/cursos"
+          link: "/cursos"
         },
         // {
         //   title: "Mi Perfil",
