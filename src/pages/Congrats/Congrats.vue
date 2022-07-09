@@ -40,7 +40,7 @@ export default {
   name: "Congrats",
   data() {
     return {
-      approvated: false,
+      approvated: true,
       certificadoPreview: require("@/assets/images/rust.png")
     }
   },

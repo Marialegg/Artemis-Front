@@ -31,9 +31,9 @@
             <img :src="item.img_certificado" alt="Course Image" width="150px">
           </div>
         </template>
-
-        <template v-slot:[`item.actions`]>
-          <v-btn class="botones" rounded>MINTEAR</v-btn>
+    
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn class="botones" :disabled="!item.minteable" rounded @click="nftMint(item)">MINTEAR</v-btn>
         </template>
       </v-data-table>
     </v-col>
@@ -41,6 +41,18 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
+
+const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+const config = {
+        networkId: "testnet",
+        keyStore, 
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
 export default {
   name: "Certificados",
   data() {
@@ -50,23 +62,62 @@ export default {
         { value: "certificado", text: "CERTIFICADO", align: "center" },
         { value: "actions", sortable: false, align: "center" },
       ],
-      dataTable: [
-        {
-          img_course: require("@/assets/images/rust.png"),
-          name: "Rust Basico",
-          img_certificado: require("@/assets/images/certificado.png"),
-        },
-        {
-          img_course: require("@/assets/images/near-course.png"),
-          name: "Rust Basico",
-          img_certificado: require("@/assets/images/certificado.png"),
-        },
-      ],
+      dataTable: [],
     }
   },
   mounted () {
+    this.getCertificados()
   },
   methods: {
+    async nftMint(item) {
+      const CONTRACT_NAME = 'dev-1657311683539-49053611202377'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['nft_mint'],
+        sender: wallet.account()
+      })
+      await contract.nft_mint({
+        certificate_id: item.id,
+      }, '300000000000000', // attached GAS (optional)
+      utils.format.parseNearAmount("1.5"))
+        .then(async (response) => {
+          console.log(response)
+          console.log(true)
+        }) 
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    async getCertificados() {
+      this.dataTable = []
+      const CONTRACT_NAME = 'dev-1657311683539-49053611202377'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_certificate_list'],
+        sender: wallet.account()
+      })
+      await contract.get_certificate_list({
+        account_id: wallet.getAccountId(),
+      })
+        .then(async (response) => {
+          for (var i = 0; i < response.length; i++) {
+            var item = {}
+            item.id = response[i].id
+            item.name = response[i].curso
+            item.img_course = response[i].img_curso
+            item.img_certificado = response[i].img_certificado
+            item.minteable = response[i].minteable
+            this.dataTable.push(item)
+          }
+          this.dataTable = this.dataTable.reverse()
+        })
+    },
   }
 };
 </script>
