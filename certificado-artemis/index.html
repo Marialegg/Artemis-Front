@@ -1,109 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" :href="logo.png" />
-    <title>Certificado</title>
-</head>
-<body>
-    <section>
-        <span>Otorgamos este</span>
-        <h1>CERTIFICADO</h1>
-        <h2>a: Maria Alejandra Gutierrez</h2>
-        <div class="inside">
-            <span>Ha aprobado el curso en modalidad e-learning</span>
-            <h3>Introducción a Rust</h3>
-        </div>
-    </section>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="icon" type="image/png" :href="logo" />
+            <title>Certificado</title>
+        </head>
+        <body style="--certificado:url({{certificado}})">
+            <section>
+                <span>Otorgamos este</span>
+                <h1>CERTIFICADO</h1>
+                <h2>a: {{user_name}}</h2>
+                <div class="inside">
+                    <span>Ha aprobado el curso en modalidad e-learning</span>
+                    <h3>{{curso}}</h3>
+                </div>
+            </section>
 
-    <span class="firma">
-        <span>Instructor</span>
-    </span>
+            <span class="firma">
+                <img src="http://127.0.0.1:8000/media_artemis/firma_WC4rpiT.jpg">
+                <span>Instructor</span>
+            </span>
 
-    <img class="logo" src="logo.png" alt="logo">
-</body>
-</html>
+            <img class="logo" src="http://127.0.0.1:8000/media_artemis/firma_WC4rpiT.jpg" alt="logo">
+        </body>
+        </html>
 
-<style>
-body {
-    --distance: 1rem;
-    font-family: sans-serif;
-    display: grid;
-    place-content: center;
-    background: no-repeat url(certificado);
-    background-size: cover;
-    height: 100vh;
-    gap: 8em;
-}
-section {
-    display: flex;
-    flex-direction: column;
-    gap: .5em;
-}
-section > span {
-    text-indent: calc(var(--distance) * 7);
-    font-size: 1.2em;
-    font-weight: 500;
-    color: hsl(0, 0%, 20%);
-}
-section h1 {
-    text-indent: calc(var(--distance) * 3);
-    font-size: 4em;
-    font-weight: 600;
-    color: #292b48;
-}
-section h2 {
-    font-size: 1.4em;
-    font-weight: 500;
-    margin-bottom: .5em;
-}
-section > div span {
-    margin-left: calc(var(--distance) * 3);
-    font-size: 1em;
-    font-weight: 500;
-    color: hsl(22, 72%, 78%);
-}
-section h3 {
-    margin-left: calc(var(--distance) * 5.5);
-    font-size: 1.5em;
-    font-weight: 500;
-    color: #e56316;
-}
-.firma {
-    max-width: max-content;
-    position: absolute;
-    bottom: 2em;
-    left: 0;
-    transform: translate(calc(var(--distance) * -4));
-    right: 0;
-    margin: auto;
-}
-.firma span {
-    position: relative;
-    font-size: 1.2em;
-    font-weight: 500;
-    max-width: max-content;
-}
-.firma span:before {
-    --distancia: 4em;
-    content: "";
-    position: absolute;
-    top: -5px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    width: calc(100% + var(--distancia));
-    height: 1.3px;
-    transform: translateX(calc(var(--distancia) * -1 / 2));
-    background-color: #000000;
-}
-.logo {
-    width: clamp(7em,8vw,8em);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
-h1,h2,h3 {margin:0}
-</style>
+        <style>
+        body {
+            --distance: 1rem;
+            font-family: sans-serif;
+            display: grid;
+            place-content: center;
+            background: no-repeat var(--certificado);
+            background-size: cover;
+            height: 100vh;
+            gap: 8em;
+        }
+        section {
+            display: flex;
+            flex-direction: column;
+            gap: .5em;
+        }
+        section > span {
+            text-indent: calc(var(--distance) * 7);
+            font-size: 1.2em;
+            font-weight: 500;
+            color: hsl(0, 0%, 20%);
+        }
+        section h1 {
+            text-indent: calc(var(--distance) * 3);
+            font-size: 4em;
+            font-weight: 600;
+            color: #292b48;
+        }
+        section h2 {
+            font-size: 1.4em;
+            font-weight: 500;
+            margin-bottom: .5em;
+        }
+        section > div span {
+            margin-left: calc(var(--distance) * 3);
+            font-size: 1em;
+            font-weight: 500;
+            color: hsl(22, 72%, 78%);
+        }
+        section h3 {
+            margin-left: calc(var(--distance) * 5.5);
+            font-size: 1.5em;
+            font-weight: 500;
+            color: #e56316;
+        }
+        .firma {
+            max-width: max-content;
+            position: absolute;
+            bottom: 2em;
+            left: 0;
+            transform: translate(calc(var(--distance) * -4));
+            right: 0;
+            margin: auto;
+        }
+        .firma img {
+            width: calc(100% - 4.5em);
+            aspect-ratio: 16/9;
+            top: 0px;
+            left: 0;
+            right: 0;
+            margin-inline: auto;
+        }
+        .firma span {
+            position: relative;
+            font-size: 1.2em;
+            font-weight: 500;
+            max-width: max-content;
+        }
+        .firma span:before {
+            --distancia: 4em;
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: calc(100% + var(--distancia));
+            height: 1.3px;
+            transform: translateX(calc(var(--distancia) * -1 / 2));
+            background-color: #000000;
+        }
+        .logo {
+            width: clamp(7em,8vw,8em);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        h1,h2,h3 {margin:0}
+        </style>

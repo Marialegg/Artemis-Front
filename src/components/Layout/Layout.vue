@@ -2,7 +2,7 @@
   <v-app id="layout">
     <Header ref="header" />
     <v-main>
-      <router-view></router-view>
+      <router-view @Nota="(e)=>{variable=e}" :approve="variable"></router-view>
     </v-main>
     <Footer />
   </v-app>
@@ -62,6 +62,11 @@ v-animate-onscroll.repeat="'animHero'"
 export default {
   name: "Layout",
   components: { Footer, Header },
+  data() {
+    return {
+      variable: null
+    }
+  }
 }
 </script>
 

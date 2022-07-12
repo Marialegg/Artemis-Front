@@ -108,6 +108,11 @@
           >
           </v-textarea>
         </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="firma">FIRMA</label>
+          <v-file-input id="firma" accept="image/*" v-model="image" solo prepend-icon="" @change="fileInput"></v-file-input>
+        </v-card>
+      
       </section>
     </v-form>
 
@@ -148,6 +153,8 @@ export default {
   name: "Profile",
   data() {
     return {
+      image: null,
+      firma: null,
       snackbar: {},
       valid: true,
       newProfile: true,
@@ -171,6 +178,12 @@ export default {
     this.getData()
   },
   methods: {
+    fileInput(){
+      //this.profile.firma = URL.createObjectURL(this.image)
+      console.log(this.image)
+      
+      this.profile.firma = this.image;
+    },
     async setData () {
       if (this.$refs.form.validate()) {
         const near = await connect(config);
@@ -179,6 +192,7 @@ export default {
         if (wallet.isSignedIn()) {
           const url = "api/v1/profile/"
           this.axios.defaults.headers.common.Authorization='token '
+          console.log(this.profile)
           this.axios.post(url, this.profile)
             .then((response) => {
               if (response.data){
@@ -244,7 +258,10 @@ export default {
         if (wallet.isSignedIn()) {
           const url = "api/v1/profile/" + this.profile.id + "/"
           this.axios.defaults.headers.common.Authorization='token '
-          this.axios.put(url, this.profile)
+
+          this.profile.firma = this.image
+          console.log(this.profile)
+          this.axios.patch(url, this.profile)
             .then((response) => {
               if (response.data){
                 console.log(response.data)
@@ -272,6 +289,7 @@ export default {
               text: "Ha ocurrido algo",
               visible: true
             }
+            console.log(error)
           })
         }
       }

@@ -146,10 +146,10 @@ export default {
         //   title: "Mi Perfil",
         //   link: "#"
         // },
-        {
-          title: "Contacto",
-          link: "#"
-        }
+        // {
+        //   title: "Contacto",
+        //   link: "#"
+        // }
       ]
     };
   },
@@ -212,10 +212,10 @@ export default {
         //   title: "Mi Perfil",
         //   link: "#"
         // },
-        {
-          title: "Contacto",
-          link: "#"
-        }
+        // {
+        //   title: "Contacto",
+        //   link: "#"
+        // }
       ]
       this.$router.push({ path: '/' })
     },

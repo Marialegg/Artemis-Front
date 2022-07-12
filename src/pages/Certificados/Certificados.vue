@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     async nftMint(item) {
-      const CONTRACT_NAME = 'dev-1657311683539-49053611202377'
+      const CONTRACT_NAME = 'nft.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection
@@ -93,7 +93,7 @@ export default {
     },
     async getCertificados() {
       this.dataTable = []
-      const CONTRACT_NAME = 'dev-1657311683539-49053611202377'
+      const CONTRACT_NAME = 'nft.e-learning.testnet'
       // connect to NEAR
       const near = await connect(config)
       // create wallet connection

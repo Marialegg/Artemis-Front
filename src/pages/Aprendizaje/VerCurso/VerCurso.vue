@@ -67,7 +67,7 @@
           <h4 class="h7-em semibold fill-w notdefault-clr">CERTIFICATE!!</h4>
           <div class="space">
             <p>Puedes optar por la certificacion ahora. puedes optar 1 vez.</p>
-            <v-btn class="botones h9-em" rounded @click="$router.push('/presentar-examen/'+course_id)">CERTIFICATE</v-btn>
+            <v-btn class="botones h9-em" rounded @click="Certificate()">CERTIFICATE</v-btn>
           </div>
         </aside>
       </v-tab-item>
@@ -190,6 +190,46 @@ export default {
     this.getReview()
   },
   methods: {
+    async Certificate () {
+      const response = await this.getData()
+
+      if (response === true) {
+        this.$router.push('/presentar-examen/'+this.course_id)
+      } else {
+        this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Completa tu perfil para poder certificarte",
+              visible: true
+        }
+      }
+    },
+    async getData () {
+      // connect to NEAR
+      const near = await connect(config);
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      let accountId = wallet.getAccountId()
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/profile/?wallet=" + accountId
+        this.axios.defaults.headers.common.Authorization='token'
+        const response = this.axios.get(url)
+          .then((response) => {
+            if (response.data[0]){
+              return true
+            } else {
+              return false
+            }
+        }).catch((error) => {
+          console.log(error)
+        })
+        return response
+      }
+    },
     async setReview() {
       if (this.feedback.rating != null && this.feedback.coment != "" && this.feedback.coment != null) {  
         this.progress = true

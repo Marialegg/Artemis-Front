@@ -204,7 +204,24 @@ export default {
         this.axios.post(url, item)
           .then((response) => {
             if (response.data){
-              console.log(response.data)
+              if (response.data.nota >= 10) {
+                let item3 = {
+                  approvated: true,
+                  curso: response.data.curso,
+                  id_certificado: response.data.id_certificado,
+                  img_certificado: response.data.img_certificado,
+                  nota: response.data.nota
+                }
+                this.$emit("Nota", item3)
+                this.$router.push('/congrats')
+              } else if (response.data.nota < 10) {
+                let item3 = {
+                  approvated: false,
+                  nota: response.data.nota
+                }
+                this.$emit("Nota", item3)
+                this.$router.push('/congrats')
+              }
             }
         }).catch((error) => {
           console.log(error)
