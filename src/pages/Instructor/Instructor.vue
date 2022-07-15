@@ -247,11 +247,11 @@ export default {
       this.tableEstadisticas[2].valoracion = (this.total_val / this.dataCursos.length).toFixed(2)
     },
     async newCourse () {
-      const response = await this.getData()
+      const response = await this.getDataInstructor()
 
-      if (response === true) {
+      if (response === "ok") {
         this.$router.push({ path: '/instructor-cursos' })
-      } else {
+      } else if (response === "perfil"){
         this.snackbar = {
               color: "red",
               icon: "error",
@@ -262,6 +262,42 @@ export default {
               text: "Completa tu perfil para poder crear cursos",
               visible: true
         }
+      } else if (response === "firma"){
+        this.snackbar = {
+              color: "red",
+              icon: "error",
+              mode: "multi-line",
+              position: "top",
+              timeout: 1500,
+              title: "Error!",
+              text: "Sube tu firma digital para poder crear cursos",
+              visible: true
+        }
+      } 
+    },
+    async getDataInstructor () {
+      // connect to NEAR
+      const near = await connect(config);
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      let accountId = wallet.getAccountId()
+      if (wallet.isSignedIn()) {
+        const url = "api/v1/profile/?wallet=" + accountId
+        this.axios.defaults.headers.common.Authorization='token'
+        const response = this.axios.get(url)
+          .then((response) => {
+            if (response.data[0]){
+              if (response.data[0].firma) {
+                return "ok"
+              }
+              return "firma"
+            } else {
+              return "perfil"
+            }
+        }).catch((error) => {
+          console.log(error)
+        })
+        return response
       }
     },
     async getData () {

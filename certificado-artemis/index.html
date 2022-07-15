@@ -17,13 +17,15 @@
                     <h3>{{curso}}</h3>
                 </div>
             </section>
+            
+            <div class="firma">
+                <div class="content">
+                    <img src="https://www.consumer.es/app/uploads/fly-images/110784/img_firma-3-1200x550-cc.jpg" alt="firma">
+                    <span>Instructor</span>
+                </div>
+            </div>
 
-            <span class="firma">
-                <img src="http://127.0.0.1:8000/media_artemis/firma_WC4rpiT.jpg">
-                <span>Instructor</span>
-            </span>
-
-            <img class="logo" src="http://127.0.0.1:8000/media_artemis/firma_WC4rpiT.jpg" alt="logo">
+            <img class="logo" src="https://www.consumer.es/app/uploads/fly-images/110784/img_firma-3-1200x550-cc.jpg" alt="logo">
         </body>
         </html>
 
@@ -50,44 +52,52 @@
             color: hsl(0, 0%, 20%);
         }
         section h1 {
-            text-indent: calc(var(--distance) * 3);
+            text-indent: calc(var(--distance) * 0.5);
             font-size: 4em;
             font-weight: 600;
             color: #292b48;
         }
         section h2 {
+            text-indent: calc(var(--distance) * 1);
             font-size: 1.4em;
             font-weight: 500;
             margin-bottom: .5em;
         }
         section > div span {
             margin-left: calc(var(--distance) * 3);
-            font-size: 1em;
+            font-size: 1.2em;
             font-weight: 500;
-            color: hsl(22, 72%, 78%);
+            color: hsl(22, 77%, 58%);
         }
         section h3 {
+            max-width: 330px;
             margin-left: calc(var(--distance) * 5.5);
-            font-size: 1.5em;
+            font-size: 1.9em;
             font-weight: 500;
             color: #e56316;
         }
         .firma {
-            max-width: max-content;
+            --distancia: 4em;
             position: absolute;
+            max-width: max-content; 
             bottom: 2em;
             left: 0;
             transform: translate(calc(var(--distance) * -4));
             right: 0;
             margin: auto;
         }
-        .firma img {
-            width: calc(100% - 4.5em);
-            aspect-ratio: 16/9;
-            top: 0px;
+        .firma .content {
+            position: relative;
+        }
+        .firma .content img {
+            position: absolute;
+            width: calc(100% - -3em);
+            aspect-ratio: 16 / 9; 
+            top: -5em;
             left: 0;
             right: 0;
             margin-inline: auto;
+            transform: translateX(calc(var(--distancia) * -1 / 2.5));
         }
         .firma span {
             position: relative;
@@ -96,7 +106,6 @@
             max-width: max-content;
         }
         .firma span:before {
-            --distancia: 4em;
             content: "";
             position: absolute;
             top: -5px;

@@ -1,5 +1,30 @@
 <template>
   <section id="instructorCursos" class="subparent divcol gap">
+    <v-snackbar
+      v-model="snackbar.visible"
+      auto-height
+      :color="snackbar.color"
+      :multi-line="snackbar.mode === 'multi-line'"
+      :timeout="snackbar.timeout"
+      :top="snackbar.position === 'top'"
+    >
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn
+        v-if="snackbar.timeout === 0"
+        icon
+        @click="snackbar.visible = false"
+      >
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
     <v-window v-model="stepWindow" touchless>
       <v-window-item :value="1">
         <v-col>
@@ -97,6 +122,16 @@
                   id="publicar_precio"
                   solo
                   style="max-width: 10em"
+                  number
+                >
+                </v-text-field>
+                <label class="h9-em" for="publicar_precio">PRECIO CERTIFICADO</label>
+                <v-text-field
+                  v-model="publicar_certificado"
+                  id="publicar_precio"
+                  solo
+                  style="max-width: 10em"
+                  number
                 >
                 </v-text-field>
               </v-card>
@@ -125,7 +160,7 @@
               <v-card class="space divwrap" style="display:Flex">
                 <div class="divcol">
                   <span class="h8-em">Precio Actual:</span>
-                  <span class="number bold">{{formatPrice(publicar_precio)}} 
+                  <span class="number bold">{{publicar_precio}} 
                     <span class="h8 normal">NEAR <span class="h6">Ⓝ</span></span>
                   </span>
                 </div>
@@ -167,7 +202,7 @@
                 <v-btn class="botones h8-em" rounded @click="stepWindow--">
                   REGRESAR
                 </v-btn>
-                <v-btn class="botones h8-em" rounded @click="PublicarEdited()">
+                <v-btn class="botones h8-em" rounded @click="Publicar()">
                   PUBLICAR
                 </v-btn>
               </div>
@@ -245,7 +280,7 @@ export default {
       stepWindow: 1,
       e6: 1,
       accountId: "",
-
+      snackbar: {},
       // descripcion
       descripcion_titulo: null,/*1*/
       descripcion_categoria: {},/*2*/
@@ -256,6 +291,7 @@ export default {
 
       // publicar
       publicar_precio: null,/*7*/
+      publicar_certificado: null,
 
       headersPreview: [
         { text: 'ORDEN', align: 'start', value: 'orden' },
@@ -338,11 +374,85 @@ export default {
           this.descripcion_descripcion = response[0].short_description
           this.descripcion_aprendizaje = response[0].long_description
           this.publicar_precio = this.formatPrice(response[0].price)
+          this.publicar_certificado = this.formatPrice(response[0].price_certification)    
           this.descripcion_image = response[0].img
         })
         .catch((error) => {
           console.log(error)
         })
+    },
+    async Publicar() {
+      this.progress = true;
+      let input = this.$refs.fileInput;
+      let file = input.files;
+
+      const formData = new FormData();
+      formData.append("file", file[0]);
+
+      const CONTRACT_NAME = "contract2.e-learning.testnet";
+      const direccionIpfs = ".ipfs.dweb.link";
+
+      // connect to NEAR
+
+      const near = await connect(config);
+      // create wallet connection
+      const wallet = new WalletConnection(near);
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ["put_course"],
+        sender: wallet.account(),
+      });
+
+        await this.axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
+          .then((response) => {    
+            var imgFinal
+            if (file[0]) {
+              imgFinal = 'https://' + response.data.data + direccionIpfs + '/' + response.data.nombre
+            } else {
+              imgFinal = this.descripcion_image
+            }
+            contract
+              .put_course({
+                course_id: parseInt(this.course_id),
+                title: this.descripcion_titulo,
+                categories: this.descripcion_categoria,
+                short_description: this.descripcion_descripcion,
+                long_description: this.descripcion_aprendizaje,
+                img: imgFinal,
+                price: utils.format.parseNearAmount(this.publicar_precio),
+                price_certification: utils.format.parseNearAmount(this.publicar_certificado),
+              })
+              .then(() => {
+                  this.$router.push({ path: "/instructor" });
+                })
+              .catch((error) => {
+                  console.log(error)
+                  this.snackbar = {
+                    color: "red",
+                    icon: "error",
+                    mode: "multi-line",
+                    position: "top",
+                    timeout: 1500,
+                    title: "Error!",
+                    text: "Ha ocurrido algo",
+                    visible: true
+                  }
+                  this.progress = false;
+                })
+              })
+              .catch((error) => {
+                console.log("error", error);
+                this.snackbar = {
+                  color: "red",
+                  icon: "error",
+                  mode: "multi-line",
+                  position: "top",
+                  timeout: 1500,
+                  title: "Error!",
+                  text: error + "Ha ocurrido algo con el IPFS",
+                  visible: true,
+                };
+                this.progress = false;
+            });
     },
     PublicarEdited() {
       let object = {

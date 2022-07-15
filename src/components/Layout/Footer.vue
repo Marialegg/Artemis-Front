@@ -3,10 +3,10 @@
     <!-- content -->
     <aside class="dicol">
       <img class="logoFooter" src="@/assets/logos/logo.png" alt="logo Artemis" style="max-width: 100px; height: auto; "  >
-      <p class="h8-em">
+      <!-- <p class="h8-em">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
         tempor incididunt ut labore et dolore m
-      </p>
+      </p> -->
     </aside>
 
     <aside v-for="(item, index) in dataFooter" :key="index"
