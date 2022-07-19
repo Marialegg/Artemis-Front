@@ -23,15 +23,13 @@
           </router-link>
         </aside>
 
-        <v-col class="jend padd eliminarmobile" style="display:flex !important">
-          <!-- content -->
-          <v-col class="contmiddle end" style="display:flex !important">
-            <a v-for="(item, index) in dataHeader" :key="index" @click="$router.push(item.link)"
-              class="h9-em notdefault-hover">
-              {{ item.title }}
-            </a>
-          </v-col>
-        </v-col>
+        <!-- content -->
+        <div class="contmiddle end eliminarmobile fill-w">
+          <a v-for="(item, index) in dataHeader" :key="index" @click="$router.push(item.link)"
+            class="h9-em notdefault-hover">
+            {{ item.title }}
+          </a>
+        </div>
 
         <divider></divider>
 
