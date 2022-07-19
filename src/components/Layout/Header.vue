@@ -25,7 +25,7 @@
 
         <v-col class="jend padd eliminarmobile">
           <!-- content -->
-          <v-col class="contmiddle end padd">
+          <v-col class="contmiddle end padd" style="display:flex">
             <a v-for="(item, index) in dataHeader" :key="index" @click="$router.push(item.link)"
               class="h9-em openMenuCollections notdefault-hover">
               {{ item.title }}
