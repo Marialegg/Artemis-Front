@@ -22,7 +22,7 @@ Vue.component('apexchart', VueApexCharts)
 Vue.use(VueAnimateOnScroll);
 
 Vue.use(VueAxios,axios);
-axios.defaults.baseURL='http://127.0.0.1:8000/'
+axios.defaults.baseURL='http://157.230.2.213:85/artemis/'
 
 Vue.use(Toast);
 

@@ -1732,7 +1732,7 @@ export default {
       });
 
       this.axios
-        .post("http://localhost:3070/api/ipfs/files/", formData)
+        .post("https://artemis-edu.com:3070/api/ipfs/files/", formData)
         .then((response) => {
           console.log("ipfs",response);
           for (var i = 0; i < response.data.length; i++) {

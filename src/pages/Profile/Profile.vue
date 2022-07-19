@@ -27,6 +27,7 @@
           <label class="h7-em" for="nombre">NOMBRE</label>
           <v-text-field
             v-model="profile.name"
+            type="string"
             id="nombre"
             :rules="rules.date"
             solo
@@ -108,6 +109,11 @@
           >
           </v-textarea>
         </v-card>
+        <v-card color="transparent" class="form">
+          <label class="h7-em" for="firma">FIRMA</label>
+          <v-file-input id="firma" accept="image/*" v-model="profile.firma" solo prepend-icon="" @change="fileInput"></v-file-input>
+        </v-card>
+      
       </section>
     </v-form>
 
@@ -132,7 +138,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
 const config = {
@@ -148,6 +154,9 @@ export default {
   name: "Profile",
   data() {
     return {
+      formData: null,
+      image: null,
+      firma: null,
       snackbar: {},
       valid: true,
       newProfile: true,
@@ -169,8 +178,15 @@ export default {
   },
   mounted () {
     this.getData()
+    this.formData = new FormData();
+    // dict of all elements
   },
   methods: {
+    fileInput(){
+      if (this.profile.firma) {
+        this.formData.append("firma", this.profile.firma);
+      }
+    },
     async setData () {
       if (this.$refs.form.validate()) {
         const near = await connect(config);
@@ -178,8 +194,28 @@ export default {
 
         if (wallet.isSignedIn()) {
           const url = "api/v1/profile/"
-          this.axios.defaults.headers.common.Authorization='token '
-          this.axios.post(url, this.profile)
+          if (this.profile.firma) {
+            this.formData.append("biography", this.profile.biography);
+            this.formData.append("country", this.profile.country);
+            this.formData.append("discord", this.profile.discord);
+            this.formData.append("dni", this.profile.dni);
+            this.formData.append("email", this.profile.email);
+            this.formData.append("id", this.profile.id);
+            this.formData.append("last_name", this.profile.last_name);
+            this.formData.append("name", this.profile.name);
+            this.formData.append("profession", this.profile.profession);
+            this.formData.append("wallet", this.profile.wallet);
+          } else {
+            this.formData = this.profile
+          }
+          this.axios.post(url, this.formData,
+                          {
+                            headers:
+                              {
+                                Authorization: 'token ',
+                                'Content-Type': 'application/json; multipart/form-data',
+                              },
+                          })
             .then((response) => {
               if (response.data){
                 console.log(response.data)
@@ -211,31 +247,6 @@ export default {
         }
       }
     },
-    async setDataOld () {
-      if (this.$refs.form.validate()) {
-        const CONTRACT_NAME = 'contract2.e-learning.testnet'
-        // connect to NEAR
-        const near = await connect(config);
-        // create wallet connection
-        const wallet = new WalletConnection(near)
-        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-          changeMethods: ['set_profile'],
-          sender: wallet.account()
-        })
-        if (wallet.isSignedIn()) {
-          await contract.set_profile({
-            name: this.profile.name,
-            last_name: this.profile.last_name,
-            dni: this.profile.dni,
-            profession: this.profile.profession,
-            biography: this.profile.biography,
-            discord: this.profile.discord,
-            email: this.profile.email,
-            country: this.profile.country,
-          })
-        }
-      }
-    },
     async setDataEdit () {
       if (this.$refs.form.validate()) {
         const near = await connect(config);
@@ -244,7 +255,29 @@ export default {
         if (wallet.isSignedIn()) {
           const url = "api/v1/profile/" + this.profile.id + "/"
           this.axios.defaults.headers.common.Authorization='token '
-          this.axios.put(url, this.profile)
+
+          if (this.profile.firma) {
+            this.formData.append("biography", this.profile.biography);
+            this.formData.append("country", this.profile.country);
+            this.formData.append("discord", this.profile.discord);
+            this.formData.append("dni", this.profile.dni);
+            this.formData.append("email", this.profile.email);
+            this.formData.append("id", this.profile.id);
+            this.formData.append("last_name", this.profile.last_name);
+            this.formData.append("name", this.profile.name);
+            this.formData.append("profession", this.profile.profession);
+            this.formData.append("wallet", this.profile.wallet);
+          } else {
+            this.formData = this.profile
+          }
+
+          this.axios.patch(url, this.formData, {
+                            headers:
+                              {
+                                Authorization: 'token ',
+                                'Content-Type': 'application/json; multipart/form-data',
+                              },
+                          })
             .then((response) => {
               if (response.data){
                 console.log(response.data)
@@ -272,31 +305,7 @@ export default {
               text: "Ha ocurrido algo",
               visible: true
             }
-          })
-        }
-      }
-    },
-    async setDataEditOld () {
-      if (this.$refs.form.validate()) {
-        const CONTRACT_NAME = 'contract2.e-learning.testnet'
-        // connect to NEAR
-        const near = await connect(config);
-        // create wallet connection
-        const wallet = new WalletConnection(near)
-        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-          changeMethods: ['put_profile'],
-          sender: wallet.account()
-        })
-        if (wallet.isSignedIn()) {
-          await contract.put_profile({
-            name: this.profile.name,
-            last_name: this.profile.last_name,
-            dni: this.profile.dni,
-            profession: this.profile.profession,
-            biography: this.profile.biography,
-            discord: this.profile.discord,
-            email: this.profile.email,
-            country: this.profile.country,
+            console.log(error)
           })
         }
       }
@@ -315,6 +324,7 @@ export default {
           .then((response) => {
             if (response.data[0]){
               this.profile = response.data[0]
+              console.log("profile", this.profile)
               this.newProfile = false
             } else {
               this.newProfile = true
@@ -324,28 +334,6 @@ export default {
         })
       }
     },
-    async getDataOld () {
-      const CONTRACT_NAME = 'contract2.e-learning.testnet'
-      // connect to NEAR
-      const near = await connect(config);
-      // create wallet connection
-      const wallet = new WalletConnection(near)
-      this.accountId = wallet.getAccountId()
-      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_profile'],
-        sender: wallet.account()
-      })
-      if (wallet.isSignedIn()) {
-        // console.log(wallet.account())
-        await contract.get_profile({
-          user_id: wallet.getAccountId()
-        }).then((res) => {
-          this.profile = res
-          this.newProfile = false
-        }).catch(() => {
-        })
-      }
-    }
   }
 };
 </script>
