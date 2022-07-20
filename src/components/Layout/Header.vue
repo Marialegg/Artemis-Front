@@ -24,7 +24,7 @@
         </aside>
 
         <!-- content -->
-        <div class="contmiddle end eliminarmobile fill-w" style="display:flex">
+        <div class="contmiddle">
           <a v-for="(item, index) in dataHeader" :key="index" @click="$router.push(item.link)"
             class="h9-em notdefault-hover">
             {{ item.title }}

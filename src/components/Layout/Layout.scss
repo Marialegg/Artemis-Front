@@ -47,8 +47,13 @@
       height: 5em;
     }
   }
-  .contmiddle {
-    gap: clamp(0em, 3vw, 3em);
+  & .contmiddle {
+    gap: clamp(0em, 3vw, 3em) !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    width: 100% !important;
+    @media (max-width: 880px) {display: none !important}
     a {
       font-weight: 600;
       position: relative;
