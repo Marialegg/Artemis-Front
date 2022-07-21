@@ -29,7 +29,7 @@
     <v-tabs v-model="tabs" vertical>
 
     <!-- ////////////////////////////////// -->
-      <v-tab v-for="(item,i) in dataStepper" :key="i" active-class="activeClass" class="jstart h9-em">
+      <v-tab v-for="(item,i) in dataStepper" :key="i" active-class="activeClass" class="h9-em" style="display:flex;justify-content:flex-start;gap.5em">
         <v-icon left class="notdefault-clr">
           mdi-numeric-{{i+1}}-circle
         </v-icon>
