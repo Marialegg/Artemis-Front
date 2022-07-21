@@ -125,4 +125,4 @@ input[type="file"] {
   }
 }
 
-.v-dialog {box-shadow: none !important}
+.v-dialog {box-shadow: none !important;overscroll-behavior: contain}
