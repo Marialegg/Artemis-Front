@@ -402,7 +402,7 @@ export default {
         sender: wallet.account(),
       });
 
-        await this.axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
+        await this.axios.post('http://artemis-edu.com:3070/api/ipfs/', formData)
           .then((response) => {    
             var imgFinal
             if (file[0]) {
