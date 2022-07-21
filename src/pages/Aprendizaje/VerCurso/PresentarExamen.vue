@@ -57,7 +57,7 @@
       </v-window>
     </section>
 
-    <v-dialog v-model="warningModal" max-width="850px">
+    <v-dialog v-model="warningModal" persistent max-width="850px">
       <v-card class="divcol gap" style="box-shadow:0 0 2px 3px rgba(0,0,0,1) !important;padding:2em">
         <span class="h8-em">
           Esta usted seguro que desea finalizar la prueba de certificacion? Una vez confirmado la 
@@ -68,9 +68,19 @@
         </span>
 
         <div class="center gap">
-          <v-btn class="botones" style="background-color: #D0BFAA !important" rounded height="30px"
+          <v-btn :disabled="progress" class="botones" style="background-color: #D0BFAA !important" rounded height="30px"
             @click="warningModal=false">REGRESAR</v-btn>
-          <v-btn class="botones" rounded height="30px" @click="revisionCertificacion()">FINALIZAR</v-btn>
+          <v-btn v-if="!progress" class="botones" rounded height="30px" @click="revisionCertificacion()">FINALIZAR</v-btn>
+          <v-btn 
+            v-if="progress" :disabled="progress" class="botones" rounded height="30px" @click="revisionCertificacion()"
+          >
+          FINALIZAR
+          <v-progress-circular
+            :size="18"
+            :width="4"
+            indeterminate
+          ></v-progress-circular>
+          </v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -95,6 +105,7 @@ export default {
   name: "PresentarExamen",
   data() {
     return {
+      progress: false,
       warningModal: false,
       testInit: true,
       course_id: this.$route.params.id,
@@ -191,6 +202,7 @@ export default {
       }
     },
     async revisionCertificacion() {
+      this.progress = true
       const near = await connect(config);
       const wallet = new WalletConnection(near)
 
@@ -235,6 +247,7 @@ export default {
             text: "Ha ocurrido algo",
             visible: true
           }
+          this.progress = false
         })
       }
     },
