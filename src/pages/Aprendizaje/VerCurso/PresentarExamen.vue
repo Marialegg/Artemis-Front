@@ -207,7 +207,7 @@ export default {
       const wallet = new WalletConnection(near)
 
       if (wallet.isSignedIn()) {
-        const url = "https://www.artemis-edu.com:3070/api/v1/revision-certificacion/"
+        const url = "https://artemis-edu.com:3070/api/v1/revision-certificacion/"
         let item = {
           course_id: this.course_id,
           datos: this.dataPresentacionExamen,
