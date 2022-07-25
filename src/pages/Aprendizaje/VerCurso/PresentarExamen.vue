@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import * as nearAPI from 'near-api-js'
 const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
@@ -213,7 +214,7 @@ export default {
           datos: this.dataPresentacionExamen,
           user_id: wallet.getAccountId()
         }
-        this.axios.post(url, item)
+        axios.post(url, item)
           .then((response) => {
             if (response.data){
               if (response.data.nota >= 10) {

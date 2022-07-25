@@ -793,6 +793,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import * as nearAPI from "near-api-js";
 const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI;
 
@@ -1731,7 +1732,7 @@ export default {
         sender: wallet.account(),
       });
 
-      this.axios
+      axios
         .post("https://artemis-edu.com:3070/api/ipfs/files/", formData)
         .then((response) => {
           console.log("ipfs",response);

@@ -255,6 +255,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import * as nearAPI from 'near-api-js'
 const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
@@ -402,7 +403,7 @@ export default {
         sender: wallet.account(),
       });
 
-        await this.axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
+        await axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
           .then((response) => {    
             var imgFinal
             if (file[0]) {

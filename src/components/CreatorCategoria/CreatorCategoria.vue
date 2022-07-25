@@ -73,6 +73,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
+import axios from 'axios'
 const { connect, keyStores, WalletConnection, Contract } = nearAPI
 
 const keyStore = new keyStores.BrowserLocalStorageKeyStore()
@@ -134,7 +135,7 @@ export default {
         const formData = new FormData()
         formData.append('file', file[0])
 
-        await this.axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
+        await axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
           .then((response) => {       
             console.log(response)     
             contract.set_category({
@@ -203,7 +204,7 @@ export default {
         const formData = new FormData()
         formData.append('file', file[0])
 
-        await this.axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
+        await axios.post('https://artemis-edu.com:3070/api/ipfs/', formData)
           .then((response) => {            
             contract.put_category({
               category_id: this.id,
