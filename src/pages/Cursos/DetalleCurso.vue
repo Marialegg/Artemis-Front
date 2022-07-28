@@ -20,6 +20,15 @@
                   <span class="h6 normal" style="transform:translateY(-2px)">NEAR</span>
                 </div>
               </div>
+              <div class="divcol">
+                <span class="h8-em">Precio Certificado:</span>
+                <div class="divrow aend" style="gap: .2em">
+                  <span class="h3-em bold aend" style="height: min-content; line-height: 1">
+                    {{formatPrice(precio_cert)}}
+                  </span>
+                  <span class="h6 normal" style="transform:translateY(-2px)">NEAR</span>
+                </div>
+              </div>
 
               <v-rating
                 v-model="rating"
@@ -32,6 +41,7 @@
             <aside class="start">
               <v-btn 
                 class="h7-em normal"
+                :disabled="btnCompra"
                 @click="courseBuy()"
               >
                 Comprar
@@ -129,12 +139,14 @@ export default {
   name: "DetalleCursos",
   data() {
     return {
+      btnCompra: false,
       titulo: null,
       instructor: null,
       categoria: null,
       descripcion: null,
       aprendizaje: null,
       precio: null,
+      precio_cert: null,
       image: null,
       rating: null,
       accountId: "",
@@ -151,10 +163,20 @@ export default {
     }
   },
   async mounted () {
+    this.isSigned()
     await this.getCourse()
     this.getCoursesInstructor()
   },
   methods: {
+    async isSigned () {    
+      const near = await connect(config);
+      const wallet = new WalletConnection(near)
+      if (wallet.isSignedIn()) {
+        this.btnCompra = false
+      } else {
+        this.btnCompra = true
+      }
+    },
     formatPrice (price) {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
@@ -178,6 +200,7 @@ export default {
           this.descripcion = response[0].short_description
           this.aprendizaje = response[0].long_description
           this.precio = response[0].price
+          this.precio_cert = response[0].price_certification
           this.image = response[0].img
           if (response[0].reviews.length === 0) {
               this.rating = 0
@@ -250,15 +273,17 @@ export default {
       const near = await connect(config)
       // create wallet connection
       const wallet = new WalletConnection(near)
-      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        changeMethods: ['course_buy'],
-        sender: wallet.account()
-      })
-      await contract.course_buy({
-        course_id: parseInt(this.course_id),
-      }, '300000000000000', // attached GAS (optional)
-      utils.format.parseNearAmount((Number(this.formatPrice(this.precio)) + 0.015).toString()))
-    }
+      if (wallet.isSignedIn()) {
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          changeMethods: ['course_buy'],
+          sender: wallet.account()
+        })
+        await contract.course_buy({
+          course_id: parseInt(this.course_id),
+        }, '300000000000000', // attached GAS (optional)
+        utils.format.parseNearAmount((Number(this.formatPrice(this.precio))).toString()))
+      }
+    },
   }
 };
 </script>

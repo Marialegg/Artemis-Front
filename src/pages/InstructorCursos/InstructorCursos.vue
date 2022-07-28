@@ -663,6 +663,15 @@
                     >
                   </span>
                 </div>
+                <div class="divcol">
+                <span class="h8-em">Precio Certificado:</span>
+                <div class="divrow aend" style="gap: .2em">
+                  <span class="h3-em bold aend" style="height: min-content; line-height: 1">
+                    {{ publicar_certificado }}
+                  </span>
+                  <span class="h6 normal" style="transform:translateY(-2px)">NEAR</span>
+                </div>
+              </div>
 
                 <v-rating
                   background-color="pink lighten-3"

@@ -3,14 +3,15 @@
     <v-col class="align divwrap gap acenter">
       <a class="h8-em notdefault-clr hover-line" @click="clear()">Clear All</a>
       <v-text-field
+        id="search"
         v-model="search"
         dense
         filled
         shaped
         hide-details
         prepend-inner-icon="mdi-magnify"
-        placeholder="Search by author.."
-        v-on:input="searchByAuthor(search)"
+        placeholder="Search.."
+        v-on:input="search2()"
       ></v-text-field>
 
       <div class="contFilters divrow gap spacemobile fill-wmobile">
@@ -58,7 +59,7 @@
     <!-- bajo modificacion -->
     <v-col class="wrapper">
       <v-card v-for="(item,i) in dataCursos" :key="i" :href="'#/curso/' + item.id"
-        color="var(clr-card)" class="cartas align divcol" v-ripple="{ class: 'activeRipple' }">
+        color="var(clr-card)" class="filterItems cartas align divcol" v-ripple="{ class: 'activeRipple' }">
         <img :src="item.img" alt="Imagen curso">
         <div class="divcol astart">
           <aside class="divcol">
@@ -131,6 +132,59 @@ export default {
     this.get_categorys()
   },
   methods: {
+    async search2() {
+      //await this.get_market()
+      const search = document.getElementById('search')
+      const filterItems = document.querySelectorAll('.filterItems')
+
+      search.addEventListener('keyup',e=>{
+        filterItems.forEach(item=>{
+          item.textContent.toLowerCase().includes(e.target.value.toLowerCase())
+          ?item.style.display='block':item.style.display='none'
+          if (e.key=='Escape') {e.target.value = ''}
+          // // to delete at empty text field
+          // if (e.target.value == '') {item.style.display='none'}
+        })
+      })
+        
+      
+    },
+    async get_market() {
+      this.dataCursos = []
+      const CONTRACT_NAME = 'contract2.e-learning.testnet'
+      // connect to NEAR
+      const near = await connect(config)
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_market_courses'],
+        sender: wallet.account()
+      })
+      await contract.get_market_courses()
+        .then((response) => {
+          for (var i = 0; i < response.length; i++) {
+            var item = {}
+            item.id = response[i].id
+            item.instructor = response[i].creator_id
+            item.title = response[i].title
+            item.desc = response[i].short_description
+            item.price = response[i].price
+            item.img = response[i].img
+            if (response[i].reviews.length === 0) {
+              item.rating = 0
+            } else {
+              let rating = 0
+              for (var j = 0; j < response[i].reviews.length; j++) {
+                rating += response[i].reviews[j].critics
+              }
+              item.rating = rating / response[i].reviews.length
+            }
+            this.dataCursos.push(item)
+          }
+          this.dataCursos = this.dataCursos.sort()
+
+        })
+    },
     formatPrice (price) {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
@@ -240,8 +294,8 @@ export default {
       await contract.get_market_courses({
         creator_id: creator,
         category_id: category,
-        from_index: this.len_pagination,
-        limit: this.limit
+        // from_index: this.len_pagination,
+        // limit: this.limit
       })
         .then((response) => {
           for (var i = 0; i < response.length; i++) {

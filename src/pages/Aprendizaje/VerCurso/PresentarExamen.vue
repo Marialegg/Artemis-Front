@@ -10,13 +10,12 @@
           Cada pregunta tiene una valoración de 2 puntos, siendo la nota minima aprobatoria de 20 puntos.
           Una vez iniciado el proceso de evaluación no se podrá cancelar.
           Tenga la prevision de contar con internet y energía eléctrica.
-          Solo tendrá un intento para completar toda la prueba y culmina en el tiempo 
-          establecido de 10 minutos a partir de dar click al botón CERTIFICATE de esta pantalla.
+          Debe comprar un pase para poder presentar la prueba de certificación.
         </p>
 
         <v-card-action class="center gap">
           <v-btn class="botones2" rounded to="/aprendizaje">CANCELAR</v-btn>
-          <v-btn class="botones" :disabled="pass_certification" rounded @click="passBuy()">COMPRAR PASE</v-btn>
+          <v-btn class="botones" :disabled="pass_certification" rounded @click="passBuy()">COMPRAR PASE ({{formatPrice(price_certification)}} NEAR)</v-btn>
           <v-btn class="botones" :disabled="!pass_certification" rounded @click="getCertificacion(),testInit=false">CERTIFICATE</v-btn>
         </v-card-action>
       </v-card>
@@ -265,7 +264,7 @@ export default {
       await contract.pass_certification_buy({
         course_id: parseInt(this.course_id),
       }, '300000000000000', // attached GAS (optional)
-      utils.format.parseNearAmount((Number(this.formatPrice(this.price_certification)) + 0.015).toString()))
+      utils.format.parseNearAmount((Number(this.formatPrice(this.price_certification))).toString()))
     },
     formatPrice (price) {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
